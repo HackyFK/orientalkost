@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('kos_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kos_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('kos_id')->constrained()->cascadeOnDelete()
+                    ->constrained('kos') // ← PENTING
+                    ->cascadeOnDelete();;
             $table->string('image_path');
             $table->boolean('is_primary')->default(false);
             $table->timestamps();
