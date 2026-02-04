@@ -13,7 +13,7 @@
         <nav class="space-y-2 px-4">
             <a href="{{ route('dashboard') }}">Dashboard</a>
             {{-- <a href="">Dashboard</a> --}}
-            <a href="{{ route('kos.index') }}">Kos</a>
+            <a href="{{ route('admin.kos.index') }}">Kos</a>
             <a href="{{ route('kamar.index') }}">Kamar</a>
             <a href="{{ route('booking.index') }}">Booking</a>
             <a href="{{ route('blog.index') }}">Blog</a>
