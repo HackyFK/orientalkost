@@ -13,6 +13,6 @@ class Booking extends Model
 
     public function kamar()
     {
-        return $this->belongsTo(Kamar::class);
+        return $this->belongsTo(kamar::class);
     }
 }
