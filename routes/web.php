@@ -49,11 +49,22 @@ Route::get('/dashboard', [AdminDashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->group(function () {
+
     Route::resource('kos', AdminKosController::class);
+
+    Route::delete(
+        'kos-image/{image}',
+        [AdminKosController::class, 'deleteImage']
+    )->name('kos.image.delete');
+
+    Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
+
+    Route::resource('kamar', AdminKamarController::class);
+
+    Route::resource('fasilitas', AdminFasilitasController::class);
+    
 });
 
-Route::resource('kamar', AdminKamarController::class);
-Route::resource('fasilitas', AdminFasilitasController::class);
 Route::resource('blog', AdminBlogController::class);
 Route::resource('galeri', AdminGaleriController::class);
 

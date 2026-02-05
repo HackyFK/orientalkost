@@ -25,4 +25,9 @@ class Kos extends Model
     {
         return $this->hasMany(KosImage::class);
     }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(KosImage::class)->where('is_primary', true);
+    }
 }

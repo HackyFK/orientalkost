@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('fasilitas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_fasilitas');
+            $table->string('kategori');
             $table->string('icon')->nullable();
             $table->timestamps();
         });
