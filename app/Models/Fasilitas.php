@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Fasilitas extends Model
 {
-    protected $fillable = ['nama_fasilitas','icon'];
+    protected $table = 'fasilitas';
 
-    public function kamar()
+    protected $fillable = [
+        'nama_fasilitas',
+        'icon',
+        'kategori',
+    ];
+
+    // nanti dipakai waktu pivot kamar
+    public function kamars()
     {
-        return $this->belongsToMany(Kamar::class);
+        return $this->belongsToMany(
+            Kamar::class,
+            'fasilitas_kamar'
+        );
     }
 }

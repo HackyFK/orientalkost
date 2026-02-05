@@ -14,7 +14,7 @@ class AdminKosController extends Controller
     public function index()
     {
         return view('admin.kos.index', [
-            'items' => Kos::with('images')->latest()->get()
+            'items' => Kos::with('primaryImage')->latest()->get()
         ]);
     }
 
@@ -30,28 +30,31 @@ class AdminKosController extends Controller
             'nama_kos'   => 'required|min:3',
             'alamat'     => 'required',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
-            'image'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $data['slug'] = Str::slug($data['nama_kos']);
 
         $kos = Kos::create($data);
 
-        // === UPLOAD IMAGE ===
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('kos', 'public');
+        // === MULTI IMAGE UPLOAD ===
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('kos', 'public');
 
-            KosImage::create([
-                'kos_id'     => $kos->id,
-                'image_path' => $path,
-                'is_primary' => true,
-            ]);
+                KosImage::create([
+                    'kos_id'     => $kos->id,
+                    'image_path' => $path,
+                    'is_primary' => $index === 0 // gambar pertama = primary
+                ]);
+            }
         }
 
         return redirect()
             ->route('admin.kos.index')
             ->with('success', 'Kos berhasil dibuat');
     }
+
 
     public function edit(Kos $ko)
     {
@@ -63,28 +66,24 @@ class AdminKosController extends Controller
     public function update(Request $request, Kos $ko)
     {
         $data = $request->validate([
-            'nama_kos' => 'required',
-            'alamat' => 'required',
+            'nama_kos'   => 'required',
+            'alamat'     => 'required',
             'jenis_sewa' => 'required',
-            'image' => 'nullable|image'
+            'images.*'   => 'nullable|image'
         ]);
 
         $ko->update($data);
 
-        if ($request->hasFile('image')) {
-            // hapus image lama
-            if ($old = $ko->images()->where('is_primary', true)->first()) {
-                Storage::disk('public')->delete($old->image_path);
-                $old->delete();
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('kos', 'public');
+
+                KosImage::create([
+                    'kos_id'     => $ko->id,
+                    'image_path' => $path,
+                    'is_primary' => false
+                ]);
             }
-
-            $path = $request->file('image')->store('kos', 'public');
-
-            KosImage::create([
-                'kos_id' => $ko->id,
-                'image_path' => $path,
-                'is_primary' => true
-            ]);
         }
 
         return redirect()
@@ -92,10 +91,40 @@ class AdminKosController extends Controller
             ->with('success', 'Kos berhasil diupdate');
     }
 
-
     public function destroy(Kos $ko)
     {
         $ko->delete();
         return back()->with('success', 'Kos berhasil dihapus');
+    }
+
+    public function deleteImage(KosImage $image)
+    {
+        $kos = $image->kos;
+
+        // hapus file
+        Storage::disk('public')->delete($image->image_path);
+
+        $wasPrimary = $image->is_primary;
+
+        // hapus db
+        $image->delete();
+
+        // jika primary dihapus → set primary baru
+        if ($wasPrimary) {
+            $newPrimary = $kos->images()->first();
+            if ($newPrimary) {
+                $newPrimary->update(['is_primary' => true]);
+            }
+        }
+
+        return back()->with('success', 'Gambar berhasil dihapus');
+    }
+
+    public function setPrimaryImage(KosImage $image)
+    {
+        $image->kos->images()->update(['is_primary' => false]);
+        $image->update(['is_primary' => true]);
+
+        return back()->with('success', 'Primary image diubah');
     }
 }

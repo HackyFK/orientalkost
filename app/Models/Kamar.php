@@ -30,11 +30,19 @@ class Kamar extends Model
 
     public function fasilitas()
     {
-        return $this->belongsToMany(Fasilitas::class);
+        return $this->belongsToMany(
+            Fasilitas::class,
+            'fasilitas_kamar'
+        );
     }
 
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(KamarImage::class)->where('is_primary', true);
     }
 }
