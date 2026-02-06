@@ -8,9 +8,18 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminKosController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+// User Controller
+use App\Http\Controllers\User\BerandaController;
+use App\Http\Controllers\User\KamarController;
+use App\Http\Controllers\User\BlogController;
+use App\Http\Controllers\User\GaleriController;
+use App\Http\Controllers\User\KosController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\TransaksiController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,20 +27,48 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 /*
 |--------------------------------------------------------------------------
 | AUTH (BREEZE)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIC / USER
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIC / USER
+|--------------------------------------------------------------------------
+*/
+
+Route::name('user.')->group(function () {
+
+    Route::get('/', [BerandaController::class, 'index'])->name('beranda');
+
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+
+    Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
+
+    Route::get('/kos', [KosController::class, 'index'])->name('kos');
+
+    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar');
+      Route::get('/kamar/detail', [KamarController::class, 'detail'])
+        ->name('kamar.detail');
+    
+
+    Route::get('/booking', [BookingController::class, 'index'])->name('booking');
+
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
+
+    
 });
+
 
 require __DIR__ . '/auth.php';
 
@@ -62,21 +99,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('kamar', AdminKamarController::class);
 
     Route::resource('fasilitas', AdminFasilitasController::class);
-    
-});
 
-Route::resource('blog', AdminBlogController::class);
-Route::resource('galeri', AdminGaleriController::class);
+    Route::resource('blog', AdminBlogController::class);
+    Route::resource('galeri', AdminGaleriController::class);
 
-Route::resource('booking', BookingController::class)
-    ->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('booking', BookingController::class)
+        ->only(['index', 'show', 'update', 'destroy']);
 
-Route::resource('review', AdminReviewController::class)
-    ->only(['index', 'destroy']);
+    Route::resource('review', AdminReviewController::class)
+        ->only(['index', 'destroy']);
 
-Route::get('setting', [AdminSettingController::class, 'index'])
-    ->name('setting.index');
+    Route::get('setting', [AdminSettingController::class, 'index'])
+        ->name('setting.index');
 
-Route::post('setting', [AdminSettingController::class, 'update'])
-    ->name('setting.update');
+    Route::post('setting', [AdminSettingController::class, 'update'])
+        ->name('setting.update');
     // });
+});
