@@ -16,7 +16,7 @@ class Kos extends Model
         'jenis_sewa'
     ];
 
-    public function kamar()
+    public function kamars  ()
     {
         return $this->hasMany(Kamar::class);
     }

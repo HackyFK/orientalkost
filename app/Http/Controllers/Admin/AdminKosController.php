@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kos;
 use App\Models\KosImage;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AdminKosController extends Controller
@@ -18,7 +18,6 @@ class AdminKosController extends Controller
         ]);
     }
 
-
     public function create()
     {
         return view('admin.kos.create');
@@ -28,28 +27,27 @@ class AdminKosController extends Controller
     {
         $data = $request->validate([
             'nama_kos'   => 'required|min:3|unique:kos,nama_kos',
+            'deskripsi'  => 'nullable',
             'alamat'     => 'required',
+            'latitude'   => 'nullable|numeric',
+            'longitude'  => 'nullable|numeric',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ], [
-            'nama_kos.required' => 'Nama kos wajib diisi.',
-            'nama_kos.min'      => 'Nama kos minimal 3 karakter.',
-            'nama_kos.unique'   => 'Nama kos sudah digunakan, silakan gunakan nama lain.'
         ]);
 
         $data['slug'] = Str::slug($data['nama_kos']);
 
         $kos = Kos::create($data);
 
-        // === MULTI IMAGE UPLOAD ===
+        // MULTI IMAGE
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
+            foreach ($request->file('images') as $i => $image) {
                 $path = $image->store('kos', 'public');
 
                 KosImage::create([
                     'kos_id'     => $kos->id,
                     'image_path' => $path,
-                    'is_primary' => $index === 0 // gambar pertama = primary
+                    'is_primary' => $i === 0
                 ]);
             }
         }
@@ -59,26 +57,25 @@ class AdminKosController extends Controller
             ->with('success', 'Kos berhasil dibuat');
     }
 
-
     public function edit(Kos $ko)
     {
         $ko->load('images');
         return view('admin.kos.edit', compact('ko'));
     }
 
-
     public function update(Request $request, Kos $ko)
     {
         $data = $request->validate([
-            'nama_kos'   => 'required|unique:kos,nama_kos,' . $ko->id,
+            'nama_kos'   => 'required|min:3|unique:kos,nama_kos,' . $ko->id,
+            'deskripsi'  => 'nullable',
             'alamat'     => 'required',
-            'jenis_sewa' => 'required',
-            'images.*'   => 'nullable|image'
-        ], [
-            'nama_kos.required' => 'Nama kos wajib diisi.',
-            'nama_kos.min'      => 'Nama kos minimal 3 karakter.',
-            'nama_kos.unique'   => 'Nama kos sudah digunakan, silakan gunakan nama lain.'
+            'latitude'   => 'nullable|numeric',
+            'longitude'  => 'nullable|numeric',
+            'jenis_sewa' => 'required|in:bulanan,tahunan',
+            'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
+
+        $data['slug'] = Str::slug($data['nama_kos']);
 
         $ko->update($data);
 
@@ -94,9 +91,7 @@ class AdminKosController extends Controller
             }
         }
 
-        return redirect()
-            ->route('admin.kos.index')
-            ->with('success', 'Kos berhasil diupdate');
+        return back()->with('success', 'Kos berhasil diperbarui');
     }
 
     public function destroy(Kos $ko)
@@ -107,25 +102,18 @@ class AdminKosController extends Controller
 
     public function deleteImage(KosImage $image)
     {
-        $kos = $image->kos;
-
-        // hapus file
         Storage::disk('public')->delete($image->image_path);
 
+        $kos = $image->kos;
         $wasPrimary = $image->is_primary;
 
-        // hapus db
         $image->delete();
 
-        // jika primary dihapus → set primary baru
         if ($wasPrimary) {
-            $newPrimary = $kos->images()->first();
-            if ($newPrimary) {
-                $newPrimary->update(['is_primary' => true]);
-            }
+            $kos->images()->first()?->update(['is_primary' => true]);
         }
 
-        return back()->with('success', 'Gambar berhasil dihapus');
+        return back()->with('success', 'Gambar dihapus');
     }
 
     public function setPrimaryImage(KosImage $image)
