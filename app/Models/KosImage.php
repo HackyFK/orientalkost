@@ -12,6 +12,10 @@ class KosImage extends Model
         'is_primary',
     ];
 
+    protected $casts = [
+        'is_primary' => 'boolean',
+    ];
+
     public function kos()
     {
         return $this->belongsTo(Kos::class);

@@ -1,6 +1,17 @@
 @extends('admin.layouts.app')
 
 @section('content')
+{{-- VALIDATION ERRORS --}}
+@if($errors->any())
+    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+        <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="bg-white shadow rounded p-6 max-w-xl">
     <h1 class="text-2xl font-bold mb-4">Tambah Kos</h1>
 

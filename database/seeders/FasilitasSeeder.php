@@ -30,7 +30,7 @@ class FasilitasSeeder extends Seeder
             ['nama_fasilitas' => 'TV', 'icon' => 'fa-solid fa-tv', 'kategori' => 'dalam_kamar'],
             ['nama_fasilitas' => 'WiFi', 'icon' => 'fa-solid fa-wifi', 'kategori' => 'dalam_kamar'],
             ['nama_fasilitas' => 'Stop Kontak', 'icon' => 'fa-solid fa-plug', 'kategori' => 'dalam_kamar'],
-            ['nama_fasilitas' => 'Cermin', 'icon' => 'fa-solid fa-mirror', 'kategori' => 'dalam_kamar'],
+            ['nama_fasilitas' => 'Cermin', 'icon' => 'fa-solid fa-ractangle-tall', 'kategori' => 'dalam_kamar'],
             ['nama_fasilitas' => 'Rak Sepatu', 'icon' => 'fa-solid fa-shoe-prints', 'kategori' => 'dalam_kamar'],
             ['nama_fasilitas' => 'Brankas', 'icon' => 'fa-solid fa-vault', 'kategori' => 'dalam_kamar'],
             ['nama_fasilitas' => 'Kulkas Mini', 'icon' => 'fa-solid fa-temperature-low', 'kategori' => 'dalam_kamar'],

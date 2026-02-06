@@ -27,10 +27,14 @@ class AdminKosController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama_kos'   => 'required|min:3',
+            'nama_kos'   => 'required|min:3|unique:kos,nama_kos',
             'alamat'     => 'required',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ], [
+            'nama_kos.required' => 'Nama kos wajib diisi.',
+            'nama_kos.min'      => 'Nama kos minimal 3 karakter.',
+            'nama_kos.unique'   => 'Nama kos sudah digunakan, silakan gunakan nama lain.'
         ]);
 
         $data['slug'] = Str::slug($data['nama_kos']);
@@ -66,10 +70,14 @@ class AdminKosController extends Controller
     public function update(Request $request, Kos $ko)
     {
         $data = $request->validate([
-            'nama_kos'   => 'required',
+            'nama_kos'   => 'required|unique:kos,nama_kos,' . $ko->id,
             'alamat'     => 'required',
             'jenis_sewa' => 'required',
             'images.*'   => 'nullable|image'
+        ], [
+            'nama_kos.required' => 'Nama kos wajib diisi.',
+            'nama_kos.min'      => 'Nama kos minimal 3 karakter.',
+            'nama_kos.unique'   => 'Nama kos sudah digunakan, silakan gunakan nama lain.'
         ]);
 
         $ko->update($data);

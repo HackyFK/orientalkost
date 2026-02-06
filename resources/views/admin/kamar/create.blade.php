@@ -53,52 +53,55 @@
         </div>
 
 
-        <div>
-            <label class="font-semibold block mb-3">Fasilitas Kamar</label>
+ <div>
+    <label class="font-semibold block mb-3">Fasilitas Kamar</label>
 
-            <div class="space-y-3">
-                @foreach ($fasilitas as $kategori => $items)
-                    <div x-data="{ open: false }" class="border rounded">
+    <div class="space-y-3">
+        @foreach ($fasilitas as $kategori => $items)
+            <div
+                x-data="{
+                    open: false,
+                    selected: []
+                }"
+                class="border rounded"
+            >
+                <!-- HEADER -->
+                <button type="button"
+                        @click="open = !open"
+                        class="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200">
+                    <span class="font-medium text-gray-700">
+                        {{ ucfirst(str_replace('_', ' ', $kategori)) }}
+                        <span class="text-sm text-gray-500" x-show="selected.length > 0">
+                            ( <span x-text="selected.length"></span> )
+                        </span>
+                    </span>
 
-                        <!-- HEADER -->
-                        <button type="button" @click="open = !open"
-                            class="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200">
-                            <span class="font-medium text-gray-700">
-                                {{ ucfirst(str_replace('_', ' ', $kategori)) }}
-                            </span>
+                    <span x-text="open ? '−' : '+'"></span>
+                </button>
 
-                            <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
+                <!-- CONTENT -->
+                <div x-show="open" x-transition class="p-3">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        @foreach ($items as $item)
+                            <label class="flex items-center gap-2 border p-2 rounded cursor-pointer">
+                                <input type="checkbox"
+                                       name="fasilitas[]"
+                                       value="{{ $item->id }}"
+                                       x-model="selected">
 
-                            <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                            </svg>
-                        </button>
+                                @if ($item->icon)
+                                    <i class="{{ $item->icon }}"></i>
+                                @endif
 
-                        <!-- CONTENT -->
-                        <div x-show="open" x-transition class="p-3">
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                @foreach ($items as $item)
-                                    <label class="flex items-center gap-2 border p-2 rounded cursor-pointer">
-                                        <input type="checkbox" name="fasilitas[]" value="{{ $item->id }}">
-
-                                        @if ($item->icon)
-                                            <i class="{{ $item->icon }}"></i>
-                                        @endif
-
-                                        {{ $item->nama_fasilitas }}
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-
+                                {{ $item->nama_fasilitas }}
+                            </label>
+                        @endforeach
                     </div>
-                @endforeach
+                </div>
             </div>
-        </div>
+        @endforeach
+    </div>
+</div>
 
 
 

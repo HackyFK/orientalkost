@@ -77,25 +77,21 @@
 
             <div class="space-y-3">
                 @foreach ($fasilitas as $kategori => $items)
-                    <div x-data="{ open: false }" class="border rounded">
-                        {{-- <div x-data="{ open: {{ $kamar->fasilitas->whereIn('id', $items->pluck('id'))->count() ? 'true' : 'false' }} }"> --}}
-
+                    <div x-data="{
+                        open: true,
+                        selected: @js($kamar->fasilitas->whereIn('id', $items->pluck('id'))->pluck('id'))
+                    }" class="border rounded">
                         <!-- HEADER -->
                         <button type="button" @click="open = !open"
                             class="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200">
                             <span class="font-medium text-gray-700">
-                                {{ ucfirst(str_replace('_', ' ', $kategori)) }} ({{ $kamar->fasilitas->whereIn('id', $items->pluck('id'))->count() }})
+                                {{ ucfirst(str_replace('_', ' ', $kategori)) }}
+                                <span class="text-sm text-gray-500">
+                                    (<span x-text="selected.length"></span>)
+                                </span>
                             </span>
 
-                            <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-
-                            <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                            </svg>
+                            <span x-text="open ? '−' : '+'"></span>
                         </button>
 
                         <!-- CONTENT -->
@@ -104,8 +100,7 @@
                                 @foreach ($items as $item)
                                     <label class="flex items-center gap-2 border p-2 rounded cursor-pointer">
                                         <input type="checkbox" name="fasilitas[]" value="{{ $item->id }}"
-                                            {{ $kamar->fasilitas->contains($item->id) ? 'checked' : '' }}>
-
+                                            x-model="selected">
 
                                         @if ($item->icon)
                                             <i class="{{ $item->icon }}"></i>
@@ -116,11 +111,11 @@
                                 @endforeach
                             </div>
                         </div>
-
                     </div>
                 @endforeach
             </div>
         </div>
+
 
 
 

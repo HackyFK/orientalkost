@@ -23,11 +23,14 @@ class Kos extends Model
 
     public function images()
     {
-        return $this->hasMany(KosImage::class);
+        return $this->hasMany(KosImage::class)
+            ->orderByDesc('is_primary')
+            ->orderBy('id');
     }
 
     public function primaryImage()
     {
-        return $this->hasOne(KosImage::class)->where('is_primary', true);
+        return $this->hasOne(KosImage::class)
+            ->where('is_primary', true);
     }
 }

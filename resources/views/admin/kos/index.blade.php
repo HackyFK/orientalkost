@@ -1,6 +1,13 @@
 @extends('admin.layouts.app')
 
 @section('content')
+{{-- SUCCESS MESSAGE --}}
+@if(session('success'))
+    <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold">Data Kos</h1>
     <a href="{{ route('admin.kos.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
