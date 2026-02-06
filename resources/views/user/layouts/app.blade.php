@@ -2,14 +2,13 @@
 <html lang="id">
 
 <head>
-
     <!-- SEO Meta Tags -->
     <meta name="description"
         content="Baca artikel, tips, dan panduan seputar kos-kosan, properti, dan kehidupan mahasiswa">
     <meta name="keywords" content="tips kos, panduan kos, blog properti, kehidupan mahasiswa">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KosKu - Temukan Kos Nyaman Impianmu</title>
+    <title>KosKu - Temukan tentang kos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -41,6 +40,7 @@
     <style>
         /* GLOBAL */
         body {
+            margin: 0;
             font-family: 'Poppins', sans-serif;
         }
 
@@ -196,19 +196,44 @@
 
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <i class="fas fa-home text-accent text-3xl"></i>
+                    <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
                     <span class="text-text-light text-2xl font-bold">KosKu</span>
                 </div>
 
                 <!-- Menu Desktop -->
                 <div class="hidden lg:flex items-center space-x-8">
-                    <a href="{{ route('user.beranda') }}" class="text-text-light hover:text-accent transition">Home</a>
-                    <a href="{{ route('user.kamar') }}" class="text-text-light hover:text-accent transition">Kamar</a>
-                    <a href="{{ route('user.kos') }}" class="text-text-light hover:text-accent transition">Kos</a>
-                    <a href="{{ route('user.galeri') }}" class="text-text-light hover:text-accent transition">Galeri</a>
-                    <a href="{{ route('user.blog') }}" class="text-text-light hover:text-accent transition">Blog</a>
-                    <a href="#kontak" class="text-text-light hover:text-accent transition">Kontak</a>
+
+                    <a href="{{ route('user.beranda') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
+                        <i class="fas fa-home text-sm"></i>
+                        <span>Home</span>
+                    </a>
+
+                    <a href="{{ route('user.kos') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
+                        <i class="fas fa-building text-sm"></i>
+                        <span>Kos</span>
+                    </a>
+
+                    <a href="{{ route('user.galeri') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
+                        <i class="fas fa-images text-sm"></i>
+                        <span>Galeri</span>
+                    </a>
+
+                    <a href="{{ route('user.blog') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
+                        <i class="fas fa-blog text-sm"></i>
+                        <span>Blog</span>
+                    </a>
+
+                    <a href="#kontak" class="flex items-center gap-2 text-text-light hover:text-accent transition">
+                        <i class="fas fa-envelope text-sm"></i>
+                        <span>Kontak</span>
+                    </a>
+
                 </div>
+
 
                 <!-- Right -->
                 <div class="flex items-center space-x-4">
@@ -233,11 +258,10 @@
         <!-- MENU MOBILE -->
         <div id="mobile-menu" class="hidden lg:hidden bg-primary border-t border-white/10">
             <div class="px-6 py-6 space-y-4">
-                <a href="#home" class="block text-text-light hover:text-accent">Home</a>
-                <a href="#kamar" class="block text-text-light hover:text-accent">Kamar</a>
-                <a href="#kos" class="block text-text-light hover:text-accent">Kos</a>
-                <a href="#galeri" class="block text-text-light hover:text-accent">Galeri</a>
-                <a href="#blog" class="block text-text-light hover:text-accent">Blog</a>
+                <a href="{{ route('user.beranda') }}" class="block text-text-light hover:text-accent">Home</a>
+                <a href="{{ route('user.kos') }}" class="block text-text-light hover:text-accent">Kos</a>
+                <a href="{{ route('user.galeri') }}" class="block text-text-light hover:text-accent">Galeri</a>
+                <a href="{{ route('user.blog') }}" class="block text-text-light hover:text-accent">Blog</a>
                 <a href="#kontak" class="block text-text-light hover:text-accent">Kontak</a>
 
                 <button class="w-full mt-4 bg-accent text-white py-3 rounded-xl font-semibold">
@@ -249,7 +273,7 @@
 
 
     {{-- KONTEN HALAMAN --}}
-    <main class="pt-24">
+    <main class="pt-3">
         @yield('content')
     </main>
 
@@ -260,7 +284,7 @@
             <div class="grid md:grid-cols-4 gap-12">
                 <div>
                     <div class="flex items-center space-x-3 mb-6">
-                        <i class="fas fa-home text-accent text-3xl"></i>
+                        <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
                         <span class="text-2xl font-bold">KosKu</span>
                     </div>
                     <p class="text-text-gray leading-relaxed mb-4">
