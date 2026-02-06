@@ -36,13 +36,21 @@
                     <td class="p-2 border">
                         <div class="flex flex-wrap gap-1">
                             @foreach ($kamar->fasilitas as $f)
-                                <span class="px-2 py-1 text-xs bg-gray-100 rounded">
-                                    <i class="{{ $f->icon }}"></i>
-                                </span>
+                                <div class="relative group">
+                                    <span class="px-2 py-1 text-xs bg-gray-100 rounded cursor-pointer">
+                                        <i class="{{ $f->icon }}"></i>
+                                    </span>
+
+                                    <div
+                                        class="absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-1
+                           hidden group-hover:block
+                           px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap">
+                                        {{ $f->nama_fasilitas }}
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </td>
-
                     <td class="p-2 border">
                         Rp {{ number_format($kamar->harga_bulanan, 0, ',', '.') }}
                     </td>
