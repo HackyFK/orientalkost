@@ -27,7 +27,7 @@
                 <a href="{{ route('admin.kos.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Kos</a>
                 <a href="{{ route('admin.kamar.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Kamar</a>
                 <a href="{{ route('admin.fasilitas.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Fasilitas</a>
-                <a href="{{ route('booking.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Booking</a>
+                {{-- <a href="{{ route('booking.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Booking</a> --}}
                 <a href="{{ route('blog.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Blog</a>
                 <a href="{{ route('galeri.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Galeri</a>
                 <a href="{{ route('setting.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Setting</a>
