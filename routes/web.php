@@ -63,7 +63,7 @@ Route::name('user.')->group(function () {
 
 
     Route::get('/kamar/{kamar}', [KamarController::class, 'show'])
-        ->name('user.kamar.show');
+        ->name('kamar.show');
 
 
 
