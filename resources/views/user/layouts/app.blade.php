@@ -3,12 +3,15 @@
 
 <head>
     <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Baca artikel, tips, dan panduan seputar kos-kosan, properti, dan kehidupan mahasiswa">
-    <meta name="keywords" content="tips kos, panduan kos, blog properti, kehidupan mahasiswa">
+    <meta name="description" content="{{ setting('seo_description', 'Website kos modern dan terpercaya') }}">
+    <meta name="keywords" content="{{ setting('seo_keywords', 'kos, kamar, sewa kos') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KosKu - Temukan tentang kos</title>
+
+    <title>
+        @yield('title', setting('site_name', 'KosKu'))
+    </title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -197,7 +200,10 @@
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
-                    <span class="text-text-light text-2xl font-bold">KosKu</span>
+                    <span class="text-text-light text-2xl font-bold">
+                        {{ setting('site_name', 'KosKu') }}
+                    </span>
+
                 </div>
 
                 <!-- Menu Desktop -->
@@ -239,10 +245,10 @@
                         Login
                     </button>
 
-                    <button
+                    <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
                         class="bg-accent hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-lg">
-                        Booking
-                    </button>
+                        {{ setting('cta_booking_text', 'Booking') }}
+                    </a>
 
                     <!-- Toggle -->
                     <button id="menu-toggle" class="lg:hidden text-text-light text-2xl">
@@ -257,7 +263,7 @@
         <div id="mobile-menu" class="hidden lg:hidden bg-primary border-t border-white/10">
             <div class="px-6 py-6 space-y-4">
                 <a href="{{ route('user.beranda') }}" class="block text-text-light hover:text-accent">Home</a>
-                <a href="{{ route('user.kos') }}" class="block text-text-light hover:text-accent">Kos</a>
+                <a href="{{ route('user.kos.index') }}" class="block text-text-light hover:text-accent">Kos</a>
                 <a href="{{ route('user.galeri') }}" class="block text-text-light hover:text-accent">Galeri</a>
                 <a href="{{ route('user.blog') }}" class="block text-text-light hover:text-accent">Blog</a>
                 <a href="#kontak" class="block text-text-light hover:text-accent">Kontak</a>
@@ -283,29 +289,37 @@
                 <div>
                     <div class="flex items-center space-x-3 mb-6">
                         <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
-                        <span class="text-2xl font-bold">KosKu</span>
+                        <span class="text-2xl font-bold">@yield('title', setting('site_name', 'KosKu'))</span>
                     </div>
                     <p class="text-text-gray leading-relaxed mb-4">
-                        Solusi hunian modern, aman, dan nyaman untuk mahasiswa dan pekerja profesional.
+                        {{ setting('site_tagline') }}
                     </p>
+
                     <div class="flex space-x-4">
-                        <a href="#"
-                            class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                        @if (setting('social_facebook'))
+                            <a href="{{ setting('social_facebook') }}" target="_blank"
+                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        @endif
+
+                        @if (setting('social_instagram'))
+                            <a href="{{ setting('social_instagram') }}" target="_blank"
+                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        @endif
+
+                        @if (setting('contact_whatsapp'))
+                            <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
+                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition"
+                                target="_blank">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        @endif
+
                     </div>
+
                 </div>
 
                 <div>
@@ -336,19 +350,31 @@
                     <ul class="space-y-4">
                         <li class="flex items-start space-x-3">
                             <i class="fas fa-map-marker-alt text-accent mt-1"></i>
-                            <span class="text-text-gray">Jl. Pendidikan No. 123<br>Kota Metropolitan</span>
+                            <span class="text-text-gray">
+                                {!! nl2br(e(setting('contact_address'))) !!}
+                            </span>
+
                         </li>
                         <li class="flex items-center space-x-3">
                             <i class="fas fa-phone text-accent"></i>
-                            <span class="text-text-gray">0812-3456-7890</span>
+                            <span class="text-text-gray">
+                                {{ setting('contact_phone') }}
+                            </span>
+
                         </li>
                         <li class="flex items-center space-x-3">
                             <i class="fas fa-envelope text-accent"></i>
-                            <span class="text-text-gray">info@kosku.com</span>
+                            <span class="text-text-gray">
+                                {{ setting('contact_email') }}
+                            </span>
+
                         </li>
                         <li class="flex items-center space-x-3">
                             <i class="fas fa-clock text-accent"></i>
-                            <span class="text-text-gray">Senin - Minggu<br>08:00 - 20:00</span>
+                            <span class="text-text-gray">
+                                {{ setting('operational_hours') }}
+                            </span>
+
                         </li>
                     </ul>
                 </div>
