@@ -158,8 +158,10 @@
                                 <!-- Fasilitas (STATIS) -->
                                 <div class="flex flex-wrap gap-2 mb-4">
                                     <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
-                                        <i class="fas fa-door-open text-accent mr-1"></i>24 Kamar
+                                        <i class="fas fa-door-open text-accent mr-1"></i>
+                                        {{ $item->kamars->count() }} Kamar
                                     </span>
+
                                     <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
                                         <i class="fas fa-wifi text-accent mr-1"></i>WiFi
                                     </span>
@@ -197,7 +199,7 @@
 
                                     <div class="flex items-center gap-2 text-sm text-purple-700 font-semibold">
                                         <i class="fas fa-bed"></i>
-                                        <span>12 Kamar Tersedia</span>
+                                        <span>{{ $item->kamars->count() }} Kamar Tersedia</span>
                                     </div>
                                 </div>
 
