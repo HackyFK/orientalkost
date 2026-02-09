@@ -2,6 +2,11 @@
 
 @section('content')
 
+@php
+    function badge() {}
+@endphp
+
+
     <body class="bg-gray-50">
 
         <!-- HERO SECTION -->
@@ -22,8 +27,8 @@
 
                     <!-- Badge -->
                     <div
-                        class="inline-flex items-center gap-2 mb-6 px-5 py-2 
-                       bg-white/15 backdrop-blur-md 
+                        class="inline-flex items-center gap-2 mb-6 px-5 py-2
+                       bg-white/15 backdrop-blur-md
                        rounded-full text-sm font-semibold">
                         <i class="fas fa-bed text-accent"></i>
                         Kamar Siap Huni
@@ -31,7 +36,7 @@
 
                     <!-- Title -->
                     <h1
-                        class="text-4xl md:text-6xl font-extrabold mb-6 
+                        class="text-4xl md:text-6xl font-extrabold mb-6
            leading-tight tracking-tight drop-shadow-xl">
 
                         Data
@@ -163,310 +168,70 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                    <!-- Room Card 1 -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600"
-                                alt="Kamar Premium A1"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            <div
-                                class="absolute top-4 left-4 bg-green-500 text-white px-4 py-2 rounded-full font-semibold flex items-center shadow-lg">
-                                <i class="fas fa-check-circle mr-2"></i>Tersedia
-                            </div>
+                    @foreach ($kamars as $kamar)
+                        <div
+                            class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
 
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-accent tracking-tight mb-2">Kamar Premium A1</h3>
-                            <p class="text-text-gray text-sm mb-4">
-                                Kamar luas dengan interior modern, AC, dan kamar mandi dalam. Cocok untuk kenyamanan
-                                maksimal.
-                            </p>
+                            <!-- Image -->
+                            <div class="relative overflow-hidden h-64">
+                                <img src="{{ $kamar->primaryImage
+                                    ? asset('storage/' . $kamar->primaryImage->image_path)
+                                    : 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600' }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-ruler-combined text-accent mr-1"></i> 4x5 m
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wind text-accent mr-1"></i> AC
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-bath text-accent mr-1"></i> KM Dalam
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i> WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-warehouse text-accent mr-1"></i> Lemari
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-chair text-accent mr-1"></i> Meja
-                                </span>
-                            </div>
-
-                            <div class="border-t border-gray-200 pt-4 mb-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gray-800 text-3xl font-bold">
-                                            Rp 2,5 Jt
-                                        </p>
-
-
-                                        <p class="text-text-gray text-sm">per bulan</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-text-gray">Deposit</p>
-                                        <p
-                                            class="text-primary font-semibold 
-                                        underline underline-offset-4 decoration-1 decoration-primary/30">
-                                            Rp 1 Jt
-                                        </p>
-
-                                    </div>
+                                <!-- Status -->
+                                <div
+                                    class="absolute top-4 left-4
+                    {{ $kamar->status === 'tersedia' ? 'bg-green-500' : 'bg-red-500' }}
+                    text-white px-4 py-2 rounded-full font-semibold">
+                                    {{ ucfirst($kamar->status) }}
                                 </div>
                             </div>
 
-                            <div class="flex gap-3">
-                                <a href="{{ route('user.kamar.detail') }}"
-                                    class="flex-1 inline-flex items-center justify-center border-2 border-accent text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold transition">
-                                    <i class="fas fa-info-circle mr-2"></i>
-                                    Detail
-                                </a>
+                            <!-- Content -->
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-accent mb-2">
+                                    {{ $kamar->nama_kamar }}
+                                </h3>
 
-                                <button
-                                    class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-calendar-check mr-2"></i>Booking
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                                <p class="text-text-gray text-sm mb-4">
+                                    {{ $kamar->deskripsi ?? 'Kamar nyaman dengan fasilitas lengkap.' }}
+                                </p>
 
-                    <!-- kamar no 2 -->
+                                <!-- Fasilitas (STATIS) -->
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="badge"><i class="fas fa-ruler-combined"></i> 4x5 m</span>
+                                    <span class="badge"><i class="fas fa-wind"></i> AC</span>
+                                    <span class="badge"><i class="fas fa-bath"></i> KM Dalam</span>
+                                    <span class="badge"><i class="fas fa-wifi"></i> WiFi</span>
+                                    <span class="badge"><i class="fas fa-chair"></i> Meja</span>
+                                </div>
 
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600"
-                                alt="Kamar Premium A1"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            <div
-                                class="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full font-semibold flex items-center shadow-lg">
-                                <i class="fas fa-check-circle mr-2"></i>Tersedia
-                            </div>
+                                <!-- Harga -->
+                                <div class="border-t pt-4 mb-4">
+                                    <p class="text-3xl font-bold text-gray-800">
+                                        Rp {{ number_format($kamar->harga_bulanan ?? 2500000, 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-sm text-text-gray">per bulan</p>
+                                </div>
 
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-accent tracking-tight mb-2">Kamar Premium A1</h3>
-                            <p class="text-text-gray text-sm mb-4">
-                                Kamar luas dengan interior modern, AC, dan kamar mandi dalam. Cocok untuk kenyamanan
-                                maksimal.
-                            </p>
-
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-ruler-combined text-accent mr-1"></i> 4x5 m
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wind text-accent mr-1"></i> AC
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-bath text-accent mr-1"></i> KM Dalam
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i> WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-warehouse text-accent mr-1"></i> Lemari
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-chair text-accent mr-1"></i> Meja
-                                </span>
-                            </div>
-
-                            <div class="border-t border-gray-200 pt-4 mb-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gray-800 text-3xl font-bold">
-                                            Rp 2,5 Jt
-                                        </p>
-
-
-                                        <p class="text-text-gray text-sm">per bulan</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-text-gray">Deposit</p>
-                                        <p
-                                            class="text-primary font-semibold 
-                                        underline underline-offset-4 decoration-1 decoration-primary/30">
-                                            Rp 1 Jt
-                                        </p>
-                                    </div>
+                                <!-- Button -->
+                                <div class="flex gap-3">
+                                    <a href="{{ route('user.kamar.detail', $kamar->id) }}"
+                                        class="flex-1 border-2 border-accent text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold text-center">
+                                        Detail
+                                    </a>
+                                    <button
+                                        class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold">
+                                        Booking
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="flex gap-3">
-                                <button
-                                    class="flex-1 border-2 border-accent text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold transition">
-                                    <i class="fas fa-info-circle mr-2"></i>Detail
-                                </button>
-                                <button
-                                    class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-calendar-check mr-2"></i>Booking
-                                </button>
-                            </div>
                         </div>
-                    </div>
-
-
-                    <!-- kamar no 3 -->
-                    <!-- Room Card 1 -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600"
-                                alt="Kamar Premium A1"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            <div
-                                class="absolute top-4 left-4 bg-green-500 text-white px-4 py-2 rounded-full font-semibold flex items-center shadow-lg">
-                                <i class="fas fa-check-circle mr-2"></i>Tersedia
-                            </div>
-
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-accent tracking-tight mb-2">Kamar Premium A1</h3>
-                            <p class="text-text-gray text-sm mb-4">
-                                Kamar luas dengan interior modern, AC, dan kamar mandi dalam. Cocok untuk kenyamanan
-                                maksimal.
-                            </p>
-
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-ruler-combined text-accent mr-1"></i> 4x5 m
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wind text-accent mr-1"></i> AC
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-bath text-accent mr-1"></i> KM Dalam
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i> WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-warehouse text-accent mr-1"></i> Lemari
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-chair text-accent mr-1"></i> Meja
-                                </span>
-                            </div>
-
-                            <div class="border-t border-gray-200 pt-4 mb-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gray-800 text-3xl font-bold">
-                                            Rp 2,5 Jt
-                                        </p>
-
-
-                                        <p class="text-text-gray text-sm">per bulan</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-text-gray">Deposit</p>
-                                        <p
-                                            class="text-primary font-semibold 
-                                        underline underline-offset-4 decoration-1 decoration-primary/30">
-                                            Rp 1 Jt
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-3">
-                                <button
-                                    class="flex-1 border-2 border-accent text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold transition">
-                                    <i class="fas fa-info-circle mr-2"></i>Detail
-                                </button>
-                                <button
-                                    class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-calendar-check mr-2"></i>Booking
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- kamar no 4 -->
-                    <!-- Room Card 1 -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600"
-                                alt="Kamar Premium A1"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                            <div
-                                class="absolute top-4 left-4 bg-green-500 text-white px-4 py-2 rounded-full font-semibold flex items-center shadow-lg">
-                                <i class="fas fa-check-circle mr-2"></i>Tersedia
-                            </div>
-
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-accent tracking-tight mb-2">Kamar Premium A1</h3>
-                            <p class="text-text-gray text-sm mb-4">
-                                Kamar luas dengan interior modern, AC, dan kamar mandi dalam. Cocok untuk kenyamanan
-                                maksimal.
-                            </p>
-
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-ruler-combined text-accent mr-1"></i> 4x5 m
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wind text-accent mr-1"></i> AC
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-bath text-accent mr-1"></i> KM Dalam
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i> WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-warehouse text-accent mr-1"></i> Lemari
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-chair text-accent mr-1"></i> Meja
-                                </span>
-                            </div>
-
-                            <div class="border-t border-gray-200 pt-4 mb-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gray-800 text-3xl font-bold">
-                                            Rp 2,5 Jt
-                                        </p>
-
-
-                                        <p class="text-text-gray text-sm">per bulan</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-text-gray">Deposit</p>
-                                        <p class="text-primary font-semibold">Rp 1 Jt</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex gap-3">
-                                <button
-                                    class="flex-1 border-2 border-accent text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold transition">
-                                    <i class="fas fa-info-circle mr-2"></i>Detail
-                                </button>
-                                <button
-                                    class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-calendar-check mr-2"></i>Booking
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
 
                 </div>
+
 
                 <!-- Pagination -->
                 <div class="flex justify-center items-center space-x-2 mt-12">
