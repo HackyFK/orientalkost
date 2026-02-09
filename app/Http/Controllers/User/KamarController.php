@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kamar;
 
 class KamarController extends Controller
 {
-    public function index()
+    public function show(Kamar $kamar)
     {
-        return view('user.kamar.index');
+        $kamar->load([
+            'kos',
+            'images',
+            'fasilitas'
+        ]);
+
+        return view('user.kamar.show', compact('kamar'));
     }
-
-    public function detail()
-    {
-        return view('user.kamar.detail');
-    }
-
-
-    
 }

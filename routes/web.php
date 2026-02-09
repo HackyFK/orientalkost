@@ -55,18 +55,22 @@ Route::name('user.')->group(function () {
 
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 
-    Route::get('/kos', [KosController::class, 'index'])->name('kos');
+    Route::get('/kos', [KosController::class, 'index'])
+        ->name('kos.index');
 
-    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar');
-      Route::get('/kamar/detail', [KamarController::class, 'detail'])
-        ->name('kamar.detail');
-    
+    Route::get('/kos/{kos}', [KosController::class, 'show'])
+        ->name('kos.show');
+
+
+    Route::get('/kamar/{kamar}', [KamarController::class, 'show'])
+        ->name('user.kamar.show');
+
+
+
 
     Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
-
-    
 });
 
 

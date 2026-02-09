@@ -203,8 +203,7 @@
                 <!-- Menu Desktop -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="{{ route('user.beranda') }}" class="text-text-light hover:text-accent transition">Home</a>
-                    <a href="{{ route('user.kamar') }}" class="text-text-light hover:text-accent transition">Kamar</a>
-                    <a href="{{ route('user.kos') }}" class="text-text-light hover:text-accent transition">Kos</a>
+                    <a href="{{ route('user.kos.index') }}" class="text-text-light hover:text-accent transition">Kos</a>
                     <a href="{{ route('user.galeri') }}" class="text-text-light hover:text-accent transition">Galeri</a>
                     <a href="{{ route('user.blog') }}" class="text-text-light hover:text-accent transition">Blog</a>
                     <a href="#kontak" class="text-text-light hover:text-accent transition">Kontak</a>
