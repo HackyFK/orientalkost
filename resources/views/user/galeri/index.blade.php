@@ -33,7 +33,7 @@
 
 
     <!-- Category Filter -->
-    <section class="bg-white border-b sticky top-[88px] z-40 shadow-sm">
+    <section class="bg-white border-b top-[88px] z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex flex-wrap items-center justify-center gap-3">
                 <button onclick="filterGallery('all')"
