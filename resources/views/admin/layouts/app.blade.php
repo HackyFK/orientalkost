@@ -30,7 +30,7 @@
                 {{-- <a href="{{ route('booking.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Booking</a> --}}
                 <a href="{{ route('admin.blog.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Blog</a>
                 <a href="{{ route('admin.galeri.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Galeri</a>
-                <a href="{{ route('admin.setting.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Setting</a>
+                <a href="{{ route('admin.settings.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Setting</a>
             </nav>
         </aside>
 

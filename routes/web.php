@@ -113,10 +113,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('review', AdminReviewController::class)
         ->only(['index', 'destroy']);
 
-    Route::get('setting', [AdminSettingController::class, 'index'])
-        ->name('setting.index');
+    Route::get('/settings', [AdminSettingController::class, 'index'])
+        ->name('settings.index');
 
-    Route::post('setting', [AdminSettingController::class, 'update'])
-        ->name('setting.update');
+    Route::put('/settings', [AdminSettingController::class, 'update'])
+        ->name('settings.update');
     // });
 });
