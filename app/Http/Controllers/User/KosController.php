@@ -9,7 +9,13 @@ class KosController extends Controller
 {
     public function index()
     {
-        $kos = Kos::with('primaryImage')->latest()->get();
+        $kos = Kos::with([
+            'primaryImage',
+            'kamars' => function ($q) {
+                $q->where('status', 'tersedia');
+            }
+        ])->latest()->get();
+
         return view('user.kos.index', compact('kos'));
     }
 
@@ -20,6 +26,9 @@ class KosController extends Controller
             'kamars.fasilitas'
         ]);
 
-        return view('user.kos.show', compact('kos'));
+        return view('user.kos.kamar', [
+            'kos'    => $kos,
+            'kamars' => $kos->kamars
+        ]);
     }
 }
