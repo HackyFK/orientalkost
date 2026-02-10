@@ -12,7 +12,7 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard', [
+        return view('admin.dashboard.index', [
             'kos' => Kos::count(),
             'kamar' => Kamar::count(),
             'booking' => Booking::where('status','pending')->count(),

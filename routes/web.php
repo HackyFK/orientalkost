@@ -55,11 +55,23 @@ Route::name('user.')->group(function () {
 
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 
-    Route::get('/kos', [KosController::class, 'index'])->name('kos');
+    Route::get('/kos', [KosController::class, 'index'])
+        ->name('kos.index');
+
+    Route::get('/kos/{kos}', [KosController::class, 'show'])
+        ->name('kos.show');
+
+
+    Route::get('/kamar/{kamar}', [KamarController::class, 'show'])
+        ->name('kamar.show');
+
+
+
 
     Route::get('/kamar', [KamarController::class, 'index'])->name('kamar');
     Route::get('/kamar/detail', [KamarController::class, 'detail'])
         ->name('kamar.detail');
+
 
 
     Route::get('/booking', [BookingController::class, 'index'])->name('booking');
@@ -116,10 +128,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('review', AdminReviewController::class)
         ->only(['index', 'destroy']);
 
-    Route::get('setting', [AdminSettingController::class, 'index'])
-        ->name('setting.index');
+    Route::get('/settings', [AdminSettingController::class, 'index'])
+        ->name('settings.index');
 
-    Route::post('setting', [AdminSettingController::class, 'update'])
-        ->name('setting.update');
+    Route::put('/settings', [AdminSettingController::class, 'update'])
+        ->name('settings.update');
     // });
 });

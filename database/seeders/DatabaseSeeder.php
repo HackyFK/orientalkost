@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             FasilitasSeeder::class,
+            KosKamarSeeder::class,
+            SettingsSeeder::class,
         ]);
     }
 }

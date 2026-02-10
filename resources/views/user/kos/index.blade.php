@@ -131,275 +131,109 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                    <!-- Kos Card -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 
-            overflow-hidden group flex flex-col">
+                    @foreach ($kos as $item)
+                        <div
+                            class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300
+                    overflow-hidden group flex flex-col">
 
-                        <!-- Image -->
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600"
-                                alt="KosKu Premium Residence"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="p-6 flex flex-col">
-                            <h3 class="text-2xl font-bold text-primary mb-2">
-                                KosKu Premium Residence
-                            </h3>
-
-                            <p class="text-text-gray text-sm mb-3 line-clamp-2">
-                                Kos modern dengan fasilitas lengkap di lokasi strategis dekat kampus dan pusat kota.
-                                WiFi cepat, keamanan 24 jam.
-                            </p>
-
-                            <!-- Fasilitas -->
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-door-open text-accent mr-1"></i>24 Kamar
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i>Free WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-parking text-accent mr-1"></i>Parkir
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-shield-alt text-accent mr-1"></i>Security
-                                </span>
+                            <!-- Image -->
+                            <div class="relative overflow-hidden h-64">
+                                <img src="{{ $item->primaryImage
+                                    ? asset('storage/' . $item->primaryImage->image_path)
+                                    : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600' }}"
+                                    alt="{{ $item->nama_kos }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                             </div>
 
-                            <!-- Status -->
-                            <div class="flex gap-3 mb-4">
-                                <span
-                                    class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-check-circle mr-2"></i>Tersedia
-                                </span>
-                                <span
-                                    class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-mars mr-2"></i>Putra
-                                </span>
-                            </div>
+                            <!-- Content -->
+                            <div class="p-6 flex flex-col">
+                                <h3 class="text-2xl font-bold text-primary mb-2">
+                                    {{ $item->nama_kos }}
+                                </h3>
 
+                                <p class="text-text-gray text-sm mb-3 line-clamp-2">
+                                    {{ $item->deskripsi ?? 'Kos nyaman dengan fasilitas lengkap di lokasi strategis.' }}
+                                </p>
 
-                            <!-- Rating & Jarak -->
-                            <div
-                                class="flex items-center justify-between mb-8
-            bg-gray-200/50 backdrop-blur-sm 
-            px-4 py-2 rounded-xl">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="font-bold text-primary">4.8</span>
-                                    <span class="text-sm text-text-gray">(127)</span>
+                                <!-- Fasilitas (STATIS) -->
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                        <i class="fas fa-door-open text-accent mr-1"></i>
+                                        {{ $item->kamars->count() }} Kamar
+                                    </span>
+
+                                    <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                        <i class="fas fa-wifi text-accent mr-1"></i>WiFi
+                                    </span>
+                                    <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                        <i class="fas fa-parking text-accent mr-1"></i>Parkir
+                                    </span>
+                                    <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                        <i class="fas fa-shield-alt text-accent mr-1"></i>Security
+                                    </span>
                                 </div>
 
+                                <!-- Status (STATIS) -->
+                                <div class="flex gap-3 mb-4">
+                                    <span
+                                        class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                                        <i class="fas fa-check-circle mr-2"></i>Tersedia
+                                    </span>
+                                    <span
+                                        class="bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                                        <i class="fas fa-venus mr-2"></i>Putri
+                                    </span>
+                                </div>
+
+                                <!-- Rating & Kamar Tersedia (STATIS) -->
                                 <div
-                                    class="flex items-center gap-2 text-sm 
-                text-purple-700 px-3 py-1.5 rounded-full font-semibold">
-                                    <i class="fas fa-bed"></i>
-                                    <span>12 Kamar Tersedia</span>
+                                    class="flex items-center justify-between mb-8
+                            bg-gray-200/50 backdrop-blur-sm
+                            px-4 py-2 rounded-xl">
+
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <span class="font-bold text-primary">4.8</span>
+                                        <span class="text-sm text-text-gray">(127)</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2 text-sm text-purple-700 font-semibold">
+                                        <i class="fas fa-bed"></i>
+                                        <span>{{ $item->kamars->count() }} Kamar Tersedia</span>
+                                    </div>
                                 </div>
-                            </div>
 
-
-
-                            <!-- Button -->
-                            <div class="grid grid-cols-1 gap-3">
-
-
-                                <a href="{{ route('user.kamar') }}"
-                                    class="inline-flex items-center bg-accent hover:bg-orange-600 text-white py-3 px-6 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-eye mr-2"></i>
-                                    Lihat Kamar
+                                <!-- Button -->
+                                <a href="{{ route('user.kos.show', $item->id) }}"
+                                    class="inline-flex items-center justify-center bg-accent hover:bg-orange-600
+          text-white py-3 rounded-xl font-semibold transition shadow-lg">
+                                    <i class="fas fa-eye mr-2"></i> Lihat Kamar
                                 </a>
 
                             </div>
                         </div>
-                    </div>
+                    @endforeach
 
-                    <!-- Kos Card -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 
-            overflow-hidden group flex flex-col">
-
-                        <!-- Image -->
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600"
-                                alt="KosKu Premium Residence"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="p-6 flex flex-col">
-                            <h3 class="text-2xl font-bold text-primary mb-2">
-                                KosKu Premium Residence
-                            </h3>
-
-                            <p class="text-text-gray text-sm mb-3 line-clamp-2">
-                                Kos modern dengan fasilitas lengkap di lokasi strategis dekat kampus dan pusat kota.
-                                WiFi cepat, keamanan 24 jam.
-                            </p>
-
-                            <!-- Fasilitas -->
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-door-open text-accent mr-1"></i>24 Kamar
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i>WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-parking text-accent mr-1"></i>Parkir
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-shield-alt text-accent mr-1"></i>Security
-                                </span>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="flex gap-3 mb-4">
-                                <span
-                                    class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-check-circle mr-2"></i>Tersedia
-                                </span>
-                                <span
-                                    class="bg-blue-100 text-pink-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-mars mr-2"></i>Putri
-                                </span>
-                            </div>
-
-
-                            <!-- Rating & Jarak -->
-                            <div
-                                class="flex items-center justify-between mb-8
-            bg-gray-200/50 backdrop-blur-sm 
-            px-4 py-2 rounded-xl">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="font-bold text-primary">4.8</span>
-                                    <span class="text-sm text-text-gray">(127)</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center gap-2 text-sm 
-                text-purple-700 px-3 py-1.5 rounded-full font-semibold">
-                                    <i class="fas fa-bed"></i>
-                                    <span>12 Kamar Tersedia</span>
-                                </div>
-                            </div>
-
-
-
-                            <!-- Button -->
-                            <div class="grid grid-cols-1 gap-3">
-
-                                <button
-                                    class="bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-eye mr-2"></i>Lihat Kamar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kos Card -->
-                    <div
-                        class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 
-            overflow-hidden group flex flex-col">
-
-                        <!-- Image -->
-                        <div class="relative overflow-hidden h-64">
-                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600"
-                                alt="KosKu Premium Residence"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="p-6 flex flex-col">
-                            <h3 class="text-2xl font-bold text-primary mb-2">
-                                KosKu Premium Residence
-                            </h3>
-
-                            <p class="text-text-gray text-sm mb-3 line-clamp-2">
-                                Kos modern dengan fasilitas lengkap di lokasi strategis dekat kampus dan pusat kota.
-                                WiFi cepat, keamanan 24 jam.
-                            </p>
-
-                            <!-- Fasilitas -->
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-door-open text-accent mr-1"></i>24 Kamar
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i>WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-parking text-accent mr-1"></i>Parkir
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">
-                                    <i class="fas fa-shield-alt text-accent mr-1"></i>Security
-                                </span>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="flex gap-3 mb-4">
-                                <span
-                                    class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-check-circle mr-2"></i>Tersedia
-                                </span>
-                                <span
-                                    class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-mars mr-2"></i>Campur
-                                </span>
-                            </div>
-
-
-                            <!-- Rating & Jarak -->
-                            <div
-                                class="flex items-center justify-between mb-8
-            bg-gray-200/50 backdrop-blur-sm 
-            px-4 py-2 rounded-xl">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="font-bold text-primary">4.8</span>
-                                    <span class="text-sm text-text-gray">(127)</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center gap-2 text-sm 
-                text-purple-700 px-3 py-1.5 rounded-full font-semibold">
-                                    <i class="fas fa-bed"></i>
-                                    <span>12 Kamar Tersedia</span>
-                                </div>
-                            </div>
-                            <!-- Button -->
-                            <div class="grid grid-cols-1 gap-3">
-
-                                <button
-                                    class="bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition shadow-lg">
-                                    <i class="fas fa-eye mr-2"></i>Lihat Kamar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Pagination -->
-                <div class="flex justify-center items-center space-x-2 mt-12">
-                    <button
-                        class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="w-10 h-10 rounded-lg bg-accent text-white font-semibold">1</button>
-                    <button
-                        class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition">2</button>
-                    <button
-                        class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
                 </div>
             </div>
+        </section>
+
+
+        <!-- Pagination -->
+        <div class="flex justify-center items-center space-x-2 mt-12">
+            <button
+                class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="w-10 h-10 rounded-lg bg-accent text-white font-semibold">1</button>
+            <button
+                class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition">2</button>
+            <button
+                class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        </div>
         </section>
 
         <!-- CTA SECTION -->

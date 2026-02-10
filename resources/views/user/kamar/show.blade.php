@@ -31,8 +31,12 @@
                     <div
                         class="relative overflow-hidden rounded-3xl shadow-lg
                 md:col-span-2 md:row-span-2 group">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200"
-                            class="w-full h-full object-cover group-hover:scale-110 transition">
+                        <!-- Gambar Utama -->
+                        <img src="{{ $kamar->images->first()
+                            ? asset('storage/' . $kamar->images->first()->image_path)
+                            : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200' }}"
+                            class="w-full h-full object-cover">
+
                     </div>
 
 
@@ -75,14 +79,15 @@
                                     <div class="flex items-center gap-3 mb-3">
                                         <i class="fas fa-building text-2xl text-accent"></i>
                                         <h1 class="text-4xl font-bold text-primary">
-                                            KosKu Premium Residence
+                                            {{ $kamar->nama_kamar }}
                                         </h1>
                                     </div>
 
                                     <div class="flex items-center space-x-2 text-text-gray mb-4">
 
-                                        <p class="text-lg">Jl. Pendidikan Raya No. 123, Kelurahan Suka Maju, Kecamatan Cipta
-                                            Karya, Kota Metropolitan, Provinsi Jawa Barat 40132</p>
+                                        <p class="text-text-gray">
+                                            {{ $kamar->kos->alamat }}
+                                        </p>
                                     </div>
                                     <div class="flex items-center space-x-6">
                                         <div class="flex items-center space-x-2">
@@ -110,41 +115,29 @@
                                 <i class="fas fa-concierge-bell text-accent mr-3"></i>
                                 Fasilitas Kos
                             </h2>
+
                             <div class="grid md:grid-cols-2 gap-4">
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-wifi text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">WiFi Super Cepat</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-shield-alt text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Security 24 Jam</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-video text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">CCTV Area Publik</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-parking text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Parkir Motor & Mobil</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-utensils text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Dapur Bersama</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-tshirt text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Laundry Service</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-couch text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Ruang Tamu</span>
-                                </div>
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
-                                    <i class="fas fa-dumbbell text-accent text-xl"></i>
-                                    <span class="text-primary font-medium">Area Fitness</span>
-                                </div>
+
+                                @forelse ($kamar->fasilitas as $fasilitas)
+                                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
+
+                                        <i
+                                            class="{{ $fasilitas->icon ?? 'fa-solid fa-circle-check' }}
+                   text-accent text-xl"></i>
+
+                                        <span class="text-primary font-medium">
+                                            {{ $fasilitas->nama_fasilitas }}
+                                        </span>
+                                    </div>
+                                @empty
+                                    <div class="md:col-span-2 text-text-gray text-sm">
+                                        Fasilitas belum tersedia
+                                    </div>
+                                @endforelse
+
                             </div>
                         </div>
+
 
                         <!-- Deskripsi -->
                         <div class="bg-white rounded-3xl shadow-lg p-8">
@@ -152,15 +145,8 @@
                                 <i class="fas fa-info-circle text-accent mr-3"></i>
                                 Deskripsi Kamar
                             </h2>
-                            <p class="text-text-gray leading-relaxed mb-4">
-                                KosKu Premium Residence adalah hunian kos modern yang dirancang khusus untuk mahasiswa dan
-                                pekerja profesional yang menginginkan kenyamanan maksimal. Terletak di lokasi strategis
-                                dengan akses mudah ke berbagai kampus ternama dan pusat kota.
-                            </p>
                             <p class="text-text-gray leading-relaxed">
-                                Dengan desain interior kontemporer, fasilitas lengkap, dan sistem keamanan 24 jam, kami
-                                berkomitmen memberikan pengalaman tinggal yang tak terlupakan. Setiap kamar dilengkapi
-                                dengan furniture berkualitas dan koneksi internet berkecepatan tinggi.
+                                {{ $kamar->deskripsi ?? 'Deskripsi kamar belum tersedia.' }}
                             </p>
                         </div>
 
@@ -336,7 +322,9 @@
                             <div class="mb-6">
                                 <p class="text-sm text-text-gray mb-2">Mulai dari</p>
                                 <div class="flex items-baseline space-x-2">
-                                    <span class="text-4xl font-bold text-accent">Rp 800rb</span>
+                                    <span class="text-4xl font-bold text-accent">
+                                        Rp {{ number_format($kamar->harga_bulanan ?? 800000, 0, ',', '.') }}
+                                    </span>
                                     <span class="text-text-gray">/bulan</span>
                                 </div>
                             </div>
@@ -398,7 +386,7 @@
                                     Chat WhatsApp
                                 </button>
                                 <button
-                                    class="w-full border-2 border-gray-300 
+                                    class="w-full border-2 border-gray-300
            hover:border-yellow-400 text-yellow-400 py-4 rounded-xl transition flex items-center justify-center">
 
                                     <i class="fas fa-star text-yellow-400 text-xl mr-3"></i>

@@ -22,8 +22,8 @@
 
                     <!-- Badge -->
                     <div
-                        class="inline-flex items-center gap-2 mb-6 px-5 py-2 
-                       bg-white/15 backdrop-blur-md 
+                        class="inline-flex items-center gap-2 mb-6 px-5 py-2
+                       bg-white/15 backdrop-blur-md
                        rounded-full text-sm font-semibold">
                         <i class="fas fa-bed text-accent"></i>
                         Kamar Siap Huni
@@ -31,7 +31,7 @@
 
                     <!-- Title -->
                     <h1
-                        class="text-4xl md:text-6xl font-extrabold mb-6 
+                        class="text-4xl md:text-6xl font-extrabold mb-6
            leading-tight tracking-tight drop-shadow-xl">
 
                         Data
@@ -217,7 +217,7 @@
                                     <div class="text-right">
                                         <p class="text-sm text-text-gray">Deposit</p>
                                         <p
-                                            class="text-primary font-semibold 
+                                            class="text-primary font-semibold
                                         underline underline-offset-4 decoration-1 decoration-primary/30">
                                             Rp 1 Jt
                                         </p>
@@ -296,7 +296,7 @@
                                     <div class="text-right">
                                         <p class="text-sm text-text-gray">Deposit</p>
                                         <p
-                                            class="text-primary font-semibold 
+                                            class="text-primary font-semibold
                                         underline underline-offset-4 decoration-1 decoration-primary/30">
                                             Rp 1 Jt
                                         </p>
@@ -373,7 +373,7 @@
                                     <div class="text-right">
                                         <p class="text-sm text-text-gray">Deposit</p>
                                         <p
-                                            class="text-primary font-semibold 
+                                            class="text-primary font-semibold
                                         underline underline-offset-4 decoration-1 decoration-primary/30">
                                             Rp 1 Jt
                                         </p>
