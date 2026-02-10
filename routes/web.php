@@ -68,6 +68,12 @@ Route::name('user.')->group(function () {
 
 
 
+    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar');
+    Route::get('/kamar/detail', [KamarController::class, 'detail'])
+        ->name('kamar.detail');
+
+
+
     Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
@@ -105,6 +111,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('fasilitas', AdminFasilitasController::class);
 
     Route::resource('blog', AdminBlogController::class);
+
+    Route::post('blog/{blog}/publish', [AdminBlogController::class, 'publish'])
+        ->name('blog.publish');
+
+    Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
+        ->name('blog.unpublish');
+
+
+
     Route::resource('galeri', AdminGaleriController::class);
 
     Route::resource('booking', BookingController::class)
