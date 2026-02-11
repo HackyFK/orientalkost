@@ -47,6 +47,7 @@ use App\Http\Controllers\User\TransaksiController;
 |--------------------------------------------------------------------------
 */
 
+// Route::prefix('user')->name('user.')->group(function () {
 Route::name('user.')->group(function () {
 
     Route::get('/', [BerandaController::class, 'index'])->name('beranda');
@@ -73,8 +74,22 @@ Route::name('user.')->group(function () {
         ->name('kamar.detail');
 
 
+    // BOOKING
+    Route::get('/booking', [BookingController::class, 'index'])
+        ->name('booking');
 
-    Route::get('/booking', [BookingController::class, 'index'])->name('booking');
+    Route::get('/booking/{kamar}', [BookingController::class, 'create'])
+        ->name('booking.create');
+
+    Route::get('/booking/{booking}/payment', [BookingController::class, 'payment'])
+        ->name('booking.payment');
+
+    Route::post('/booking/{kamar}', [BookingController::class, 'store'])
+        ->name('booking.store');
+
+    Route::get('/booking/success/{booking}', [BookingController::class, 'success'])
+        ->name('booking.success');
+
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
 });

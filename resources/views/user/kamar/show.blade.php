@@ -8,7 +8,7 @@
         <!-- TOMBOL KEMBALI -->
         <section class="pt-28 pb-6 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <a href="data-kamar.html"
+                <a href="{{ url()->previous() }}"
                     class="inline-flex items-center gap-2 text-sm font-medium text-primary
                   hover:text-accent transition">
                     <i class="fas fa-arrow-left"></i>
@@ -375,7 +375,7 @@
 
                             <!-- CTA Buttons -->
                             <div class="space-y-3">
-                                <a href="{{ route('user.booking') }}"
+                                <a href="{{ route('user.booking.create', $kamar->id) }}"
                                     class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg transition shadow-lg flex items-center justify-center">
                                     <i class="fas fa-calendar-check mr-3"></i>
                                     Booking Sekarang
