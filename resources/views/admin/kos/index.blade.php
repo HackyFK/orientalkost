@@ -19,7 +19,8 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2">Foto</th>
+                    <th class="px-4 py-2">Foto Kos</th>
+                    <th class="px-4 py-2">Owner</th>
                     <th class="px-4 py-2">Nama</th>
                     <th class="px-4 py-2">Alamat</th>
                     <th class="px-4 py-2">Jenis</th>
@@ -38,6 +39,10 @@
                             @else
                                 <span class="text-gray-400">No Image</span>
                             @endif
+                        </td>
+
+                        <td class="px-4 py-2">
+                            {{ $kos->owner->name ?? '-' }}
                         </td>
 
                         <td class="px-4 py-2 font-semibold">

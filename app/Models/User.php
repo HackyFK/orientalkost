@@ -19,6 +19,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nomor_identitas',
+        'phone',
+        'alamat',
         'password',
     ];
 
@@ -37,6 +40,12 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+
+    public function kos()
+    {
+        return $this->hasMany(Kos::class, 'owner_id');
+    }
+
     protected function casts(): array
     {
         return [
