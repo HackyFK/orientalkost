@@ -5,17 +5,20 @@
     <body class="bg-gray-50">
 
 
+
         <!-- TOMBOL KEMBALI -->
         <section class="pt-28 pb-6 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <a href="data-kamar.html"
+                <a href="{{ url()->previous() }}"
                     class="inline-flex items-center gap-2 text-sm font-medium text-primary
-                  hover:text-accent transition">
+           hover:text-accent transition">
                     <i class="fas fa-arrow-left"></i>
                     Kembali
                 </a>
             </div>
         </section>
+
+
 
 
         <!-- GALLERY SECTION -->
@@ -89,21 +92,31 @@
                                             {{ $kamar->kos->alamat }}
                                         </p>
                                     </div>
-                                    <div class="flex items-center space-x-6">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="flex text-yellow-400 text-xl">
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star"></i>
-                                                <i class="fas fa-star-half-alt"></i>
-                                            </div>
-                                            <span class="text-2xl font-bold text-primary">4.8</span>
-                                            <span class="text-text-gray">(127 ulasan)</span>
-                                        </div>
+                                    @php
+                                        $fullStars = floor($averageRating);
+                                        $halfStar = $averageRating - $fullStars >= 0.5;
+                                    @endphp
+
+                                    <div class="flex text-yellow-400 text-xl">
+                                        @for ($i = 0; $i < $fullStars; $i++)
+                                            <i class="fas fa-star"></i>
+                                        @endfor
+
+                                        @if ($halfStar)
+                                            <i class="fas fa-star-half-alt"></i>
+                                        @endif
+
+                                        @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
+                                            <i class="far fa-star"></i>
+                                        @endfor
                                     </div>
+
+                                    <span
+                                        class="text-2xl font-bold text-primary">{{ number_format($averageRating, 1) }}</span>
+                                    <span class="text-text-gray">({{ $totalReviews }} ulasan)</span>
+
                                 </div>
-                                <button class="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition">
+                                <button class="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition" type="button">
                                     <i class="fas fa-share-alt text-primary text-xl"></i>
                                 </button>
                             </div>
@@ -161,9 +174,7 @@
                                     <i class="fas fa-comments text-accent mr-3"></i>
                                     Ulasan Penghuni Kamar
                                 </h2>
-                                <button class="text-accent hover:text-orange-600 font-semibold">
-                                    Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
-                                </button>
+
                             </div>
 
                             <!-- Rating Summary -->
@@ -171,147 +182,118 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <div class="flex items-center space-x-3 mb-2">
-                                            <span class="text-5xl font-bold text-primary">4.8</span>
+                                            <span
+                                                class="text-5xl font-bold text-primary">{{ number_format($averageRating, 1) }}</span>
                                             <div>
                                                 <div class="flex text-yellow-400 text-xl mb-1">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
+                                                    @php
+                                                        $fullStars = floor($averageRating);
+                                                        $halfStar = $averageRating - $fullStars >= 0.5;
+                                                    @endphp
+
+                                                    @for ($i = 0; $i < $fullStars; $i++)
+                                                        <i class="fas fa-star"></i>
+                                                    @endfor
+
+                                                    @if ($halfStar)
+                                                        <i class="fas fa-star-half-alt"></i>
+                                                    @endif
+
+                                                    @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
+                                                        <i class="far fa-star"></i>
+                                                    @endfor
                                                 </div>
-                                                <p class="text-text-gray text-sm">dari 127 ulasan</p>
+                                                <p class="text-text-gray text-sm">dari {{ $totalReviews }} ulasan</p>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="space-y-2 flex-1 max-w-sm ml-8">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-primary w-8">5★</span>
-                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-accent rounded-full h-2" style="width: 85%"></div>
+                                        @for ($i = 5; $i >= 1; $i--)
+                                            <div class="flex items-center space-x-2">
+                                                <span class="text-sm text-primary w-8">{{ $i }}★</span>
+                                                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-accent rounded-full h-2"
+                                                        style="width: {{ number_format($ratingPercentages[$i], 1) }}%">
+                                                    </div>
+                                                </div>
+                                                <span class="text-sm text-text-gray w-8">{{ $ratingCounts[$i] }}</span>
                                             </div>
-                                            <span class="text-sm text-text-gray w-8">108</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-primary w-8">4★</span>
-                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-accent rounded-full h-2" style="width: 12%"></div>
-                                            </div>
-                                            <span class="text-sm text-text-gray w-8">15</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-primary w-8">3★</span>
-                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-accent rounded-full h-2" style="width: 2%"></div>
-                                            </div>
-                                            <span class="text-sm text-text-gray w-8">3</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-primary w-8">2★</span>
-                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-accent rounded-full h-2" style="width: 1%"></div>
-                                            </div>
-                                            <span class="text-sm text-text-gray w-8">1</span>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-sm text-primary w-8">1★</span>
-                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                                <div class="bg-accent rounded-full h-2" style="width: 0%"></div>
-                                            </div>
-                                            <span class="text-sm text-text-gray w-8">0</span>
-                                        </div>
+                                        @endfor
                                     </div>
                                 </div>
                             </div>
+
 
                             <!-- Reviews -->
                             <div class="space-y-4">
-                                <div class="border-b border-gray-200 pb-4">
-                                    <div class="flex items-start space-x-4">
-                                        <img src="https://i.pravatar.cc/100?img=1" alt="User"
-                                            class="w-12 h-12 rounded-full">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div>
-                                                    <h4 class="font-semibold text-primary">Budi Santoso</h4>
-                                                    <div class="flex items-center space-x-2">
-                                                        <div class="flex text-yellow-400 text-sm">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <span class="text-xs text-text-gray">2 minggu lalu</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p class="text-text-gray text-sm leading-relaxed">
-                                                Kos yang sangat nyaman dan bersih. Fasilitas lengkap, WiFi cepat, dan
-                                                security 24 jam membuat saya merasa aman. Pengelola sangat responsif dan
-                                                ramah. Highly recommended!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @foreach ($kamar->reviews as $review)
+                                    <div class="border-b border-gray-200 pb-4">
+                                        <div class="flex items-start space-x-4">
 
-                                <div class="border-b border-gray-200 pb-4">
-                                    <div class="flex items-start space-x-4">
-                                        <img src="https://i.pravatar.cc/100?img=5" alt="User"
-                                            class="w-12 h-12 rounded-full">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div>
-                                                    <h4 class="font-semibold text-primary">Siti Nurhaliza</h4>
-                                                    <div class="flex items-center space-x-2">
-                                                        <div class="flex text-yellow-400 text-sm">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <span class="text-xs text-text-gray">1 bulan lalu</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p class="text-text-gray text-sm leading-relaxed">
-                                                Lokasi strategis dekat kampus dan pusat kota. Kamar luas, AC dingin, dan
-                                                kamar mandi bersih. Suasana kos tenang cocok untuk belajar. Worth the price!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                            {{-- Avatar dinamis --}}
+                                            @php
+                                                $initial = strtoupper(substr($review->user->name ?? 'U', 0, 1));
 
-                                <div class="pb-4">
-                                    <div class="flex items-start space-x-4">
-                                        <img src="https://i.pravatar.cc/100?img=8" alt="User"
-                                            class="w-12 h-12 rounded-full">
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div>
-                                                    <h4 class="font-semibold text-primary">Ahmad Fauzi</h4>
-                                                    <div class="flex items-center space-x-2">
-                                                        <div class="flex text-yellow-400 text-sm">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="far fa-star"></i>
+                                                // Warna bg berdasarkan hash nama (agar selalu sama untuk user yang sama)
+                                                $colors = [
+                                                    'bg-red-500',
+                                                    'bg-green-500',
+                                                    'bg-blue-500',
+                                                    'bg-yellow-500',
+                                                    'bg-purple-500',
+                                                    'bg-pink-500',
+                                                    'bg-indigo-500',
+                                                ];
+                                                $colorIndex = isset($review->user->name)
+                                                    ? ord(strtolower($review->user->name[0])) % count($colors)
+                                                    : 0;
+                                                $bgColor = $colors[$colorIndex];
+                                            @endphp
+
+                                            <div
+                                                class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold {{ $bgColor }}">
+                                                {{ $initial }}
+                                            </div>
+
+                                            <div class="flex-1">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div>
+                                                        <h4 class="font-semibold text-primary">
+                                                            {{ $review->user->name ?? 'User' }}</h4>
+                                                        <div class="flex items-center space-x-2">
+                                                            <div class="flex text-yellow-400 text-sm">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= $review->rating)
+                                                                        <i class="fas fa-star"></i>
+                                                                    @elseif($i - $review->rating < 1)
+                                                                        <i class="fas fa-star-half-alt"></i>
+                                                                    @else
+                                                                        <i class="far fa-star"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <span class="text-xs text-text-gray">
+                                                                {{ $review->created_at->diffForHumans() }}
+                                                            </span>
                                                         </div>
-                                                        <span class="text-xs text-text-gray">2 bulan lalu</span>
                                                     </div>
                                                 </div>
+                                                <p class="text-text-gray text-sm leading-relaxed">
+                                                    {{ $review->ulasan ?? '-' }}
+                                                </p>
                                             </div>
-                                            <p class="text-text-gray text-sm leading-relaxed">
-                                                Overall bagus, hanya kadang WiFi agak lambat di jam sibuk. Tapi untuk harga
-                                                segini, fasilitasnya sudah sangat memuaskan. Proses booking juga mudah dan
-                                                cepat.
-                                            </p>
+
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
+
+                                @if ($kamar->reviews->isEmpty())
+                                    <p class="text-sm text-text-gray">Belum ada ulasan untuk kamar ini.</p>
+                                @endif
                             </div>
+
+
                         </div>
 
                     </div>
@@ -334,11 +316,13 @@
                                 <label class="block text-sm font-semibold text-primary mb-3">Jenis Sewa</label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <button
-                                        class="border-2 border-accent bg-accent text-white py-3 rounded-xl font-semibold transition">
+                                        class="border-2 border-accent bg-accent text-white py-3 rounded-xl font-semibold transition"
+                                        type="button">
                                         Bulanan
                                     </button>
                                     <button
-                                        class="border-2 border-gray-300 text-gray-700 hover:border-accent hover:text-accent py-3 rounded-xl font-semibold transition">
+                                        class="border-2 border-gray-300 text-gray-700 hover:border-accent hover:text-accent py-3 rounded-xl font-semibold transition"
+                                        type="button">
                                         Tahunan
                                     </button>
                                 </div>
@@ -381,61 +365,156 @@
                                     Booking Sekarang
                                 </a>
                                 <button
-                                    class="w-full border-2 border-accent text-accent hover:bg-accent hover:text-white py-4 rounded-xl font-semibold transition flex items-center justify-center">
+                                    class="w-full border-2 border-accent text-accent hover:bg-accent hover:text-white py-4 rounded-xl font-semibold transition flex items-center justify-center"
+                                    type="button">
                                     <i class="fab fa-whatsapp mr-3 text-xl"></i>
                                     Chat WhatsApp
                                 </button>
-                                <button
-                                    class="w-full border-2 border-gray-300
-           hover:border-yellow-400 text-yellow-400 py-4 rounded-xl transition flex items-center justify-center">
+                                <button type="button" onclick="checkBooking({{ $hasBooked ? 'true' : 'false' }})"
+                                    class="w-full border-2 border-gray-300 hover:border-yellow-400
+    text-yellow-400 py-4 rounded-xl transition flex items-center justify-center">
 
-                                    <i class="fas fa-star text-yellow-400 text-xl mr-3"></i>
+                                    <i class="fas fa-star text-xl mr-3"></i>
                                     <span class="font-semibold text-primary tracking-wide">
                                         Rating Kamar
                                     </span>
                                 </button>
 
+                                {{-- MODAL --}}
+                                <div id="ratingModal"
+                                    class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
 
-                                <!-- Popup Pemberitahuan -->
-                                <div id="bookingModal"
-                                    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+                                    <form action="{{ route('user.reviews.store', $kamar->id) }}" method="POST"
+                                        class="bg-white p-6 rounded-xl shadow w-full max-w-md">
+                                        @csrf
+
+                                        <label class="block mb-2 font-semibold">Rating</label>
+                                        <select name="rating" required class="w-full border rounded-lg p-2 mb-4">
+                                            <option value="">Pilih Rating</option>
+                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                            <option value="4">⭐⭐⭐⭐</option>
+                                            <option value="3">⭐⭐⭐</option>
+                                            <option value="2">⭐⭐</option>
+                                            <option value="1">⭐</option>
+                                        </select>
+
+                                        <textarea name="ulasan" class="w-full border rounded-lg p-3 mb-4" placeholder="Tulis ulasan (opsional)"></textarea>
+
+                                        <button type="submit"
+                                            class="w-full border-2 border-yellow-400 text-yellow-500
+            hover:bg-yellow-400 hover:text-white py-3 rounded-xl transition
+            flex items-center justify-center">
+                                            <i class="fas fa-star mr-2"></i>
+                                            Kirim Rating
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            @if (session('success'))
+                                <div id="successModal"
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 
                                     <div
                                         class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
 
                                         <div
-                                            class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-orange-100 text-accent">
-                                            <i class="fas fa-info-circle text-3xl"></i>
+                                            class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500">
+                                            <i class="fas fa-clock text-3xl"></i>
                                         </div>
 
                                         <h3 class="text-xl font-bold text-primary mb-2">
-                                            Informasi Booking
+                                            Rating Berhasil Dikirim 🎉
                                         </h3>
 
-                                        <p class="text-textGray mb-6">
-                                            Kamar<span class="font-semibold text-accent ml-1">bisa dibooking dari tanggal
-                                                1</span>.
-                                            <br>
-                                            Harap pilih tanggal 1 disetiap bulan yang anda pilih dan berapa lama durasi kos
+                                        <p class="text-text-gray mb-6">
+                                            Terima kasih! Rating kamu <br>
+                                            <span class="font-semibold text-yellow-500">
+                                                sedang menunggu persetujuan admin
+                                            </span>.
                                         </p>
 
-                                        <button id="closeModal"
+                                        <button onclick="closeSuccessModal()"
                                             class="w-full bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
-                                            MENGERTI!
+                                            Mengerti
                                         </button>
-
-                                        <a href="panduan.html"
-                                            class="block w-full bg-primary hover:bg-secondary text-white py-3 rounded-xl font-semibold transition
-          flex items-center justify-center mt-3 gap-3">
-                                            <i class="fas fa-book-open text-lg"></i>
-                                            Baca Panduan
-                                        </a>
-
                                     </div>
                                 </div>
+                            @endif
 
 
+
+
+
+
+
+                            <!-- Popup Pemberitahuan -->
+                            <div id="bookingModal"
+                                class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+
+                                <div
+                                    class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
+
+                                    <div
+                                        class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-orange-100 text-accent">
+                                        <i class="fas fa-info-circle text-3xl"></i>
+                                    </div>
+
+                                    <h3 class="text-xl font-bold text-primary mb-2">
+                                        Informasi Booking
+                                    </h3>
+
+                                    <p class="text-textGray mb-6">
+                                        Kamar<span class="font-semibold text-accent ml-1">bisa dibooking dari tanggal
+                                            1</span>.
+                                        <br>
+                                        Harap pilih tanggal 1 disetiap bulan yang anda pilih dan berapa lama durasi kos
+                                    </p>
+
+                                    <button id="closeModal" type="button"
+                                        class="w-full bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
+                                        MENGERTI!
+                                    </button>
+
+                                    <a href="panduan.html"
+                                        class="block w-full bg-primary hover:bg-secondary text-white py-3 rounded-xl font-semibold transition
+          flex items-center justify-center mt-3 gap-3">
+                                        <i class="fas fa-book-open text-lg"></i>
+                                        Baca Panduan
+                                    </a>
+
+                                </div>
                             </div>
+
+                            @if (session('error'))
+                                <div id="errorModal"
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+                                    <div
+                                        class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
+
+                                        <div
+                                            class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100 text-red-500">
+                                            <i class="fas fa-exclamation-circle text-3xl"></i>
+                                        </div>
+
+                                        <h3 class="text-xl font-bold text-primary mb-2">
+                                            Rating Sudah Ada ⭐
+                                        </h3>
+
+                                        <p class="text-text-gray mb-6">
+                                            {{ session('error') }}
+                                        </p>
+
+                                        <button onclick="closeErrorModal()"
+                                            class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
+                                            Mengerti
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+
+
 
                             <!-- Info -->
                             <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
@@ -446,10 +525,13 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
+                        </div>
+
+                    </div>
                 </div>
+
+            </div>
             </div>
         </section>
 
@@ -459,22 +541,59 @@
             <i class="fas fa-arrow-up text-xl"></i>
         </button>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        {{-- Raing --}}
         <script>
-            const bookingBtn = document.getElementById('bookingBtn');
-            const bookingModal = document.getElementById('bookingModal');
-            const closeModal = document.getElementById('closeModal');
+            function openRatingModal() {
+                document.getElementById('ratingModal').classList.remove('hidden');
+                document.getElementById('ratingModal').classList.add('flex');
+            }
 
-            bookingBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                bookingModal.classList.remove('hidden');
-                bookingModal.classList.add('flex');
-            });
-
-            closeModal.addEventListener('click', function() {
-                window.location.href = "booking.html";
-            });
+            function closeRatingModal() {
+                document.getElementById('ratingModal').classList.add('hidden');
+            }
         </script>
 
+        {{-- CEK BOOKING --}}
+        <script>
+            function checkBooking(hasBooked) {
+                if (hasBooked) {
+                    openRatingModal();
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Belum Pernah Booking',
+                        text: 'Silakan booking kamar terlebih dahulu sebelum memberi rating.',
+                        confirmButtonColor: '#f59e0b'
+                    });
+                }
+            }
+        </script>
+
+        @if (session('success'))
+            <script>
+                setTimeout(() => {
+                    const modal = document.getElementById('successModal');
+                    if (modal) modal.classList.add('hidden');
+                }, 8000);
+            </script>
+        @endif
+
+        <script>
+            function closeErrorModal() {
+                document.getElementById('errorModal')?.classList.add('hidden');
+            }
+        </script>
+
+        <script>
+            function closeSuccessModal() {
+                const modal = document.getElementById('successModal');
+                if (modal) {
+                    modal.classList.add('hidden'); // sembunyikan modal
+                }
+            }
+        </script>
 
 
     </body>

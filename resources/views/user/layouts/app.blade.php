@@ -2,6 +2,7 @@
 <html lang="id">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- SEO Meta Tags -->
     <meta name="description" content="{{ setting('seo_description', 'Website kos modern dan terpercaya') }}">
     <meta name="keywords" content="{{ setting('seo_keywords', 'kos, kamar, sewa kos') }}">

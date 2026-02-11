@@ -66,7 +66,7 @@
                                 </td>
 
                                 <td class="p-3 text-center">
-                                    -
+                                    {{ $blog->likes }}
                                 </td>
 
                                 {{-- STATUS --}}

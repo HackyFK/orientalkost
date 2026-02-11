@@ -18,6 +18,7 @@ use App\Http\Controllers\User\GaleriController;
 use App\Http\Controllers\User\KosController;
 use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\User\TransaksiController;
+use App\Http\Controllers\User\ReviewController;
 
 
 
@@ -52,27 +53,49 @@ Route::name('user.')->group(function () {
     Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 
     Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/blog/{blog}', [BlogController::class, 'show'])
+    ->name('blog.show');
+    Route::post('/blog/{blog}/like', [BlogController::class, 'toggleLike'])
+    ->name('blog.like')
+    ->middleware('auth');
 
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 
-    Route::get('/kos', [KosController::class, 'index'])
-        ->name('kos.index');
+    Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 
-    Route::get('/kos/{kos}', [KosController::class, 'show'])
-        ->name('kos.show');
+   
+    Route::post('/kos/{kos}/like', [KosController::class, 'like'])
+         ->name('kos.like')
+         ->middleware('auth');
+
+
+    Route::get('/kos/{kos}', [KosController::class, 'show'])->name('kos.show');
+
+
+
 
 
     Route::get('/kamar/{kamar}', [KamarController::class, 'show'])
         ->name('kamar.show');
 
+    Route::post('/kamar/{kamar}/review', [ReviewController::class, 'store'])
+        ->name('reviews.store');
 
+    Route::get('/reviews', [ReviewController::class, 'myReviews'])
+        ->name('reviews.mine');
 
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])
+        ->name('reviews.edit');
+
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])
+        ->name('reviews.update');
+
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
 
     Route::get('/kamar', [KamarController::class, 'index'])->name('kamar');
     Route::get('/kamar/detail', [KamarController::class, 'detail'])
         ->name('kamar.detail');
-
-
 
     Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
@@ -120,6 +143,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 
+
+
     Route::resource('galeri', AdminGaleriController::class);
 
     Route::resource('booking', BookingController::class)
@@ -127,6 +152,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('review', AdminReviewController::class)
         ->only(['index', 'destroy']);
+        Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
     Route::get('/settings', [AdminSettingController::class, 'index'])
         ->name('settings.index');
@@ -134,4 +160,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/settings', [AdminSettingController::class, 'update'])
         ->name('settings.update');
     // });
+
+    Route::get('/reviews', [AdminReviewController::class, 'index'])
+        ->name('reviews.index');
+
+    Route::patch('/admin/reviews/{review}/status', [AdminReviewController::class, 'updateStatus'])
+        ->name('reviews.status');
+
+    Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
 });
