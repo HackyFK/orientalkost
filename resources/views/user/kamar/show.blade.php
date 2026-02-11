@@ -375,11 +375,29 @@
 
                             <!-- CTA Buttons -->
                             <div class="space-y-3">
-                                <a href="{{ route('user.booking.create', $kamar->id) }}"
-                                    class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg transition shadow-lg flex items-center justify-center">
-                                    <i class="fas fa-calendar-check mr-3"></i>
-                                    Booking Sekarang
-                                </a>
+                                @guest
+                                    <button
+                                        class="w-full bg-gray-400 text-white py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center cursor-not-allowed relative group">
+
+                                        <i class="fas fa-calendar-check mr-3"></i>
+                                        Booking Sekarang
+
+                                        <!-- Tooltip -->
+                                        <span
+                                            class="absolute -top-10 bg-black text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                                            Login untuk booking
+                                        </span>
+                                    </button>
+                                @endguest
+
+                                @auth
+                                    <a href="{{ route('user.booking.create', $kamar->id) }}"
+                                        class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg transition shadow-lg flex items-center justify-center">
+                                        <i class="fas fa-calendar-check mr-3"></i>
+                                        Booking Sekarang
+                                    </a>
+                                @endauth
+
                                 <button
                                     class="w-full border-2 border-accent text-accent hover:bg-accent hover:text-white py-4 rounded-xl font-semibold transition flex items-center justify-center">
                                     <i class="fab fa-whatsapp mr-3 text-xl"></i>

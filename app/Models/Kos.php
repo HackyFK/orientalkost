@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kos extends Model
 {
     protected $fillable = [
+        'owner_id',
         'nama_kos',
         'slug',
         'deskripsi',
@@ -16,7 +17,12 @@ class Kos extends Model
         'jenis_sewa'
     ];
 
-    public function kamars  ()
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function kamars()
     {
         return $this->hasMany(Kamar::class);
     }

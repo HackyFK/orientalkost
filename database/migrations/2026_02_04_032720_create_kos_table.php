@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('kos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('owner_id')
+                ->nullable() // Bisa null dulu
+                ->constrained('users')
+                ->cascadeOnDelete()
+                ->nullOnDelete();
             $table->string('nama_kos');
             $table->string('slug')->unique();
             $table->text('deskripsi')->nullable();

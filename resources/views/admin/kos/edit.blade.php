@@ -28,6 +28,18 @@
             @method('PUT')
 
             <div>
+                <label>Owner</label>
+                <select name="owner_id" class="w-full border px-3 py-2">
+                    <option value="">-- Pilih Owner --</option>
+                    @foreach ($owners as $owner)
+                        <option value="{{ $owner->id }}" @selected(old('owner_id', $ko->owner_id) == $owner->id)>
+                            {{ $owner->name }} ({{ $owner->email }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
                 <label>Nama Kos</label>
                 <input name="nama_kos" class="w-full border px-3 py-2" value="{{ old('nama_kos', $ko->nama_kos) }}">
             </div>

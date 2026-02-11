@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminKamarController;
 use App\Http\Controllers\Admin\AdminFasilitasController;
 use App\Http\Controllers\Admin\AdminGaleriController;
 use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminKosController;
 use App\Http\Controllers\Admin\AdminReviewController;
@@ -18,8 +19,7 @@ use App\Http\Controllers\User\GaleriController;
 use App\Http\Controllers\User\KosController;
 use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\User\TransaksiController;
-
-
+use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,46 +107,53 @@ require __DIR__ . '/auth.php';
 //     ->name('admin.')
 //     ->group(function () {
 
-Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-    ->name('dashboard');
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', AdminMiddleware::class])
+    ->group(function () {
 
-    Route::resource('kos', AdminKosController::class);
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
-    Route::delete(
-        'kos-image/{image}',
-        [AdminKosController::class, 'deleteImage']
-    )->name('kos.image.delete');
+        Route::resource('kos', AdminKosController::class);
 
-    Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
+        Route::delete(
+            'kos-image/{image}',
+            [AdminKosController::class, 'deleteImage']
+        )->name('kos.image.delete');
 
-    Route::resource('kamar', AdminKamarController::class);
+        Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
 
-    Route::resource('fasilitas', AdminFasilitasController::class);
+        Route::resource('kamar', AdminKamarController::class);
 
-    Route::resource('blog', AdminBlogController::class);
+        Route::resource('fasilitas', AdminFasilitasController::class);
 
-    Route::post('blog/{blog}/publish', [AdminBlogController::class, 'publish'])
-        ->name('blog.publish');
+        Route::resource('blog', AdminBlogController::class);
 
-    Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
-        ->name('blog.unpublish');
+        Route::post('blog/{blog}/publish', [AdminBlogController::class, 'publish'])
+            ->name('blog.publish');
+
+        Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
+            ->name('blog.unpublish');
 
 
 
-    Route::resource('galeri', AdminGaleriController::class);
+        Route::resource('galeri', AdminGaleriController::class);
 
-    Route::resource('booking', BookingController::class)
-        ->only(['index', 'show', 'update', 'destroy']);
+        Route::resource('booking', AdminBookingController::class)
+            ->only(['index', 'show', 'update', 'destroy']);
+        Route::patch(
+            'booking/{booking}/status',
+            [AdminBookingController::class, 'updateStatus']
+        )->name('booking.updateStatus');
 
-    Route::resource('review', AdminReviewController::class)
-        ->only(['index', 'destroy']);
+        Route::resource('review', AdminReviewController::class)
+            ->only(['index', 'destroy']);
 
-    Route::get('/settings', [AdminSettingController::class, 'index'])
-        ->name('settings.index');
+        Route::get('/settings', [AdminSettingController::class, 'index'])
+            ->name('settings.index');
 
-    Route::put('/settings', [AdminSettingController::class, 'update'])
-        ->name('settings.update');
-    // });
-});
+        Route::put('/settings', [AdminSettingController::class, 'update'])
+            ->name('settings.update');
+    });

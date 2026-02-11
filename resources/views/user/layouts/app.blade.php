@@ -342,24 +342,23 @@
                 <div>
                     <h3 class="text-xl font-bold mb-6">Menu</h3>
                     <ul class="space-y-3">
-                        <li><a href="#home" class="text-text-gray hover:text-accent transition">Home</a></li>
-                        <li><a href="#profil" class="text-text-gray hover:text-accent transition">Profil Kami</a></li>
-                        <li><a href="#kamar" class="text-text-gray hover:text-accent transition">Kamar</a></li>
-                        <li><a href="#galeri" class="text-text-gray hover:text-accent transition">Galeri</a></li>
+                        <li><a href="{{ route('user.beranda') }}"
+                                class="text-text-gray hover:text-accent transition">Home</a></li>
+                        <li><a href="{{ route('user.kos.index') }}"
+                                class="text-text-gray hover:text-accent transition">Kos</a></li>
+                        <li><a href="{{ route('user.galeri') }}"
+                                class="text-text-gray hover:text-accent transition">Galeri</a></li>
+                        <li><a href="user.blog" class="text-text-gray hover:text-accent transition">Blog</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="text-xl font-bold mb-6">Layanan</h3>
                     <ul class="space-y-3">
+                        <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat & Ketentuan</a></li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">Cari Kamar</a></li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a>
-                        </li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Virtual Tour</a>
-                        </li>
+                        <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a></li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">FAQ</a></li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat &
-                                Ketentuan</a></li>
                     </ul>
                 </div>
 

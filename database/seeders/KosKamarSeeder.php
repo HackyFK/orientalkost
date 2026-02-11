@@ -37,6 +37,7 @@ class KosKamarSeeder extends Seeder
                 'nama_kos'   => $kosData['nama_kos'],
                 'slug'       => Str::slug($kosData['nama_kos']),
                 'deskripsi'  => 'Kos nyaman dan strategis',
+                'owner_id'  => 2,
                 'alamat'     => $kosData['alamat'],
                 'latitude'   => -6.200000 + ($index * 0.01),
                 'longitude'  => 106.816666 + ($index * 0.01),
