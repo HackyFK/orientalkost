@@ -12,6 +12,7 @@
         @yield('title', setting('site_name', 'KosKu'))
     </title>
 
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -241,9 +242,24 @@
 
                 <!-- Right -->
                 <div class="flex items-center space-x-4">
-                    <button class="hidden md:block text-text-light hover:text-accent transition font-medium">
-                        Login
-                    </button>
+                    @guest
+                        <!-- Jika BELUM login -->
+                        <a href="{{ route('login') }}"
+                            class="hidden md:block text-text-light hover:text-accent transition font-medium">
+                            Login
+                        </a>
+                    @endguest
+
+                    @auth
+                        <!-- Jika SUDAH login -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="hidden md:block text-text-light hover:text-accent transition font-medium">
+                                Logout
+                            </button>
+                        </form>
+                    @endauth
 
                     <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
                         class="bg-accent hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-lg">
@@ -255,6 +271,7 @@
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
+
 
             </div>
         </div>
@@ -338,7 +355,8 @@
                         <li><a href="#" class="text-text-gray hover:text-accent transition">Cari Kamar</a></li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a>
                         </li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Virtual Tour</a></li>
+                        <li><a href="#" class="text-text-gray hover:text-accent transition">Virtual Tour</a>
+                        </li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">FAQ</a></li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat &
                                 Ketentuan</a></li>
@@ -424,6 +442,7 @@
             menu.classList.toggle('hidden');
         });
     </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 
 </html>

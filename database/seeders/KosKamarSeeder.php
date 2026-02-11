@@ -54,6 +54,7 @@ class KosKamarSeeder extends Seeder
                     'deskripsi'      => 'Kamar bersih dan nyaman',
                     'harga_bulanan'  => 750000 + ($i * 100000),
                     'harga_tahunan'  => 8000000 + ($i * 500000),
+                    'deposit'  => 50,
                     'status'         => 'tersedia',
                 ]);
 
