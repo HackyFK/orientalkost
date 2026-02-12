@@ -14,13 +14,23 @@ class Kos extends Model
         'alamat',
         'latitude',
         'longitude',
-        'jenis_sewa'
+        'jenis_sewa',
+        'likes',
     ];
+
+
+    public function likesUsers()
+  {
+        return $this->belongsToMany(\App\Models\User::class, 'kos_likes', 'kos_id', 'user_id')
+                ->withTimestamps();
+  }
+
 
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
 
     public function kamars()
     {
@@ -39,4 +49,6 @@ class Kos extends Model
         return $this->hasOne(KosImage::class)
             ->where('is_primary', true);
     }
+
+    
 }

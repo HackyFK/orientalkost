@@ -31,4 +31,31 @@ class KosController extends Controller
             'kamars' => $kos->kamars
         ]);
     }
+
+    public function like(Kos $kos)
+    {
+        $user = auth()->user();
+
+        // Cek apakah user sudah like
+        $alreadyLiked = $kos->likesUsers()
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if ($alreadyLiked) {
+            // UNLIKE
+            $kos->likesUsers()->detach($user->id);
+            $kos->decrement('likes');
+            $liked = false;
+        } else {
+            // LIKE
+            $kos->likesUsers()->attach($user->id);
+            $kos->increment('likes');
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes' => $kos->likes
+        ]);
+    }
 }

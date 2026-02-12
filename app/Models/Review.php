@@ -1,20 +1,26 @@
 <?php
 
-namespace App\Models;
+    namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
-{
-    protected $fillable = ['kamar_id','user_id','rating','ulasan, status'];
-
-    public function kamar()
+    class Review extends Model
     {
-        return $this->belongsTo(Kamar::class);
-    }
+        protected $fillable = [
+            'kamar_id',
+            'user_id',
+            'rating',
+            'ulasan',
+            'status',
+        ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        public function kamar()
+        {
+            return $this->belongsTo(Kamar::class);
+        }
+
+        public function user()
+        {
+            return $this->belongsTo(User::class);
+        }
     }
-}
