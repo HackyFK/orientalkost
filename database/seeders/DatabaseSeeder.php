@@ -16,14 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@kost.com',
-            'password' => Hash::make('admin'),
-            'role' => 'admin'
-        ]);
-
         $this->call([
+            UserSeeder::class,
             FasilitasSeeder::class,
             KosKamarSeeder::class,
             SettingsSeeder::class,

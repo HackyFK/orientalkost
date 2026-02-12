@@ -26,7 +26,7 @@ class SettingsSeeder extends Seeder
             [
                 'key' => 'site_tagline',
                 'value' => 'Hunian Nyaman & Strategis',
-                'group' => 'general'
+                'group' => 'general '
             ],
             [
                 'key' => 'seo_description',

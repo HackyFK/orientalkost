@@ -12,7 +12,7 @@ class AdminSettingController extends Controller
     public function index()
     {
         $settings = DB::table('settings')
-            ->orderBy('group')
+            ->orderBy('id')
             ->get()
             ->groupBy('group');
 

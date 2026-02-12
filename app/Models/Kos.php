@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kos extends Model
 {
     protected $fillable = [
+        'owner_id',
         'nama_kos',
         'slug',
         'deskripsi',
@@ -17,11 +18,18 @@ class Kos extends Model
         'likes',
     ];
 
+
     public function likesUsers()
-{
-    return $this->belongsToMany(\App\Models\User::class, 'kos_likes', 'kos_id', 'user_id')
+  {
+        return $this->belongsToMany(\App\Models\User::class, 'kos_likes', 'kos_id', 'user_id')
                 ->withTimestamps();
-}
+  }
+
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 
 
     public function kamars()

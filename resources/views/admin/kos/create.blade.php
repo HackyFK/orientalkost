@@ -19,6 +19,19 @@
             @csrf
 
             <div class="space-y-4">
+
+                <div>
+                    <label>Owner</label>
+                    <select name="owner_id" class="w-full border px-3 py-2">
+                        <option value="">-- Pilih Owner --</option>
+                        @foreach ($owners as $owner)
+                            <option value="{{ $owner->id }}" @selected(old('owner_id') == $owner->id)>
+                                {{ $owner->name }} ({{ $owner->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div>
                     <label>Nama Kos</label>
                     <input name="nama_kos" class="w-full border px-3 py-2">
@@ -78,8 +91,8 @@
         const latInput = document.querySelector('[name="latitude"]');
         const lngInput = document.querySelector('[name="longitude"]');
 
-let lat = latInput.value || -7.797068;
-let lng = lngInput.value || 110.370529;
+        let lat = latInput.value || -7.797068;
+        let lng = lngInput.value || 110.370529;
 
         const map = L.map('map').setView([lat, lng], 13);
 
