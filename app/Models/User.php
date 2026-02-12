@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Booking;
+use App\Models\Kos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -46,6 +48,8 @@ class User extends Authenticatable
         return $this->hasMany(Kos::class, 'owner_id');
     }
 
+
+
     protected function casts(): array
     {
         return [
@@ -55,7 +59,7 @@ class User extends Authenticatable
     }
 
     public function bookings()
-{
-    return $this->hasMany(Booking::class);
-}
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

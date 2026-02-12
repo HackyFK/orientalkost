@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('isi');
             $table->timestamp('published_at')->nullable();
             $table->integer('views')->default(0);
+            $table->unsignedInteger('likes')->default(0);
             $table->timestamps();
         });
     }

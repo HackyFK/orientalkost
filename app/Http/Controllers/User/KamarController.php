@@ -4,16 +4,19 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kamar;
+use Illuminate\Support\Facades\Auth;
 
 class KamarController extends Controller
 {
     public function show(Kamar $kamar)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $hasBooked = false;
 
         if ($user) {
-            $hasBooked = $user->bookings()->where('kamar_id', $kamar->id)->exists();
+            $hasBooked = $user->bookings()
+                ->where('kamar_id', $kamar->id)
+                ->exists();
         }
 
         $kamar->load([
@@ -50,3 +53,4 @@ class KamarController extends Controller
         ));
     }
 }
+

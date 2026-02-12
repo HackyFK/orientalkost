@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Auth;
 
     public function toggleLike(\App\Models\Blog $blog)
     {
-        $user = auth()->user();
+        $user = auth::user();
 
         $like = DB::table('blog_likes')
             ->where('blog_id', $blog->id)
