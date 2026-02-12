@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\User;
 use App\Models\Kamar;
 
@@ -36,14 +37,13 @@ class Booking extends Model
         'tanggal_selesai',
         'paid_at',
     ];
-
-    public function kamar()
-    {
-        return $this->belongsTo(kamar::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function kamar()
+    {
+        return $this->belongsTo(Kamar::class);
     }
 }

@@ -45,19 +45,19 @@ Route::name('user.')->group(function () {
 
     Route::get('/blog', [BlogController::class, 'index'])->name('blog');
     Route::get('/blog/{blog}', [BlogController::class, 'show'])
-    ->name('blog.show');
+        ->name('blog.show');
     Route::post('/blog/{blog}/like', [BlogController::class, 'toggleLike'])
-    ->name('blog.like')
-    ->middleware('auth');
+        ->name('blog.like')
+        ->middleware('auth');
 
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 
     Route::get('/kos', [KosController::class, 'index'])->name('kos.index');
 
-   
+
     Route::post('/kos/{kos}/like', [KosController::class, 'like'])
-         ->name('kos.like')
-         ->middleware('auth');
+        ->name('kos.like')
+        ->middleware('auth');
 
 
     Route::get('/kos/{kos}', [KosController::class, 'show'])->name('kos.show');
@@ -165,19 +165,18 @@ Route::prefix('admin')
             ->only(['index', 'destroy']);
 
 
-    Route::put('/settings', [AdminSettingController::class, 'update'])
-        ->name('settings.update');
-    // });
+        Route::put('/settings', [AdminSettingController::class, 'update'])
+            ->name('settings.update');
+        // });
 
-    Route::get('/reviews', [AdminReviewController::class, 'index'])
-        ->name('reviews.index');
+        Route::get('/reviews', [AdminReviewController::class, 'index'])
+            ->name('reviews.index');
 
-    Route::patch('/admin/reviews/{review}/status', [AdminReviewController::class, 'updateStatus'])
-        ->name('reviews.status');
+        Route::patch('/admin/reviews/{review}/status', [AdminReviewController::class, 'updateStatus'])
+            ->name('reviews.status');
 
-    Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])
-        ->name('reviews.destroy');
-});
+        Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])
+            ->name('reviews.destroy');
 
         Route::get('/settings', [AdminSettingController::class, 'index'])
             ->name('settings.index');

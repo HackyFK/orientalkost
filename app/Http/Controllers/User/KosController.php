@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kos;
+use Illuminate\Support\Facades\Auth;
 
 class KosController extends Controller
 {
@@ -34,7 +35,7 @@ class KosController extends Controller
 
     public function like(Kos $kos)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Cek apakah user sudah like
         $alreadyLiked = $kos->likesUsers()
