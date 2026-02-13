@@ -34,6 +34,7 @@
                 <a href="{{ route('admin.galeri.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Galeri</a>
                 <a href="{{ route('admin.review.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Rating</a>
                 <a href="{{ route('admin.settings.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Setting</a>
+                <a href="{{ route('admin.website-profile.index') }}" class="px-3 py-2 rounded hover:bg-gray-700">Home</a>
             </nav>
         </aside>
 
