@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+
 // User Controller
 use App\Http\Controllers\User\BerandaController;
 use App\Http\Controllers\User\KamarController;
@@ -183,4 +185,13 @@ Route::prefix('admin')
 
         Route::put('/settings', [AdminSettingController::class, 'update'])
             ->name('settings.update');
+
+       Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
+        ->name('website-profile.index');
+
+    Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
+        ->name('website-profile.edit');
+
+    Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
+        ->name('website-profile.update');
     });
