@@ -2,7 +2,9 @@
 
     namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
+use App\Models\Kamar;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
     class Review extends Model
     {

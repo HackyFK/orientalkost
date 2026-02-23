@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Kamar;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,12 +14,12 @@ class KamarController extends Controller
         $user = Auth::user();
         $hasBooked = false;
 
-        if ($user) {
-            $hasBooked = $user->bookings()
-                ->where('kamar_id', $kamar->id)
-                ->exists();
-        }
-
+        $hasBooked = $user
+            ? Booking::where('user_id', $user->id)
+            ->where('kamar_id', $kamar->id)
+            ->exists()
+            : false;
+            
         $kamar->load([
             'kos',
             'images',
@@ -53,4 +54,3 @@ class KamarController extends Controller
         ));
     }
 }
-

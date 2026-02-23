@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kos;
 use Illuminate\Database\Eloquent\Model;
 
 class KosImage extends Model

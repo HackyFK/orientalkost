@@ -242,53 +242,146 @@
 
 
                 <!-- Right -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3 relative">
+
                     @guest
-                        <!-- Jika BELUM login -->
+                        <!-- Login -->
                         <a href="{{ route('login') }}"
-                            class="hidden md:block text-text-light hover:text-accent transition font-medium">
+                            class="hidden md:inline-flex items-center px-4 py-2 rounded-full border border-white/30
+                   text-text-light hover:border-accent hover:text-accent
+                   transition duration-300 font-medium">
                             Login
+                        </a>
+
+                        <!-- Register -->
+                        <a href="{{ route('register') }}"
+                            class="hidden md:inline-flex items-center px-5 py-2 rounded-full
+                   bg-accent hover:bg-orange-600 text-white
+                   shadow-lg hover:shadow-xl
+                   transition duration-300 font-semibold">
+                            Register
                         </a>
                     @endguest
 
-                    @auth
-                        <!-- Jika SUDAH login -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="hidden md:block text-text-light hover:text-accent transition font-medium">
-                                Logout
-                            </button>
-                        </form>
-                    @endauth
-
-                    <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
-                        class="bg-accent hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-lg">
-                        {{ setting('cta_booking_text', 'Booking') }}
-                    </a>
-
-                    <!-- Toggle -->
-                    <button id="menu-toggle" class="lg:hidden text-text-light text-2xl">
-                        <i class="fas fa-bars"></i>
-                    </button>
                 </div>
 
 
+                @auth
+                    <!-- Jika SUDAH login -->
+                    <div class="relative hidden md:block">
+                        <!-- Button User -->
+                        <button id="user-menu-button"
+                            class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center focus:outline-none">
+                            <i class="fas fa-user"></i>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div id="user-dropdown"
+                            class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-50">
+
+                            <!-- Profile -->
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Profile
+                            </a>
+
+                            <!-- Logout -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
+
+                <!-- Toggle -->
+                <button id="menu-toggle" class="lg:hidden text-text-light text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
+
+
+
+        </div>
         </div>
 
         <!-- MENU MOBILE -->
         <div id="mobile-menu" class="hidden lg:hidden bg-primary border-t border-white/10">
-            <div class="px-6 py-6 space-y-4">
-                <a href="{{ route('user.beranda') }}" class="block text-text-light hover:text-accent">Home</a>
-                <a href="{{ route('user.kos.index') }}" class="block text-text-light hover:text-accent">Kos</a>
-                <a href="{{ route('user.galeri') }}" class="block text-text-light hover:text-accent">Galeri</a>
-                <a href="{{ route('user.blog') }}" class="block text-text-light hover:text-accent">Blog</a>
-                <a href="#kontak" class="block text-text-light hover:text-accent">Kontak</a>
+            <div class="px-6 py-6 space-y-5">
 
-                <button class="w-full mt-4 bg-accent text-white py-3 rounded-xl font-semibold">
-                    Booking Sekarang
-                </button>
+                <!-- Menu -->
+                <a href="{{ route('user.beranda') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="{{ route('user.kos.index') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
+                    <i class="fas fa-building w-5"></i>
+                    <span>Kos</span>
+                </a>
+
+                <a href="{{ route('user.galeri') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
+                    <i class="fas fa-images w-5"></i>
+                    <span>Galeri</span>
+                </a>
+
+                <a href="{{ route('user.blog') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
+                    <i class="fas fa-blog w-5"></i>
+                    <span>Blog</span>
+                </a>
+
+                <a href="#kontak" class="flex items-center gap-3 text-text-light hover:text-accent transition">
+                    <i class="fas fa-envelope w-5"></i>
+                    <span>Kontak</span>
+                </a>
+
+                <!-- Divider -->
+                <div class="border-t border-white/10 pt-5"></div>
+
+                @guest
+                    <!-- Login -->
+                    <a href="{{ route('login') }}"
+                        class="block text-center px-4 py-2 rounded-full border border-white/30
+                       text-text-light hover:border-accent hover:text-accent
+                       transition duration-300 font-medium">
+                        Login
+                    </a>
+
+                    <!-- Register -->
+                    <a href="{{ route('register') }}"
+                        class="block text-center px-5 py-2 rounded-full
+                       bg-accent hover:bg-orange-600 text-white
+                       shadow-lg transition duration-300 font-semibold">
+                        Register
+                    </a>
+                @endguest
+
+                @auth
+                    <div class="space-y-3">
+
+                        <div class="text-text-light font-semibold">
+                            {{ Auth::user()->name }}
+                        </div>
+
+                        <a href="{{ route('profile.edit') }}" class="block text-text-gray hover:text-accent transition">
+                            Profile
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block text-text-gray hover:text-accent transition">
+                                Logout
+                            </button>
+                        </form>
+
+                    </div>
+                @endauth
+
             </div>
         </div>
     </nav>
@@ -356,9 +449,11 @@
                 <div>
                     <h3 class="text-xl font-bold mb-6">Layanan</h3>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat &
+                                Ketentuan</a></li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">Cari Kamar</a></li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a></li>
+                        <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a>
+                        </li>
                         <li><a href="#" class="text-text-gray hover:text-accent transition">FAQ</a></li>
                     </ul>
                 </div>
@@ -407,7 +502,23 @@
         </div>
     </footer>
 
+    <script>
+        const userButton = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-dropdown');
 
+        if (userButton) {
+            userButton.addEventListener('click', function() {
+                userDropdown.classList.toggle('hidden');
+            });
+
+            // Tutup dropdown jika klik di luar
+            window.addEventListener('click', function(e) {
+                if (!userButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 
     <script>
         const videos = [

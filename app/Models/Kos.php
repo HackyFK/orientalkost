@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Kamar;
+use App\Models\KosImage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Kos extends Model
@@ -20,12 +23,12 @@ class Kos extends Model
 
 
     public function likesUsers()
-  {
-        return $this->belongsToMany(\App\Models\User::class, 'kos_likes', 'kos_id', 'user_id')
-                ->withTimestamps();
-  }
+    {
+        return $this->belongsToMany(User::class, 'kos_likes', 'kos_id', 'user_id')
+            ->withTimestamps();
+    }
 
-
+ 
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -49,6 +52,4 @@ class Kos extends Model
         return $this->hasOne(KosImage::class)
             ->where('is_primary', true);
     }
-
-    
 }

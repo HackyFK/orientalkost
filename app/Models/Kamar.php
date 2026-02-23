@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Fasilitas;
+use App\Models\KamarImage;
+use App\Models\Kos;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Model;
 
 class Kamar extends Model

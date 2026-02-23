@@ -117,6 +117,58 @@ class SettingsSeeder extends Seeder
                 'value' => 'Senin - Minggu | 08:00 - 21:00',
                 'group' => 'operational'
             ],
+            /*
+            |--------------------------------------------------
+            | SMTP CONFIG
+            |--------------------------------------------------
+            */
+            [
+                'key' => 'smtp_host',
+                'value' => 'smtp.gmail.com',
+                'group' => 'smtp'
+            ],
+            [
+                'key' => 'smtp_port',
+                'value' => '587',
+                'group' => 'smtp'
+            ],
+            [
+                'key' => 'smtp_username',
+                'value' => 'your@email.com',
+                'group' => 'smtp'
+            ],
+            [
+                'key' => 'smtp_password',
+                'value' => '',
+                'group' => 'smtp'
+            ],
+            [
+                'key' => 'smtp_encryption',
+                'value' => 'tls',
+                'group' => 'smtp'
+            ],
+
+            /*
+            |--------------------------------------------------
+            | MIDTRANS CONFIG
+            |--------------------------------------------------
+            */
+            [
+                'key' => 'midtrans_server_key',
+                'value' => '',
+                'group' => 'midtrans'
+            ],
+            [
+                'key' => 'midtrans_client_key',
+                'value' => '',
+                'group' => 'midtrans'
+            ],
+            [
+                'key' => 'midtrans_is_production',
+                'value' => 'false',
+                'group' => 'midtrans'
+            ],
+
         ];
 
         DB::table('settings')->insert($settings);
