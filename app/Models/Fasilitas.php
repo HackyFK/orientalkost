@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kamar;
 use Illuminate\Database\Eloquent\Model;
 
 class Fasilitas extends Model

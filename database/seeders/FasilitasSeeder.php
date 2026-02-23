@@ -59,7 +59,7 @@ class FasilitasSeeder extends Seeder
             ['nama_fasilitas' => 'Kompor', 'icon' => 'fa-solid fa-fire-burner', 'kategori' => 'dapur'],
             ['nama_fasilitas' => 'Rice Cooker', 'icon' => 'fa-solid fa-bowl-rice', 'kategori' => 'dapur'],
             ['nama_fasilitas' => 'Microwave', 'icon' => 'fa-solid fa-microwave', 'kategori' => 'dapur'],
-            ['nama_fasilitas' => 'Kulkas', 'icon' => 'fa-solid fa-temperature-low', 'kategori' => 'dapur'],
+            ['nama_fasilitas' => 'Kulkas', 'icon' => 'fa-solid fa-snowflake', 'kategori' => 'dapur'],
             ['nama_fasilitas' => 'Dispenser', 'icon' => 'fa-solid fa-water', 'kategori' => 'dapur'],
             ['nama_fasilitas' => 'Meja Makan', 'icon' => 'fa-solid fa-table', 'kategori' => 'dapur'],
 
