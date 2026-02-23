@@ -429,7 +429,7 @@
                                 </div>
                             </div>
 
-                            @if (session('success'))
+                            @if (session('review_success'))
                                 <div id="successModal"
                                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 

@@ -50,7 +50,7 @@
                                 {{ $review->ulasan ?? '-' }}
                             </td>
                             <td class="p-3 text-center">
-                                @if ($review->status == 1)
+                                @if ($review->status === 'approved')
                                     <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
                                         Approved
                                     </span>
@@ -68,7 +68,11 @@
                                     @csrf
                                     @method('PATCH')
                                     <button class="px-3 py-1 text-xs rounded bg-indigo-500 text-white hover:bg-indigo-600">
-                                        {{ $review->status === 'approved' ? 'Pending' : 'Approve' }}
+                                        @if ($review->status === 'approved')
+                                            Pendingkan
+                                        @else
+                                            Approve
+                                        @endif
                                     </button>
                                 </form>
 

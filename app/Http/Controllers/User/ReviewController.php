@@ -34,10 +34,10 @@ class ReviewController extends Controller
             'kamar_id'  => $kamarId,
             'rating'    => $request->rating,
             'ulasan'  => $request->ulasan,
-             'status'   => 0, // pending
+            'status' => 'pending',
         ]);
 
-        return back()->with('success', 'Review berhasil dikirim dan menunggu persetujuan admin.');
+        return back()->with('review_success', 'Review berhasil dikirim dan menunggu persetujuan admin.');
     }
 
     /**
@@ -85,7 +85,7 @@ class ReviewController extends Controller
         $review->update([
             'rating' => $request->rating,
             'ulasan' => $request->ulasan,
-            'status' => false, // reset ke pending setelah edit
+            'status' => 'pending',
         ]);
 
         return redirect()

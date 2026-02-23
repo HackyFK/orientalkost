@@ -30,10 +30,12 @@ class AdminReviewController extends Controller
     }
 
 
-    public function updateStatus(Review $review)
+   public function updateStatus(Review $review)
 {
     $review->update([
-        'status' => $review->status == 1 ? 0 : 1
+        'status' => $review->status === 'approved'
+            ? 'pending'
+            : 'approved'
     ]);
 
     return back()->with('success', 'Status review berhasil diperbarui');

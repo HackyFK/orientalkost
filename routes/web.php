@@ -124,6 +124,7 @@ require __DIR__ . '/auth.php';
 //     ->group(function () {
 
 
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', AdminMiddleware::class])
@@ -153,6 +154,7 @@ Route::prefix('admin')
         Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
             ->name('blog.unpublish');
 
+        
 
         Route::resource('galeri', AdminGaleriController::class);
 
