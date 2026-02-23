@@ -79,6 +79,9 @@
                 <div>
                     <label>Foto Kos</label>
                     <input type="file" name="images[]" multiple>
+                            <p class="text-sm text-gray-500 mt-1">
+            JPG, PNG, WEBP – max 2MB
+        </p>
                 </div>
             </div>
 

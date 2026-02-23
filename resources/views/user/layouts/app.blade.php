@@ -234,10 +234,7 @@
                         <span>Blog</span>
                     </a>
 
-                    <a href="#kontak" class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-envelope text-sm"></i>
-                        <span>Kontak</span>
-                    </a>
+                   
                 </div>
 
 
@@ -308,6 +305,7 @@
 
         <!-- MENU MOBILE -->
         <div id="mobile-menu" class="hidden lg:hidden bg-primary border-t border-white/10">
+
             <div class="px-6 py-6 space-y-5">
 
                 <!-- Menu -->
@@ -424,7 +422,8 @@
                         @if (setting('contact_whatsapp'))
                             <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
                                 class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition"
-                                target="_blank">
+                                target="_
+                                blank">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         @endif

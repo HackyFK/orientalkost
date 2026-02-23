@@ -11,6 +11,11 @@ use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+
+
 // User Controller
 use App\Http\Controllers\User\BerandaController;
 use App\Http\Controllers\User\BlogController;
@@ -130,6 +135,7 @@ require __DIR__ . '/auth.php';
 //     ->group(function () {
 
 
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', AdminMiddleware::class])
@@ -159,6 +165,7 @@ Route::prefix('admin')
         Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
             ->name('blog.unpublish');
 
+        
 
         Route::resource('galeri', AdminGaleriController::class);
 
@@ -193,10 +200,21 @@ Route::prefix('admin')
             ->name('settings.update');
 
 
-            // TEST
-            Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])
-    ->name('settings.test.smtp');
 
+            // TEST
+        Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])
+    ->name('settings.test.smtp');
+//main
 Route::post('/settings/test-midtrans', [AdminSettingController::class, 'testMidtrans'])
     ->name('settings.test.midtrans');
+
+       Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
+        ->name('website-profile.index');
+
+    Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
+        ->name('website-profile.edit');
+
+    Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
+        ->name('website-profile.update');
+
     });
