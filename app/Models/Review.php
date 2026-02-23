@@ -3,6 +3,7 @@
     namespace App\Models;
 
     use Illuminate\Database\Eloquent\Model;
+    use App\Models\Kamar;
 
     class Review extends Model
     {
@@ -23,4 +24,9 @@
         {
             return $this->belongsTo(User::class);
         }
+
+        public function kos()
+{
+    return $this->belongsTo(Kos::class);
+}
     }

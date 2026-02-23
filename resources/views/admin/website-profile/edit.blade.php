@@ -9,7 +9,7 @@
 
         <div class="bg-white rounded-2xl shadow-lg p-8">
 
-                <form action="{{ route('admin.website-profile.update') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.website-profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-6">
@@ -18,12 +18,16 @@
                     </label>
 
                     <input type="file" name="image" class="w-full border rounded-lg px-4 py-2">
+                    <p class="text-sm text-gray-500 mt-1">
+                        JPG, PNG, WEBP – max 2MB
+                    </p>
 
                     @if (!empty($profile->image))
                         <div class="mt-4">
                             <img src="{{ asset('storage/' . $profile->image) }}" class="w-40 rounded-lg shadow">
                         </div>
                     @endif
+
                 </div>
 
 

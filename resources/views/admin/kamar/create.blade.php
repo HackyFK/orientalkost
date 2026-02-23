@@ -117,6 +117,9 @@
         <div>
             <label>Gambar Utama</label>
             <input type="file" name="image">
+                    <p class="text-sm text-gray-500 mt-1">
+            JPG, PNG, WEBP – max 2MB
+        </p>
         </div>
 
         <button class="px-4 py-2 bg-blue-600 text-white rounded">

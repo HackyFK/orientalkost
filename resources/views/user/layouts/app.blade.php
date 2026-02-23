@@ -234,10 +234,7 @@
                         <span>Blog</span>
                     </a>
 
-                    <a href="#kontak" class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-envelope text-sm"></i>
-                        <span>Kontak</span>
-                    </a>
+                   
                 </div>
 
 
@@ -284,7 +281,7 @@
                 <a href="{{ route('user.kos.index') }}" class="block text-text-light hover:text-accent">Kos</a>
                 <a href="{{ route('user.galeri') }}" class="block text-text-light hover:text-accent">Galeri</a>
                 <a href="{{ route('user.blog') }}" class="block text-text-light hover:text-accent">Blog</a>
-                <a href="#kontak" class="block text-text-light hover:text-accent">Kontak</a>
+
 
                 <button class="w-full mt-4 bg-accent text-white py-3 rounded-xl font-semibold">
                     Booking Sekarang
@@ -331,7 +328,8 @@
                         @if (setting('contact_whatsapp'))
                             <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
                                 class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition"
-                                target="_blank">
+                                target="_
+                                blank">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         @endif

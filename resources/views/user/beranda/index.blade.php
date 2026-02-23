@@ -33,62 +33,81 @@
                     </p>
                 </div>
 
-                <form method="GET" action="{{ route('user.beranda') }}">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
+                <!-- Search Box -->
+        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-5xl mx-auto">
 
-                        <!-- Jenis Kos -->
-                        <div class="space-y-2 lg:col-span-2">
-                            <label class="text-sm font-medium text-gray-700">
-                                Jenis Kos
-                            </label>
-                            <select name="jenis_sewa" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50">
-                                <option value="">Semua Jenis</option>
-                                <option value="Kos Putra">Kos Putra</option>
-                                <option value="Kos Putri">Kos Putri</option>
-                                <option value="Kos Campur">Kos Campur</option>
-                            </select>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
 
-                        <select name="jenis_sewa">
-                            <option value="">Semua</option>
-                            <option value="Bulanan">Bulanan</option>
-                            <option value="Tahunan">Tahunan</option>
-                        </select>
+                <!-- Jenis Kos -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 flex items-center">
+                        <i class="fas fa-venus-mars text-accent mr-2"></i>
+                        Jenis Kos
+                    </label>
+                    <select
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+                        <option>Putra</option>
+                        <option>Putri</option>
+                        <option>Campur</option>
+                    </select>
+                </div>
 
+                <!-- Tipe Kamar -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 flex items-center">
+                        <i class="fas fa-bed text-accent mr-2"></i>
+                        Tipe Kamar
+                    </label>
+                    <select
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+                        <option>Semua Tipe</option>
+                        <option>Standard</option>
+                        <option>AC</option>
+                        <option>KM Dalam</option>
+                        <option>Premium</option>
+                    </select>
+                </div>
 
-                        <!-- Status -->
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">
-                                Status
-                            </label>
-                            <select name="status_kamar"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50">
-                                <option value="">Semua Status</option>
-                                <option value="Tersedia">Tersedia</option>
-                                <option value="tidakTersedia">Penuh</option>
-                            </select>
-                        </div>
+                <!-- Harga -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 flex items-center">
+                        <i class="fas fa-money-bill-wave text-accent mr-2"></i>
+                        Rentang Harga
+                    </label>
+                    <select
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+                        <option>Semua Harga</option>
+                        <option>< Rp 1 juta</option>
+                        <option>Rp 1 – 2 juta</option>
+                        <option>Rp 2 – 3 juta</option>
+                        <option>> Rp 3 juta</option>
+                    </select>
+                </div>
 
-                        <div class="flex gap-3 lg:col-span-2">
-                            <button type="submit"
-                                class="w-full bg-accent text-white px-5 py-3 rounded-xl font-semibold shadow-lg">
-                                Filter
-                            </button>
-                        </div>
-                        @if ($kosUnggulan->isEmpty())
-                            <div class="text-center py-16">
-                                <h2 class="text-xl font-semibold text-gray-600">
-                                    😔 Maaf data tidak ditemukan
-                                </h2>
-                            </div>
-                        @else
-                            @foreach ($kosUnggulan as $kos)
-                                <!-- card kos -->
-                            @endforeach
-                        @endif
+                <!-- Lokasi -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 flex items-center">
+                        <i class="fas fa-map-marker-alt text-accent mr-2"></i>
+                        Lokasi
+                    </label>
+                    <select
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+                        <option>Pilih Lokasi</option>
+                        <option>Dekat Kampus</option>
+                        <option>Pusat Kota</option>
+                        <option>Kawasan Strategis</option>
+                    </select>
+                </div>
+            </div>
 
-                    </div>
-                </form>
+            <!-- Button -->
+            <button
+                class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-semibold text-lg transition shadow-lg flex items-center justify-center space-x-2">
+                <i class="fas fa-search"></i>
+                <span>Cari Kos Sekarang</span>
+            </button>
+
+        </div>
 
 
 
@@ -124,7 +143,7 @@
                                     @endphp
 
                                     @if ($title)
-                                        <div class="flex items-start space-x-4">
+                                         <div class="flex items-start space-x-4">
 
                                             <div class="bg-accent-soft rounded-full p-3">
                                                 @if ($icon)
@@ -826,6 +845,5 @@
                 updateVideo();
             }
         </script>
-
     </body>
 @endsection

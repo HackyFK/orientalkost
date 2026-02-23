@@ -22,6 +22,7 @@ class BerandaController extends Controller
     $jenisSewa   = request('jenis_sewa');
 
     $kosQuery = Kos::with(['primaryImage', 'kamars', 'likesUsers'])
+    
         ->withCount('likesUsers');
 
     // Filter Tipe Kamar
@@ -57,17 +58,21 @@ class BerandaController extends Controller
         $kosUnggulan = $kosQuery->orderBy('likes_users_count', 'desc')->get();
 
         // Ambil galeri terbaru
-        $galeriTerbaru = Galeri::latest()->take(8)->get();
+        $galeriTerbaru =     Galeri::latest()->take(8)->get();
 
         // Ambil review terbaru
-        $reviewTerbaru = Review::with('user', 'kos')->latest()->take(4)->get();
-
-        // Ambil blog terbaru
-        $blogs = Blog::with('author')
-            ->whereNotNull('published_at')
-            ->latest('published_at')
-            ->take(6)
+       $reviewTerbaru = Review::with(['user', 'kamar.kos'])
+            ->where('status', 'approved')
+            ->latest()
+            ->take(4)
             ->get();
+
+        // Ambil blog terbaru yang sudah published
+        $blogs = Blog::with('author')
+        ->where('status', 'published')
+        ->latest()
+        ->take(6)
+        ->get();
 
         // Rating global
         $averageRating = Review::avg('rating') ?? 0;
