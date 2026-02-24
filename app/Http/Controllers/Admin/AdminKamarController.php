@@ -11,11 +11,41 @@ use Illuminate\Http\Request;
 
 class AdminKamarController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        return view('admin.kamar.index', [
-            'items' => Kamar::with(['kos', 'fasilitas'])->latest()->get()
-        ]);
+        $kosId = $request->kos_id;
+        $sort  = $request->sort;
+
+        // ambil semua kos untuk dropdown
+        $allKos = Kos::orderBy('nama_kos')->get();
+
+        // query dasar → tampilkan semua kamar dulu
+        $query = Kamar::with(['kos', 'fasilitas']);
+
+        // filter kos jika dipilih
+        if ($kosId) {
+            $query->where('kos_id', $kosId);
+        }
+
+        // sort kamar
+        if ($sort == 'harga_asc') {
+            $query->orderBy('harga_bulanan', 'asc');
+        } elseif ($sort == 'harga_desc') {
+            $query->orderBy('harga_bulanan', 'desc');
+        } elseif ($sort == 'nama') {
+            $query->orderBy('nama_kamar', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        // ambil data
+        $items = $query
+        ->latest()
+        ->paginate(9)
+        ->withQueryString();
+
+        return view('admin.kamar.index', compact('items', 'allKos'));
     }
 
 

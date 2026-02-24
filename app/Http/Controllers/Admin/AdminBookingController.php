@@ -8,14 +8,51 @@ use Illuminate\Http\Request;
 
 class AdminBookingController extends Controller
 {
-    public function index()
-    {
-        $items = Booking::with('kamar')
-            ->latest()
-            ->paginate(10);
+    public function index(Request $request)
+{
+    $query = Booking::with('kamar');
 
-        return view('admin.booking.index', compact('items'));
+    // ===============================
+    // FILTER STATUS
+    // ===============================
+    if ($request->filled('status') && $request->status !== 'all') {
+        $query->where('status', $request->status);
     }
+
+    // ===============================
+    // SEARCH
+    // ===============================
+    if ($request->filled('search')) {
+
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+
+            // Jika angka → bisa cari berdasarkan ID
+            if (is_numeric($search)) {
+                $q->orWhere('id', $search);
+            }
+
+            $q->orWhere('nama_penyewa', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%")
+              ->orWhere('durasi', 'like', "%{$search}%")
+              ->orWhere('total_bayar', 'like', "%{$search}%")
+              ->orWhereDate('created_at', $search)
+
+              ->orWhereHas('kamar', function ($kamar) use ($search) {
+                  $kamar->where('nama_kamar', 'like', "%{$search}%");
+              })
+                ->orWhereHas('kamar.kos', function ($kos) use ($search) {
+              $kos->where('nama_kos', 'like', "%{$search}%");
+          });
+        });
+    }
+
+    $items = $query->latest()->paginate(6)->withQueryString();
+
+    return view('admin.booking.index', compact('items'));
+}
 
     public function show(Booking $booking)
     {

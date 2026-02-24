@@ -15,8 +15,12 @@ class AdminBlogController extends Controller
         $blogs = Blog::when($request->search, function ($q) use ($request) {
             $q->where('judul', 'like', '%' . $request->search . '%');
         })
-            ->latest()
-            ->paginate(10);
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+           ->latest()
+            ->paginate(4)
+            ->withQueryString();
 
         return view('admin.blog.index', compact('blogs'));
     }
@@ -108,23 +112,22 @@ class AdminBlogController extends Controller
     }
 
     public function publish(Blog $blog)
-{
-    $blog->update([
-        'status' => 'published',
-        'published_at' => now(),
-    ]);
+    {
+        $blog->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
 
-    return response()->json(['success' => true]);
-}
+        return response()->json(['success' => true]);
+    }
 
-public function unpublish(Blog $blog)
-{
-    $blog->update([
-        'status' => 'draft',
-        'published_at' => null,
-    ]);
+    public function unpublish(Blog $blog)
+    {
+        $blog->update([
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
 
-    return response()->json(['success' => true]);
-}
-
+        return response()->json(['success' => true]);
+    }
 }

@@ -32,33 +32,7 @@
         </section>
 
 
-        <!-- Category Filter -->
-        <section class="bg-white border-b top-[88px] z-40 shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div class="flex flex-wrap items-center justify-center gap-3">
-                    <button onclick="filterGallery('all')"
-                        class="filter-btn active px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-th mr-2"></i>Semua Foto
-                    </button>
-                    <button onclick="filterGallery('exterior')"
-                        class="filter-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-building mr-2"></i>Eksterior
-                    </button>
-                    <button onclick="filterGallery('room')"
-                        class="filter-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-door-open mr-2"></i>Kamar
-                    </button>
-                    <button onclick="filterGallery('bathroom')"
-                        class="filter-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-bath mr-2"></i>Kamar Mandi
-                    </button>
-                    <button onclick="filterGallery('facility')"
-                        class="filter-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-couch mr-2"></i>Fasilitas
-                    </button>
-                </div>
-            </div>
-        </section>
+        
 
         <!-- Gallery Grid -->
         <section class="py-16">
@@ -181,14 +155,14 @@
                 <h2 class="text-3xl lg:text-4xl font-bold mb-4">Tertarik dengan Kos Kami?</h2>
                 <p class="text-xl text-slate-300 mb-8">Jadwalkan kunjungan atau booking kamar sekarang juga</p>
                 <div class="flex flex-wrap gap-4 justify-center">
-                    <a href="#"
+                    <a href="{{ route('user.kos.index') }}"
                         class="inline-flex items-center gap-2 bg-accent hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
                         <i class="fas fa-calendar-check"></i>
                         Booking Sekarang
                     </a>
-                    <a href="#"
+                     <a href="https://wa.me/{{ $settings->contact_whatsapp }}" target="_blank"
                         class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-xl transition-all border-2 border-white/20">
-                        <i class="fa    s fa-phone"></i>
+                      <i class="fab fa-whatsapp mr-2"></i>
                         Hubungi Kami
                     </a>
                 </div>

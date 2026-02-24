@@ -347,7 +347,7 @@
                                 class="text-text-gray hover:text-accent transition">Kos</a></li>
                         <li><a href="{{ route('user.galeri') }}"
                                 class="text-text-gray hover:text-accent transition">Galeri</a></li>
-                        <li><a href="user.blog" class="text-text-gray hover:text-accent transition">Blog</a></li>
+                        <li><a href="{{ route('user.blog') }}" class="text-text-gray hover:text-accent transition">Blog</a></li>
                     </ul>
                 </div>
 

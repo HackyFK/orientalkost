@@ -45,80 +45,143 @@
 
 
     <!-- FILTER SECTION -->
-    <section class="py-6 bg-white shadow-md top-20 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <form method="GET" action="{{ route('user.kos.index') }}">
+        <section class="py-6 bg-white shadow-md top-20 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- Filter Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
+                <!-- Filter Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
 
-                <!-- Jenis Kos -->
-                <div class="space-y-2 lg:col-span-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-venus-mars text-accent mr-2"></i>
-                        Jenis Kos
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
-                           focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Semua Jenis</option>
-                        <option>Kos Putra</option>
-                        <option>Kos Putri</option>
-                        <option>Kos Campur</option>
-                    </select>
+                    <!-- Jenis Kos -->
+                    <div class="space-y-2 lg:col-span-2">
+                        <label class="text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-venus-mars text-accent mr-2"></i>
+                            Jenis Kos
+                        </label>
+
+                        <select name="jenis_kos"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
+                    focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+
+                            <option value="">Semua Jenis</option>
+
+                            <option value="putra" {{ request('jenis_kos') == 'putra' ? 'selected' : '' }}>
+                                Kos Putra
+                            </option>
+
+                            <option value="putri" {{ request('jenis_kos') == 'putri' ? 'selected' : '' }}>
+                                Kos Putri
+                            </option>
+
+                            <option value="campur" {{ request('jenis_kos') == 'campur' ? 'selected' : '' }}>
+                                Kos Campur
+                            </option>
+
+                        </select>
+                    </div>
+
+
+                    <!-- Fasilitas -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-concierge-bell text-accent mr-2"></i>
+                            Fasilitas
+                        </label>
+
+                        <select name="fasilitas"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
+                    focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+
+                            <option value="">Semua</option>
+
+                            <option value="WiFi" {{ request('fasilitas') == 'WiFi' ? 'selected' : '' }}>
+                                WiFi
+                            </option>
+
+                            <option value="Parkir" {{ request('fasilitas') == 'Parkir' ? 'selected' : '' }}>
+                                Parkir
+                            </option>
+
+                            <option value="Dapur" {{ request('fasilitas') == 'Dapur' ? 'selected' : '' }}>
+                                Dapur
+                            </option>
+
+                            <option value="Laundry" {{ request('fasilitas') == 'Laundry' ? 'selected' : '' }}>
+                                Laundry
+                            </option>
+
+                        </select>
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700 flex items-center">
+                            <i class="fas fa-check-circle text-accent mr-2"></i>
+                            Status
+                        </label>
+
+                        <select name="status"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
+                    focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+
+                            <option value="">Semua Status</option>
+
+                            <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>
+                                Tersedia
+                            </option>
+
+                            <option value="penuh" {{ request('status') == 'penuh' ? 'selected' : '' }}>
+                                Penuh
+                            </option>
+
+                        </select>
+                    </div>
+
+
+                    <!-- Button -->
+                    <div class="flex gap-3 lg:col-span-2">
+
+                        <button type="submit"
+                            class="w-full bg-accent hover:bg-orange-600 text-white px-5 py-3
+                    rounded-xl font-semibold transition shadow-lg
+                    flex items-center justify-center">
+
+                            <i class="fas fa-search mr-2"></i>
+                            Filter
+
+                        </button>
+
+                        <!-- Reset -->
+                        <a href="{{ route('user.kos.index') }}"
+                            class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 px-5 py-3
+                    rounded-xl font-semibold transition shadow-lg
+                    flex items-center justify-center">
+
+                            Reset
+
+                        </a>
+
+                    </div>
+
                 </div>
 
-                <!-- Fasilitas -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-concierge-bell text-accent mr-2"></i>
-                        Fasilitas
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
-                           focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Semua</option>
-                        <option>WiFi</option>
-                        <option>Parkir</option>
-                        <option>Dapur</option>
-                        <option>Laundry</option>
-                    </select>
+
+                <!-- Result Info -->
+                <div class="mt-4 text-sm text-text-gray text-center md:text-left">
+
+                    Menampilkan
+                    <span class="font-semibold text-primary">
+                        {{ $kos->count() }}
+                    </span>
+
+                    kos
+
                 </div>
 
-                <!-- Status -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-check-circle text-accent mr-2"></i>
-                        Status
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
-                           focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Semua Status</option>
-                        <option>Tersedia</option>
-                        <option>Penuh</option>
-                    </select>
-                </div>
-
-                <!-- Button -->
-                <div class="flex gap-3 lg:col-span-2">
-
-                    <button
-                        class="w-full bg-accent hover:bg-orange-600 text-white px-5 py-3
-                           rounded-xl font-semibold transition shadow-lg
-                           flex items-center justify-center">
-                        <i class="fas fa-search mr-2"></i>
-                        Filter
-                    </button>
-                </div>
             </div>
-
-            <!-- Result Info -->
-            <div class="mt-4 text-sm text-text-gray text-center md:text-left">
-                Menampilkan <span class="font-semibold text-primary">12 kos</span> dari total 15 kos
-            </div>
-
-        </div>
-    </section>
+        </section>
+    </form>
 
 
     <!-- KOS CARDS GRID -->
@@ -223,20 +286,54 @@
 
 
     <!-- Pagination -->
-    <div class="flex justify-center items-center space-x-2 mt-12">
-        <button
-            class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="w-10 h-10 rounded-lg bg-accent text-white font-semibold">1</button>
-        <button
-            class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition">2</button>
-        <button
-            class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-    </div>
+    @if ($kos->hasPages())
+        <div class="flex justify-center items-center space-x-2 mt-12 mb-10">
+
+            {{-- Previous --}}
+            @if ($kos->onFirstPage())
+                <span
+                    class="w-10 h-10 rounded-lg border-2 border-gray-200 text-gray-300 flex items-center justify-center cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+            @else
+                <a href="{{ $kos->previousPageUrl() }}"
+                    class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            @endif
+
+
+            {{-- Page Numbers --}}
+            @foreach ($kos->getUrlRange(1, $kos->lastPage()) as $page => $url)
+                @if ($page == $kos->currentPage())
+                    <span class="w-10 h-10 rounded-lg bg-accent text-white font-semibold flex items-center justify-center">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}"
+                        class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+
+            {{-- Next --}}
+            @if ($kos->hasMorePages())
+                <a href="{{ $kos->nextPageUrl() }}"
+                    class="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            @else
+                <span
+                    class="w-10 h-10 rounded-lg border-2 border-gray-200 text-gray-300 flex items-center justify-center cursor-not-allowed">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+            @endif
+
+        </div>
+    @endif
+
     </section>
 
     <!-- CTA SECTION -->
@@ -246,16 +343,19 @@
             <p class="text-lg text-text-gray mb-8">
                 Tim kami siap membantu Anda menemukan kos yang sempurna sesuai kebutuhan dan budget
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                    class="bg-accent hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-semibold transition shadow-lg">
-                    <i class="fas fa-phone-alt mr-2"></i>Hubungi Kami
-                </button>
-                <button
-                    class="bg-white hover:bg-gray-100 text-primary px-8 py-4 rounded-xl font-semibold transition shadow-lg">
-                    <i class="fab fa-whatsapp mr-2"></i>Chat WhatsApp
-                </button>
-            </div>
+            {{-- Tombol Telepon --}}
+           <a href="tel:{{ $settings->contact_phone }}"
+                class="bg-accent hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-semibold transition shadow-lg inline-flex items-center justify-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                Hubungi Kami
+            </a>
+
+            {{-- Tombol WhatsApp --}}
+            <a href="https://wa.me/{{ $settings->contact_whatsapp }}" target="_blank"
+                class="bg-white hover:bg-gray-100 text-primary px-8 py-4 rounded-xl font-semibold transition shadow-lg inline-flex items-center justify-center">
+                <i class="fab fa-whatsapp mr-2"></i>
+                Chat WhatsApp
+            </a>
         </div>
     </section>
 
@@ -270,51 +370,50 @@
 
     <!-- Like Button JS -->
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = document.querySelector('meta[name="csrf-token"]').content;
 
-        document.querySelectorAll('.like-btn').forEach(button => {
+            document.querySelectorAll('.like-btn').forEach(button => {
 
-            // Warna awal
-            if (button.dataset.liked === "true") {
-                button.classList.add('text-pink-500');
-            } else {
-                button.classList.add('text-black');
-            }
+                // Warna awal
+                if (button.dataset.liked === "true") {
+                    button.classList.add('text-pink-500');
+                } else {
+                    button.classList.add('text-black');
+                }
 
-            button.addEventListener('click', function() {
-                const kosId = this.dataset.id;
-                const countSpan = this.querySelector('.like-count');
+                button.addEventListener('click', function() {
+                    const kosId = this.dataset.id;
+                    const countSpan = this.querySelector('.like-count');
 
-                fetch(`/kos/${kosId}/like`, {
-                        method: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': token,
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        // Update jumlah like
-                        countSpan.textContent = data.likes;
+                    fetch(`/kos/${kosId}/like`, {
+                            method: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': token,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            // Update jumlah like
+                            countSpan.textContent = data.likes;
 
-                        if (data.liked) {
-                            // LIKE → pink
-                            this.classList.remove('text-black');
-                            this.classList.add('text-pink-500');
-                            this.dataset.liked = "true";
-                        } else {
-                            // UNLIKE → hitam
-                            this.classList.remove('text-pink-500');
-                            this.classList.add('text-black');
-                            this.dataset.liked = "false";
-                        }
-                    })
-                    .catch(err => console.error(err));
+                            if (data.liked) {
+                                // LIKE → pink
+                                this.classList.remove('text-black');
+                                this.classList.add('text-pink-500');
+                                this.dataset.liked = "true";
+                            } else {
+                                // UNLIKE → hitam
+                                this.classList.remove('text-pink-500');
+                                this.classList.add('text-black');
+                                this.dataset.liked = "false";
+                            }
+                        })
+                        .catch(err => console.error(err));
+                });
             });
         });
-    });
-</script>
-
+    </script>
 @endsection
