@@ -40,38 +40,79 @@
         @csrf
         @method('PUT')
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 items-start">
+@php
+    $groupLabels = config('settings.groups');
+    $fieldLabels = config('settings.labels');
+@endphp
 
-            {{-- ═══════════════ LEFT: Setting Groups ═══════════════ --}}
-            <div class="xl:col-span-2 space-y-5">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-5 items-start">
 
-                {{-- PAGE HEADER --}}
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-800">Pengaturan Website</h1>
-                        <p class="text-sm text-slate-400 mt-0.5">Konfigurasi umum dan tampilan website</p>
+    {{-- ═══════════════ LEFT: Setting Groups ═══════════════ --}}
+    <div class="xl:col-span-2 space-y-5">
+
+        {{-- PAGE HEADER --}}
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Pengaturan Website</h1>
+                <p class="text-sm text-slate-400 mt-0.5">Konfigurasi umum dan tampilan website</p>
+            </div>
+        </div>
+
+        @foreach ($settings as $group => $items)
+
+            @php
+                $meta  = $groupIcons[$group] ?? ['icon' => 'fa-gear', 'color' => 'blue'];
+                $color = $colorMap[$meta['color']] ?? $colorMap['blue'];
+                $sensitiveFields = ['smtp_password', 'midtrans_server_key'];
+            @endphp
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+
+                {{-- Card Header --}}
+                <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg {{ $color['bg'] }} flex items-center justify-center">
+                        <i class="fa-solid {{ $meta['icon'] }} {{ $color['icon'] }} text-xs"></i>
+                    </div>
+
+                    <h2 class="font-bold text-slate-700 text-sm">
+                        {{ $groupLabels[$group] ?? ucfirst($group) }}
+                    </h2>
+
+                    <span class="ml-auto text-xs font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full">
+                        {{ count($items) }} field
+                    </span>
+                </div>
+
+                {{-- Card Body --}}
+                <div class="p-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach ($items as $item)
+                            <div>
+                                <label class="block text-sm font-medium text-slate-600 mb-1">
+                                    {{ $fieldLabels[$item->key] ?? ucfirst(str_replace('_', ' ', $item->key)) }}
+                                </label>
+
+                                @if (in_array($item->key, $sensitiveFields))
+                                    <input type="password"
+                                        name="settings[{{ $item->key }}]"
+                                        placeholder="Kosongkan jika tidak ingin mengubah"
+                                        class="w-full border border-slate-200 focus:border-blue-500 focus:ring focus:ring-blue-100 p-2 rounded-lg text-sm">
+                                @else
+                                    <input type="text"
+                                        name="settings[{{ $item->key }}]"
+                                        value="{{ $item->value }}"
+                                        class="w-full border border-slate-200 focus:border-blue-500 focus:ring focus:ring-blue-100 p-2 rounded-lg text-sm">
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
-                @foreach ($settings as $group => $items)
-                    @php
-                        $meta  = $groupIcons[$group] ?? ['icon' => 'fa-gear', 'color' => 'blue'];
-                        $color = $colorMap[$meta['color']] ?? $colorMap['blue'];
-                    @endphp
+            </div>
+        @endforeach
 
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-
-                        {{-- Card Header --}}
-                        <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-                            <div class="w-7 h-7 rounded-lg {{ $color['bg'] }} flex items-center justify-center">
-                                <i class="fa-solid {{ $meta['icon'] }} {{ $color['icon'] }} text-xs"></i>
-                            </div>
-                            <h2 class="font-bold text-slate-700 text-sm">
-                                {{ $groupLabels[$group] ?? ucfirst($group) }}
-                            </h2>
-                            <span class="ml-auto text-xs font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full">
-                                {{ count($items) }} field
-                            </span>
+    </div>
+</div>
                         </div>
 
                         {{-- Fields --}}
@@ -151,4 +192,35 @@
 
     </form>
 
+
+    @if (session('success'))
+        <div class="bg-green-100 text-green-700 p-3 rounded mb-3">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-3">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <div class="flex gap-3 mb-4">
+
+        <form method="POST" action="{{ route('admin.settings.test.smtp') }}">
+            @csrf
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+                🔘 Test SMTP
+            </button>
+        </form>
+
+        <form method="POST" action="{{ route('admin.settings.test.midtrans') }}">
+            @csrf
+            <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded">
+                🔘 Test Midtrans
+            </button>
+        </form>
+
+    </div>
 @endsection
+

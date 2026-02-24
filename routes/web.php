@@ -1,28 +1,32 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminKamarController;
-use App\Http\Controllers\Admin\AdminFasilitasController;
-use App\Http\Controllers\Admin\AdminGaleriController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminFasilitasController;
+use App\Http\Controllers\Admin\AdminGaleriController;
+use App\Http\Controllers\Admin\AdminKamarController;
 use App\Http\Controllers\Admin\AdminKosController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+use App\Http\Controllers\PaymentController;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\BerandaController;
+
 
 // User Controller
-use App\Http\Controllers\User\BerandaController;
-use App\Http\Controllers\User\KamarController;
 use App\Http\Controllers\User\BlogController;
-use App\Http\Controllers\User\GaleriController;
-use App\Http\Controllers\User\KosController;
 use App\Http\Controllers\User\BookingController;
-use App\Http\Controllers\User\TransaksiController;
+use App\Http\Controllers\User\GaleriController;
+use App\Http\Controllers\User\KamarController;
+use App\Http\Controllers\User\KosController;
 use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\TransaksiController;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\user\MidtransController;
 
 
 /*
@@ -31,13 +35,21 @@ use App\Http\Middleware\AdminMiddleware;
 |--------------------------------------------------------------------------
 */
 
-
+Route::post('/midtrans/notification', [MidtransController::class, 'notification']);
+// Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
+// Route::post('/pay', [PaymentController::class, 'createTransaction']);
 
 /*
 |--------------------------------------------------------------------------
 | AUTH (BREEZE)
 |--------------------------------------------------------------------------
 */
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 
 // Route::prefix('user')->name('user.')->group(function () {
@@ -108,7 +120,12 @@ Route::name('user.')->group(function () {
 
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
-});
+
+    Route::get('/payment/{payment}', [MidtransController::class, 'show'])
+        ->name('payment.show');
+
+        });
+
 
 
 require __DIR__ . '/auth.php';
@@ -154,7 +171,7 @@ Route::prefix('admin')
         Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
             ->name('blog.unpublish');
 
-        
+
 
         Route::resource('galeri', AdminGaleriController::class);
 
@@ -188,12 +205,21 @@ Route::prefix('admin')
         Route::put('/settings', [AdminSettingController::class, 'update'])
             ->name('settings.update');
 
-       Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
-        ->name('website-profile.index');
 
-    Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
-        ->name('website-profile.edit');
 
-    Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
-        ->name('website-profile.update');
+        // TEST
+        Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])
+            ->name('settings.test.smtp');
+        //main
+        Route::post('/settings/test-midtrans', [AdminSettingController::class, 'testMidtrans'])
+            ->name('settings.test.midtrans');
+
+        Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
+            ->name('website-profile.index');
+
+        Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
+            ->name('website-profile.edit');
+
+        Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
+            ->name('website-profile.update');
     });
