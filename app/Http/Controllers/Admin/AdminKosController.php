@@ -14,8 +14,12 @@ class AdminKosController extends Controller
 {
     public function index()
     {
-        $items = Kos::with(['primaryImage', 'owner'])->latest()->get();
-        return view('admin.kos.index', compact('items'));
+          $items = Kos::with(['primaryImage', 'owner'])
+         ->latest()
+        ->paginate(2)
+        ->withQueryString();
+
+    return view('admin.kos.index', compact('items'));
     }
 
     public function create()

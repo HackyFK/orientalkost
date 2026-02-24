@@ -801,14 +801,14 @@
                     Jangan lewatkan kesempatan untuk mendapatkan kamar terbaik. Booking sekarang dan dapatkan penawaran
                     spesial!
                 </p>
-                <button
-                    class="bg-accent hover:bg-orange-600 text-white px-12 py-5 rounded-full text-xl font-bold transition shadow-2xl">
+                <a href="{{ route('user.kos.index') }}"
+                class="bg-accent hover:bg-orange-600 text-white px-12 py-5 rounded-full text-xl font-bold transition shadow-2xl inline-flex items-center justify-center">
                     <i class="fas fa-calendar-check mr-3"></i>
                     Booking Sekarang
-                </button>
+                </a>
                 <p class="text-text-gray mt-6">
 
-                    Hubungi kami: <span class="text-accent font-semibold">0812-3456-7890</span>
+                    Hubungi kami: <span class="text-accent font-semibold">{{ setting('contact_phone') }}</span>
                 </p>
             </div>
         </section>

@@ -44,12 +44,21 @@
 
                 <!-- Search -->
                 <div class="max-w-xl mx-auto">
-                    <div class="relative">
-                        <input type="text" placeholder="Cari artikel..."
-                            class="w-full px-6 py-4 pl-14 rounded-2xl text-primary font-medium
-                           focus:outline-none focus:ring-4 focus:ring-blue-400 shadow-xl">
-                        <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-400 text-lg"></i>
-                    </div>
+                    <form method="GET" action="{{ route('user.blog') }}">
+                        <div class="relative">
+
+                            <input 
+                                type="text"
+                                name="search"
+                                value="{{ request('search') }}"
+                                placeholder="Cari artikel..."
+                                class="w-full px-6 py-4 pl-14 rounded-2xl text-primary font-medium
+                                    focus:outline-none focus:ring-4 focus:ring-blue-400 shadow-xl">
+
+                            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-400 text-lg"></i>
+
+                        </div>
+                    </form>
                 </div>
 
             </div>
@@ -57,28 +66,7 @@
 
 
 
-        <!-- Category Filter -->
-        <section class="bg-white border-b top-[88px] z-40 shadow-sm mt-10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div class="flex flex-wrap items-center justify-center gap-3">
-                    <button class="category-btn active px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-th mr-2"></i>Semua
-                    </button>
-                    <button class="category-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-home mr-2"></i>Properti
-                    </button>
-                    <button class="category-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-lightbulb mr-2"></i>Tips & Trik
-                    </button>
-                    <button class="category-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-user-graduate mr-2"></i>Kehidupan Mahasiswa
-                    </button>
-                    <button class="category-btn px-6 py-2.5 rounded-full font-medium transition-all text-sm">
-                        <i class="fas fa-money-bill-wave mr-2"></i>Keuangan
-                    </button>
-                </div>
-            </div>
-        </section>
+        
 
         <!-- Featured Post -->
         @if ($featuredBlog)
@@ -193,18 +181,40 @@
         <!-- Blog Grid -->
         <section class="py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between mb-12">
-                    <h2 class="text-3xl font-bold text-primary">Artikel Terbaru</h2>
-                    <div class="flex items-center gap-2 text-sm text-textGray">
-                        <span>Urutkan:</span>
-                        <select
-                            class="px-4 py-2 border-2 border-gray-200 rounded-lg font-medium text-primary focus:outline-none focus:border-accent">
-                            <option>Terbaru</option>
-                            <option>Terpopuler</option>
-                            <option>Terlama</option>
-                        </select>
-                    </div>
-                </div>
+                <form method="GET" action="{{ route('user.blog') }}">
+    <div class="flex items-center justify-between mb-12">
+
+        <h2 class="text-3xl font-bold text-primary">
+            Artikel Terbaru
+        </h2>
+
+        <div class="flex items-center gap-3 text-sm text-textGray">
+            <span>Urutkan:</span>
+
+            <select name="sort"
+                onchange="this.form.submit()"
+                class="px-4 py-2 border-2 border-gray-200 rounded-lg font-medium text-primary focus:outline-none focus:border-accent">
+
+                <option value="latest"
+                    {{ request('sort') == 'latest' ? 'selected' : '' }}>
+                    Terbaru
+                </option>
+
+                <option value="popular"
+                    {{ request('sort') == 'popular' ? 'selected' : '' }}>
+                    Terpopuler
+                </option>
+
+                <option value="oldest"
+                    {{ request('sort') == 'oldest' ? 'selected' : '' }}>
+                    Terlama
+                </option>
+
+            </select>
+        </div>
+
+    </div>
+</form>
 
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
@@ -328,13 +338,57 @@
                 </div>
 
                 <!-- Load More Button -->
-                <div class="text-center mt-12">
-                    <button
-                        class="inline-flex items-center gap-2 bg-white hover:bg-accent hover:text-white text-primary font-semibold px-8 py-4 rounded-xl transition-all border-2 border-gray-200 hover:border-accent shadow-md hover:shadow-lg">
-                        <i class="fas fa-arrow-down"></i>
-                        Muat Lebih Banyak
-                    </button>
-                </div>
+                @if ($blogs->hasPages())
+<div class="flex justify-center items-center space-x-2 mt-12 mb-10">
+
+    {{-- Previous --}}
+    @if ($blogs->onFirstPage())
+        <span class="w-10 h-10 rounded-xl border border-gray-200 text-gray-300 flex items-center justify-center cursor-not-allowed">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+    @else
+        <a href="{{ $blogs->previousPageUrl() }}"
+           class="w-10 h-10 rounded-xl border border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    @endif
+
+
+    {{-- Page Numbers --}}
+    @foreach ($blogs->getUrlRange(1, $blogs->lastPage()) as $page => $url)
+
+        @if ($page == $blogs->currentPage())
+
+            <span class="w-10 h-10 rounded-xl bg-accent text-white font-semibold flex items-center justify-center shadow">
+                {{ $page }}
+            </span>
+
+        @else
+
+            <a href="{{ $url }}"
+               class="w-10 h-10 rounded-xl border border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+                {{ $page }}
+            </a>
+
+        @endif
+
+    @endforeach
+
+
+    {{-- Next --}}
+    @if ($blogs->hasMorePages())
+        <a href="{{ $blogs->nextPageUrl() }}"
+           class="w-10 h-10 rounded-xl border border-gray-300 hover:border-accent hover:bg-accent hover:text-white transition flex items-center justify-center">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    @else
+        <span class="w-10 h-10 rounded-xl border border-gray-200 text-gray-300 flex items-center justify-center cursor-not-allowed">
+            <i class="fas fa-chevron-right"></i>
+        </span>
+    @endif
+
+</div>
+@endif
             </div>
         </section>
 
@@ -345,20 +399,10 @@
                     class="bg-white/10 backdrop-blur-sm w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-envelope text-3xl text-accent"></i>
                 </div>
-                <h2 class="text-3xl lg:text-4xl font-bold mb-4">Berlangganan Newsletter</h2>
-                <p class="text-xl text-slate-300 mb-8">Dapatkan tips dan artikel terbaru langsung ke email Anda</p>
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">Nikmati Newsletter Dari Kami</h2>
+                <p class="text-xl text-slate-300 mb-8">Dapatkan beberapa tips dan kumpulan artikel terbaru </p>
                 <div class="max-w-md mx-auto">
-                    <div class="flex gap-3">
-                        <input type="email" placeholder="Email Anda"
-                            class="flex-1 px-6 py-4 rounded-xl text-primary font-medium focus:outline-none focus:ring-4 focus:ring-orange-200">
-                        <button
-                            class="bg-accent hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                    <p class="text-sm text-slate-400 mt-3">
-                        <i class="fas fa-lock mr-1"></i>Email Anda aman bersama kami
-                    </p>
+                    
                 </div>
             </div>
         </section>

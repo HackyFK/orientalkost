@@ -1,111 +1,219 @@
 @extends('admin.layouts.app')
 
+@section('page-title', 'Tambah Kos')
+
 @section('content')
+
+    {{-- BREADCRUMB --}}
+    <div class="flex items-center gap-2 text-xs text-slate-400 mb-5">
+        <a href="{{ route('admin.kos.index') }}" class="hover:text-blue-500 transition-colors">Data Kos</a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <span class="text-slate-600 font-medium">Tambah Kos</span>
+    </div>
+
     {{-- VALIDATION ERRORS --}}
     @if ($errors->any())
-        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            <ul class="list-disc pl-5">
+        <div class="mb-5 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fa-solid fa-circle-exclamation text-red-500 text-sm"></i>
+                <p class="text-sm font-semibold text-red-600">Terdapat kesalahan input:</p>
+            </div>
+            <ul class="list-disc pl-5 space-y-0.5">
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li class="text-xs text-red-500">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
 
-    <div class="bg-white shadow rounded p-6 max-w-xl">
-        <h1 class="text-2xl font-bold mb-4">Tambah Kos</h1>
+    <form method="POST" action="{{ route('admin.kos.store') }}" enctype="multipart/form-data">
+        @csrf
 
-        <form method="POST" action="{{ route('admin.kos.store') }}" enctype="multipart/form-data" class="space-y-4">
-            @csrf
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-            <div class="space-y-4">
+            {{-- ═══════════════ LEFT — Main Form ═══════════════ --}}
+            <div class="xl:col-span-2 space-y-5">
 
-                <div>
-                    <label>Owner</label>
-                    <select name="owner_id" class="w-full border px-3 py-2">
-                        <option value="">-- Pilih Owner --</option>
-                        @foreach ($owners as $owner)
-                            <option value="{{ $owner->id }}" @selected(old('owner_id') == $owner->id)>
-                                {{ $owner->name }} ({{ $owner->email }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label>Nama Kos</label>
-                    <input name="nama_kos" class="w-full border px-3 py-2">
-                </div>
-
-                <div>
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" class="w-full border px-3 py-2"></textarea>
-                </div>
-
-                <div>
-                    <label>Alamat</label>
-                    <textarea name="alamat" class="w-full border px-3 py-2"></textarea>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label>Latitude</label>
-                        <input name="latitude" class="w-full border px-3 py-2">
+                {{-- Card: Informasi Dasar --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                            <i class="fa-solid fa-house text-blue-500 text-xs"></i>
+                        </div>
+                        <h2 class="font-bold text-slate-700 text-sm">Informasi Kos</h2>
                     </div>
-                    <div>
-                        <label>Longitude</label>
-                        <input name="longitude" class="w-full border px-3 py-2">
+                    <div class="p-5 space-y-4">
+
+                        {{-- Owner --}}
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Owner</label>
+                            <select name="owner_id"
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                                <option value="">-- Pilih Owner --</option>
+                                @foreach ($owners as $owner)
+                                    <option value="{{ $owner->id }}" @selected(old('owner_id') == $owner->id)>
+                                        {{ $owner->name }} ({{ $owner->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Nama Kos --}}
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Kos</label>
+                            <input type="text" name="nama_kos" value="{{ old('nama_kos') }}"
+                                placeholder="Contoh: Kos Melati Indah"
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                        </div>
+
+                        {{-- Deskripsi --}}
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
+                            <textarea name="deskripsi" rows="3"
+                                placeholder="Deskripsi singkat tentang kos..."
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('deskripsi') }}</textarea>
+                        </div>
+
+                        {{-- Alamat --}}
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat Lengkap</label>
+                            <textarea name="alamat" rows="2"
+                                placeholder="Jalan, nomor, kelurahan, kecamatan..."
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('alamat') }}</textarea>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="flex gap-2 mb-2">
-                    <button type="button" id="btnGps" class="px-4 py-2 bg-green-600 text-white rounded">
-                        📍 Gunakan Lokasi Saya
+                {{-- Card: Lokasi --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center">
+                                <i class="fa-solid fa-location-dot text-green-500 text-xs"></i>
+                            </div>
+                            <h2 class="font-bold text-slate-700 text-sm">Koordinat Lokasi</h2>
+                        </div>
+                        <button type="button" id="btnGps"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-xs font-semibold rounded-lg border border-green-100 transition-colors">
+                            <i class="fa-solid fa-location-crosshairs text-[10px]"></i>
+                            Gunakan Lokasi Saya
+                        </button>
+                    </div>
+                    <div class="p-5 space-y-4">
+
+                        {{-- Lat & Lng --}}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Latitude</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-arrows-up-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <input type="text" name="latitude" id="latInput" value="{{ old('latitude') }}"
+                                        placeholder="-7.7970680"
+                                        class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Longitude</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <input type="text" name="longitude" id="lngInput" value="{{ old('longitude') }}"
+                                        placeholder="110.3705290"
+                                        class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Map --}}
+                        <div id="map" class="w-full h-64 rounded-xl border border-slate-200 shadow-sm overflow-hidden"></div>
+                        <p class="text-xs text-slate-400">
+                            <i class="fa-solid fa-circle-info mr-1"></i>
+                            Klik pada peta atau seret marker untuk menentukan lokasi kos
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- ═══════════════ RIGHT — Sidebar ═══════════════ --}}
+            <div class="space-y-5">
+
+                {{-- Card: Jenis Sewa --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
+                            <i class="fa-solid fa-tag text-amber-500 text-xs"></i>
+                        </div>
+                        <h2 class="font-bold text-slate-700 text-sm">Jenis Sewa</h2>
+                    </div>
+                    <div class="p-5">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe Sewa</label>
+                        <select name="jenis_sewa"
+                            class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                            <option value="bulanan" @selected(old('jenis_sewa') == 'bulanan')>📅 Bulanan</option>
+                            <option value="tahunan" @selected(old('jenis_sewa') == 'tahunan')>📆 Tahunan</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Card: Foto Kos --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center">
+                            <i class="fa-solid fa-images text-purple-500 text-xs"></i>
+                        </div>
+                        <h2 class="font-bold text-slate-700 text-sm">Foto Kos</h2>
+                    </div>
+                    <div class="p-5">
+                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-7 cursor-pointer transition-colors group">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
+                            <span class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
+                                Klik untuk upload foto kos
+                            </span>
+                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB</span>
+                            <span class="text-[10px] text-blue-400 font-semibold">Multiple foto diperbolehkan</span>
+                            <input type="file" name="images[]" multiple accept="image/*" class="hidden"
+                                id="fotoInput" onchange="previewFotos(this)">
+                        </label>
+
+                        {{-- Preview container --}}
+                        <div id="previewGrid" class="mt-3 grid grid-cols-3 gap-2 hidden"></div>
+                    </div>
+                </div>
+
+                {{-- Tombol Aksi --}}
+                <div class="flex gap-3">
+                    <a href="{{ route('admin.kos.index') }}"
+                       class="flex-1 text-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        Simpan
                     </button>
                 </div>
 
-                <div id="map" class="w-full h-64 rounded border"></div>
-
-
-
-                <div>
-                    <label>Jenis Sewa</label>
-                    <select name="jenis_sewa" class="w-full border px-3 py-2">
-                        <option value="bulanan">Bulanan</option>
-                        <option value="tahunan">Tahunan</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Foto Kos</label>
-                    <input type="file" name="images[]" multiple>
-                            <p class="text-sm text-gray-500 mt-1">
-            JPG, PNG, WEBP – max 2MB
-        </p>
-                </div>
             </div>
-
-
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
-        </form>
-    </div>
+        </div>
+    </form>
 
     <script>
-        const latInput = document.querySelector('[name="latitude"]');
-        const lngInput = document.querySelector('[name="longitude"]');
+        // ── Map Setup ──
+        const latInput = document.getElementById('latInput');
+        const lngInput = document.getElementById('lngInput');
 
-        let lat = latInput.value || -7.797068;
-        let lng = lngInput.value || 110.370529;
+        let lat = parseFloat(latInput.value) || -7.797068;
+        let lng = parseFloat(lngInput.value) || 110.370529;
 
         const map = L.map('map').setView([lat, lng], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
+            attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        const marker = L.marker([lat, lng], {
-            draggable: true
-        }).addTo(map);
+        const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
 
         function setLocation(lat, lng) {
             marker.setLatLng([lat, lng]);
@@ -115,7 +223,6 @@
         }
 
         map.on('click', e => setLocation(e.latlng.lat, e.latlng.lng));
-
         marker.on('dragend', e => {
             const pos = e.target.getLatLng();
             setLocation(pos.lat, pos.lng);
@@ -124,12 +231,30 @@
         document.getElementById('btnGps').addEventListener('click', () => {
             navigator.geolocation.getCurrentPosition(
                 pos => setLocation(pos.coords.latitude, pos.coords.longitude),
-                () => alert('Gagal mengambil lokasi')
+                () => alert('Gagal mengambil lokasi. Pastikan izin lokasi diaktifkan.')
             );
         });
+
+        // ── Foto Preview ──
+        function previewFotos(input) {
+            const grid = document.getElementById('previewGrid');
+            grid.innerHTML = '';
+            if (input.files.length === 0) {
+                grid.classList.add('hidden');
+                return;
+            }
+            grid.classList.remove('hidden');
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-20 object-cover rounded-lg border border-slate-200';
+                    grid.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
     </script>
-
-
-
 
 @endsection

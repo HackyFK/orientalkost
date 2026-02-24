@@ -8,14 +8,33 @@ use Illuminate\Http\Request;
 
 class AdminFasilitasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $fasilitas = Fasilitas::orderBy('kategori')
-            ->orderBy('nama_fasilitas')
-            ->get()
-            ->groupBy('kategori');
+        $kategori = $request->kategori;
 
-        return view('admin.fasilitas.index', compact('fasilitas'));
+    // ambil semua kategori unik untuk dropdown
+    $allKategori = Fasilitas::select('kategori')
+        ->distinct()
+        ->orderBy('kategori')
+        ->pluck('kategori');
+
+    $query = Fasilitas::query();
+
+    // jika kategori dipilih
+    if ($kategori) {
+        $query->where('kategori', $kategori);
+    }
+
+    $fasilitas = $query
+        ->orderBy('kategori')
+        ->orderBy('nama_fasilitas')
+        ->get()
+        ->groupBy('kategori');
+
+    return view('admin.fasilitas.index', compact(
+        'fasilitas',
+        'allKategori'
+    ));
     }
 
     public function create()
