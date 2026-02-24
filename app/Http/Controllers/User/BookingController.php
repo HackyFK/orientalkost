@@ -8,6 +8,7 @@ use App\Models\Kamar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Payment;
 
 class BookingController extends Controller
 {
@@ -79,7 +80,26 @@ class BookingController extends Controller
             'status'          => 'pending',
         ]);
 
-        return redirect()->route('user.kamar.show', $booking->kamar)
-            ->with('success', 'Booking berhasil dibuat!');
+        // BUAT PAYMENT DP
+        $payment = Payment::create([
+            'booking_id'    => $booking->id,
+            'amount'        => $dpNominal,
+            'payment_type'  => 'dp',
+            'payment_method' => 'midtrans',
+            'reference'     => null,
+            'status'        => 'pending',
+        ]);
+
+        return redirect()->route('user.payment.show', $payment);
+    }
+
+    public function success(Booking $booking)
+    {
+        // optional: pastikan hanya pemilik booking yang bisa akses
+        if ($booking->user_id !== auth::id()) {
+            abort(403);
+        }
+
+        return view('user.booking.success', compact('booking'));
     }
 }
