@@ -74,66 +74,50 @@
                             </option>
 
                             <option value="campur" {{ request('jenis_kos') == 'campur' ? 'selected' : '' }}>
-                                Kos Campur
+                                Kos Campuran
                             </option>
 
                         </select>
                     </div>
 
 
-                    <!-- Fasilitas -->
+                    <!-- Fasilitas 1 -->
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700 flex items-center">
                             <i class="fas fa-concierge-bell text-accent mr-2"></i>
-                            Fasilitas
+                            Fasilitas 1
                         </label>
 
-                        <select name="fasilitas"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
-                    focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-
+                        <select name="fasilitas1" class="w-full border rounded-lg px-3 py-2">
                             <option value="">Semua</option>
 
-                            <option value="WiFi" {{ request('fasilitas') == 'WiFi' ? 'selected' : '' }}>
-                                WiFi
-                            </option>
-
-                            <option value="Parkir" {{ request('fasilitas') == 'Parkir' ? 'selected' : '' }}>
-                                Parkir
-                            </option>
-
-                            <option value="Dapur" {{ request('fasilitas') == 'Dapur' ? 'selected' : '' }}>
-                                Dapur
-                            </option>
-
-                            <option value="Laundry" {{ request('fasilitas') == 'Laundry' ? 'selected' : '' }}>
-                                Laundry
-                            </option>
+                            @foreach ($fasilitasList as $f)
+                                <option value="{{ $f->nama_fasilitas }}"
+                                    {{ request('fasilitas1') == $f->nama_fasilitas ? 'selected' : '' }}>
+                                    {{ $f->nama_fasilitas }}
+                                </option>
+                            @endforeach
 
                         </select>
                     </div>
 
 
-                    <!-- Status -->
+                    <!-- Fasilitas 2 -->
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-gray-700 flex items-center">
-                            <i class="fas fa-check-circle text-accent mr-2"></i>
-                            Status
+                            <i class="fas fa-concierge-bell text-accent mr-2"></i>
+                            Fasilitas 2
                         </label>
 
-                        <select name="status"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50
-                    focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
+                        <select name="fasilitas2" class="w-full border rounded-lg px-3 py-2">
+                            <option value="">Semua</option>
 
-                            <option value="">Semua Status</option>
-
-                            <option value="tersedia" {{ request('status') == 'tersedia' ? 'selected' : '' }}>
-                                Tersedia
-                            </option>
-
-                            <option value="penuh" {{ request('status') == 'penuh' ? 'selected' : '' }}>
-                                Penuh
-                            </option>
+                            @foreach ($fasilitasList as $f)
+                                <option value="{{ $f->nama_fasilitas }}"
+                                    {{ request('fasilitas2') == $f->nama_fasilitas ? 'selected' : '' }}>
+                                    {{ $f->nama_fasilitas }}
+                                </option>
+                            @endforeach
 
                         </select>
                     </div>
@@ -188,7 +172,11 @@
     <section class="py-12 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
+                @if ($noResult)
+                    <p class="text-center text-red-500 font-semibold mt-4">
+                        Data Kos tidak ditemukan.
+                    </p>
+                @endif
                 @foreach ($kos as $item)
                     <div
                         class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300

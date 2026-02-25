@@ -234,7 +234,7 @@
                         <span>Blog</span>
                     </a>
 
-                   
+
                 </div>
 
 
@@ -401,34 +401,10 @@
                         <span class="text-2xl font-bold">@yield('title', setting('site_name', 'KosKu'))</span>
                     </div>
                     <p class="text-text-gray leading-relaxed mb-4">
-                        {{ setting('site_tagline') }}
+                        {{ setting('seo_description') }}
                     </p>
 
-                    <div class="flex space-x-4">
-                        @if (setting('social_facebook'))
-                            <a href="{{ setting('social_facebook') }}" target="_blank"
-                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        @endif
 
-                        @if (setting('social_instagram'))
-                            <a href="{{ setting('social_instagram') }}" target="_blank"
-                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        @endif
-
-                        @if (setting('contact_whatsapp'))
-                            <a href="https://wa.me/{{ setting('contact_whatsapp') }}"
-                                class="bg-primary hover:bg-accent w-10 h-10 rounded-full flex items-center justify-center transition"
-                                target="_
-                                blank">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                        @endif
-
-                    </div>
 
                 </div>
 
@@ -436,25 +412,73 @@
                     <h3 class="text-xl font-bold mb-6">Menu</h3>
                     <ul class="space-y-3">
                         <li><a href="{{ route('user.beranda') }}"
-                                class="text-text-gray hover:text-accent transition">Home</a></li>
+                                class="text-text-gray hover:text-accent transition">Halaman Home</a></li>
                         <li><a href="{{ route('user.kos.index') }}"
-                                class="text-text-gray hover:text-accent transition">Kos</a></li>
+                                class="text-text-gray hover:text-accent transition">Halaman Kos</a></li>
                         <li><a href="{{ route('user.galeri') }}"
-                                class="text-text-gray hover:text-accent transition">Galeri</a></li>
-                        <li><a href="{{ route('user.blog') }}" class="text-text-gray hover:text-accent transition">Blog</a></li>
+                                class="text-text-gray hover:text-accent transition">Halaman Galeri</a></li>
+                        <li><a href="{{ route('user.blog') }}"
+                                class="text-text-gray hover:text-accent transition">Halaman Blog</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="text-xl font-bold mb-6">Layanan</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Syarat &
-                                Ketentuan</a></li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Cari Kamar</a></li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">Booking Online</a>
-                        </li>
-                        <li><a href="#" class="text-text-gray hover:text-accent transition">FAQ</a></li>
-                    </ul>
+                    <h3 class="text-xl font-bold mb-6">Sosial Media</h3>
+                    <div class="flex items-center gap-3 flex-wrap">
+
+                        @if (setting('social_facebook'))
+                            <a href="{{ setting('social_facebook') }}" target="_blank"
+                                class="flex flex-col items-center gap-1.5 group w-14">
+                                <div
+                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
+                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                    <i class="fab fa-facebook-f text-sm text-white"></i>
+                                </div>
+                                <span
+                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">Facebook</span>
+                            </a>
+                        @endif
+
+                        @if (setting('social_youtube'))
+                            <a href="{{ setting('social_youtube') }}" target="_blank"
+                                class="flex flex-col items-center gap-1.5 group w-14">
+                                <div
+                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
+                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                    <i class="fab fa-youtube text-sm text-white"></i>
+                                </div>
+                                <span
+                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">Youtube</span>
+                            </a>
+                        @endif
+
+                        @if (setting('social_instagram'))
+                            <a href="{{ setting('social_instagram') }}" target="_blank"
+                                class="flex flex-col items-center gap-1.5 group w-14">
+                                <div
+                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
+                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                    <i class="fab fa-instagram text-sm text-white"></i>
+                                </div>
+                                <span
+                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">Instagram</span>
+                            </a>
+                        @endif
+
+                        @if (setting('contact_whatsapp'))
+                            <a href="https://wa.me/{{ setting('contact_whatsapp') }}" target="_blank"
+                                class="flex flex-col items-center gap-1.5 group w-14">
+                                <div
+                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
+                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                    <i class="fab fa-whatsapp text-sm text-white"></i>
+                                </div>
+                                <span
+                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">WhatsApp</span>
+                            </a>
+                        @endif
+
+                    </div>
                 </div>
 
                 <div>

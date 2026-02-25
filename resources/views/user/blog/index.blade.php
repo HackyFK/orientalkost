@@ -26,7 +26,7 @@
 
                 <!-- Badge -->
                 <div
-                    class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-5 py-2.5 rounded-full text-sm font-semibold mb-6">
+                    class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-5 py-2.5 rounded-full text-sm font-semibold mb-6 mt-10">
                     <i class="fas fa-blog text-accent"></i>
                     <span>Blog & Artikel</span>
                 </div>

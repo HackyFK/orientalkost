@@ -15,53 +15,43 @@ class BerandaController extends Controller
 {
     public function index()
     {
-      
-    // Ambil filter dari request
-    $tipeKamar   = request('tipe_kamar');
-    $statusKamar = request('status_kamar');
-    $jenisSewa   = request('jenis_sewa');
+        // Ambil filter dari request
+        $ownerId    = request('owner_id');
+        $namaKos    = request('nama_kos');
+        $alamat     = request('alamat');
+        $jenisSewa  = request('jenis_sewa');
+        $gender     = request('gender');
 
-    $kosQuery = Kos::with(['primaryImage', 'kamars', 'likesUsers'])
-    
-        ->withCount('likesUsers');
+        $search = request('q');
 
-    // Filter Tipe Kamar
-    if ($tipeKamar) {
-        $kosQuery->whereHas('kamars', function ($q) use ($tipeKamar) {
-            $q->where('tipe_kamar', $tipeKamar);
-        });
-    }
+        $kosQuery = Kos::with(['primaryImage', 'kamars', 'likesUsers'])
+            ->withCount('likesUsers');
 
-    // Filter Status Kamar
-    if ($statusKamar) {
-        if ($statusKamar === 'Tersedia') {
-            $kosQuery->whereHas('kamars', function ($q) {
-                $q->where('status', 'Tersedia');
-            });
-        } elseif ($statusKamar === 'tidakTersedia') {
-            $kosQuery->whereDoesntHave('kamars', function ($q) {
-                $q->where('status', 'Tersedia');
+        if ($search) {
+            $kosQuery->where(function ($query) use ($search) {
+                $query->where('nama_kos', 'like', "%{$search}%")
+                    ->orWhere('alamat', 'like', "%{$search}%")
+                    ->orWhere('jenis_sewa', 'like', "%{$search}%")
+                    ->orWhere('gender', 'like', "%{$search}%")
+                    ->orWhereHas('owner', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
-    }
 
-    
-    if ($jenisSewa) {
-        $kosQuery->where('jenis_sewa', $jenisSewa);
-    }
+        $kosUnggulan = $kosQuery->orderBy('likes_users_count', 'desc')->paginate(10)->withQueryString();
+        $noResult = $kosUnggulan->isEmpty();
 
+        // Ambil hasil akhir
+        $kosUnggulan = $kosQuery->orderBy('likes_users_count', 'desc')->paginate(10)->withQueryString();
 
-
-
-
-        // Ambil hasil akhir, urut berdasarkan likes terbanyak
-        $kosUnggulan = $kosQuery->orderBy('likes_users_count', 'desc')->get();
+        $noResult = $kosUnggulan->isEmpty(); // jika tidak ada hasil
 
         // Ambil galeri terbaru
-        $galeriTerbaru =     Galeri::latest()->take(8)->get();
+        $galeriTerbaru = Galeri::latest()->take(8)->get();
 
         // Ambil review terbaru
-       $reviewTerbaru = Review::with(['user', 'kamar.kos'])
+        $reviewTerbaru = Review::with(['user', 'kamar.kos'])
             ->where('status', 'approved')
             ->latest()
             ->take(4)
@@ -69,10 +59,10 @@ class BerandaController extends Controller
 
         // Ambil blog terbaru yang sudah published
         $blogs = Blog::with('author')
-        ->where('status', 'published')
-        ->latest()
-        ->take(6)
-        ->get();
+            ->where('status', 'published')
+            ->latest()
+            ->take(6)
+            ->get();
 
         // Rating global
         $averageRating = Review::avg('rating') ?? 0;
@@ -80,8 +70,6 @@ class BerandaController extends Controller
 
         // Website profile
         $profile = WebsiteProfile::first();
-
-
 
         // Fasilitas
         $fasilitasTampil = [
@@ -110,7 +98,6 @@ class BerandaController extends Controller
         $iframe1 = $this->youtubeEmbed($profile->iframe_1 ?? null);
         $iframe2 = $this->youtubeEmbed($profile->iframe_2 ?? null);
 
-
         return view('user.beranda.index', compact(
             'kosUnggulan',
             'galeriTerbaru',
@@ -123,6 +110,7 @@ class BerandaController extends Controller
             'jumlahFasilitas',
             'iframe1',
             'iframe2',
+            'noResult' // tambah ini untuk pesan "Data Kos tidak ditemukan"
         ));
     }
 

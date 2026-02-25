@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fasilitas;
 use App\Models\Kos;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
@@ -11,51 +12,69 @@ use Illuminate\Http\Request;
 class KosController extends Controller
 {
     public function index(Request $request)
+{
+    $settingsRaw = Setting::all();
+    $settings = new \stdClass();
+    foreach ($settingsRaw as $item) {
+        $settings->{$item->key} = $item->value;
+    }
 
-    {
-        $settingsRaw = Setting::all();
-
-        $settings = new \stdClass();
-
-        foreach ($settingsRaw as $item) {
-            $settings->{$item->key} = $item->value;
-        }
-
-        $query = Kos::with([
+    $query = Kos::with([
         'primaryImage',
-        'kamars.fasilitas'
+        'kamars.fasilitas',
+        'owner' // pastikan ada relasi owner
     ])
     ->withCount([
         'kamars as jumlah_kamar',
-        'kamars as kamar_tersedia' => function ($q) {
+        'kamars as kamar_tersedia' => function ($q) {  
             $q->where('status', 'tersedia');
         }
     ]);
 
-        if ($request->jenis_kos) {
-            $query->where('jenis_kos', $request->jenis_kos);
-        }
+    // 🔎 GLOBAL SEARCH
+    if ($request->filled('q')) {
+        $search = $request->q;
 
-        if ($request->status) {
-            $query->whereHas('kamars', function ($q) use ($request) {
-                $q->where('status', $request->status);
-            });
-        }
-
-        if ($request->fasilitas) {
-            $query->whereHas('kamars.fasilitas', function ($q) use ($request) {
-                $q->where('nama', $request->fasilitas);
-            });
-        }
-
-        $kos = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        return view('user.kos.index', compact('kos', 'settings'));
+        $query->where(function($q) use ($search) {
+            $q->where('nama_kos', 'like', "%{$search}%")
+              ->orWhere('alamat', 'like', "%{$search}%")
+              ->orWhere('jenis_sewa', 'like', "%{$search}%")
+              ->orWhere('gender', 'like', "%{$search}%")
+              ->orWhereHas('owner', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%{$search}%");
+              });
+        });
     }
 
+    // 🔎 FILTER LAIN (jenis_kos/gender, status, fasilitas)
+    if ($request->filled('jenis_kos')) {
+        $query->where('gender', $request->jenis_kos);
+    }
+
+    if ($request->filled('status')) {
+        if ($request->status == 'tersedia') {
+            $query->whereHas('kamars', fn($q) => $q->where('status', 'tersedia'));
+        }
+        if ($request->status == 'penuh') {
+            $query->whereDoesntHave('kamars', fn($q) => $q->where('status', 'tersedia'));
+        }
+    }
+
+    if ($request->filled('fasilitas1')) {
+        $query->whereHas('kamars.fasilitas', fn($q) => $q->where('nama_fasilitas', $request->fasilitas1));
+    }
+
+    if ($request->filled('fasilitas2')) {
+        $query->whereHas('kamars.fasilitas', fn($q) => $q->where('nama_fasilitas', $request->fasilitas2));
+    }
+
+    $kos = $query->latest()->paginate(10)->withQueryString();
+    $fasilitasList = Fasilitas::orderBy('nama_fasilitas')->get();
+
+    $noResult = $kos->isEmpty(); // untuk pesan "Data Kos tidak ditemukan"
+
+    return view('user.kos.index', compact('kos', 'settings', 'fasilitasList', 'noResult'));
+}
 
 
     public function show(Request $request, Kos $kos)
