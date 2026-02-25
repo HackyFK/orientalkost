@@ -71,6 +71,9 @@ class AdminKamarController extends Controller
             'lantai'         => 'nullable|integer',
             'nomor_kamar'    => 'nullable|string',
             'deskripsi'      => 'nullable|string',
+            'panjang'        => 'nullable|numeric|min:1|max:50',
+            'lebar'          => 'nullable|numeric|min:1|max:50',
+            'harga_harian'  => 'nullable|numeric',
             'harga_bulanan'  => 'nullable|numeric',
             'harga_tahunan'  => 'nullable|numeric',
             'fasilitas' => 'nullable|array',
@@ -125,6 +128,9 @@ class AdminKamarController extends Controller
             'lantai'         => 'nullable|integer',
             'nomor_kamar'    => 'nullable|string',
             'deskripsi'      => 'nullable|string',
+            'panjang'        => 'nullable|numeric|min:1|max:50',
+            'lebar'          => 'nullable|numeric|min:1|max:50',
+            'harga_harian'  => 'nullable|numeric',
             'harga_bulanan'  => 'nullable|numeric',
             'harga_tahunan'  => 'nullable|numeric',
             'fasilitas' => 'nullable|array',
@@ -158,4 +164,15 @@ class AdminKamarController extends Controller
 
         return back()->with('success', 'Kamar berhasil dihapus');
     }
+
+    public function show(Kamar $kamar)
+{
+    $kamar->load([
+        'kos',
+        'fasilitas',
+        'images'
+    ]);
+
+    return view('admin.kamar.show', compact('kamar'));
+}
 }

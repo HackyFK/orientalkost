@@ -36,17 +36,18 @@
 
                 {{-- Card: Informasi Dasar --}}
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                    <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                         <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
                             <i class="fa-solid fa-house text-blue-500 text-xs"></i>
                         </div>
-                        <h2 class="font-bold text-slate-700 text-sm">Informasi Kos</h2>
+                        <h2 class="font-semibold text-slate-700 text-sm">Informasi Kos</h2>
                     </div>
                     <div class="p-5 space-y-4">
 
                         {{-- Owner --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Owner</label>
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Owner</label>
                             <select name="owner_id"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                                 <option value="">-- Pilih Owner --</option>
@@ -60,25 +61,39 @@
 
                         {{-- Nama Kos --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Kos</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama
+                                Kos</label>
                             <input type="text" name="nama_kos" value="{{ old('nama_kos') }}"
                                 placeholder="Contoh: Kos Melati Indah"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                         </div>
 
+                        {{-- Gender --}}
+                        <div>
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Gender</label>
+                            <select name="gender" required
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                                <option value="">-- Pilih Gender --</option>
+                                <option value="putra" @selected(old('gender') == 'putra')>Putra</option>
+                                <option value="putri" @selected(old('gender') == 'putri')>Putri</option>
+                                <option value="campuran" @selected(old('gender') == 'campuran')>Campuran</option>
+                            </select>
+                        </div>
+
                         {{-- Deskripsi --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
-                            <textarea name="deskripsi" rows="3"
-                                placeholder="Deskripsi singkat tentang kos..."
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
+                            <textarea name="deskripsi" rows="3" placeholder="Deskripsi singkat tentang kos..."
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('deskripsi') }}</textarea>
                         </div>
 
                         {{-- Alamat --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat Lengkap</label>
-                            <textarea name="alamat" rows="2"
-                                placeholder="Jalan, nomor, kelurahan, kecamatan..."
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat
+                                Lengkap</label>
+                            <textarea name="alamat" rows="2" placeholder="Jalan, nomor, kelurahan, kecamatan..."
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('alamat') }}</textarea>
                         </div>
 
@@ -105,18 +120,22 @@
                         {{-- Lat & Lng --}}
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Latitude</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Latitude</label>
                                 <div class="relative">
-                                    <i class="fa-solid fa-arrows-up-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <i
+                                        class="fa-solid fa-arrows-up-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
                                     <input type="text" name="latitude" id="latInput" value="{{ old('latitude') }}"
                                         placeholder="-7.7970680"
                                         class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Longitude</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Longitude</label>
                                 <div class="relative">
-                                    <i class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <i
+                                        class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
                                     <input type="text" name="longitude" id="lngInput" value="{{ old('longitude') }}"
                                         placeholder="110.3705290"
                                         class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
@@ -125,7 +144,8 @@
                         </div>
 
                         {{-- Map --}}
-                        <div id="map" class="w-full h-64 rounded-xl border border-slate-200 shadow-sm overflow-hidden"></div>
+                        <div id="map"
+                            class="w-full h-64 rounded-xl border border-slate-200 shadow-sm overflow-hidden"></div>
                         <p class="text-xs text-slate-400">
                             <i class="fa-solid fa-circle-info mr-1"></i>
                             Klik pada peta atau seret marker untuk menentukan lokasi kos
@@ -148,7 +168,8 @@
                         <h2 class="font-bold text-slate-700 text-sm">Jenis Sewa</h2>
                     </div>
                     <div class="p-5">
-                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe Sewa</label>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe
+                            Sewa</label>
                         <select name="jenis_sewa"
                             class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                             <option value="bulanan" @selected(old('jenis_sewa') == 'bulanan')>📅 Bulanan</option>
@@ -166,9 +187,12 @@
                         <h2 class="font-bold text-slate-700 text-sm">Foto Kos</h2>
                     </div>
                     <div class="p-5">
-                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-7 cursor-pointer transition-colors group">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
+                        <label
+                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-7 cursor-pointer transition-colors group">
+                            <i
+                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
+                            <span
+                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
                                 Klik untuk upload foto kos
                             </span>
                             <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB</span>
@@ -185,7 +209,7 @@
                 {{-- Tombol Aksi --}}
                 <div class="flex gap-3">
                     <a href="{{ route('admin.kos.index') }}"
-                       class="flex-1 text-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
+                        class="flex-1 text-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
                         Batal
                     </a>
                     <button type="submit"
@@ -213,7 +237,9 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+        const marker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
 
         function setLocation(lat, lng) {
             marker.setLatLng([lat, lng]);

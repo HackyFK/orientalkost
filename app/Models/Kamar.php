@@ -18,6 +18,9 @@ class Kamar extends Model
         'lantai',
         'nomor_kamar',
         'deskripsi',
+        'panjang',
+        'lebar',
+        'harga_harian',
         'harga_bulanan',
         'harga_tahunan',
         'status'
@@ -50,4 +53,13 @@ class Kamar extends Model
     {
         return $this->hasOne(KamarImage::class)->where('is_primary', true);
     }
+
+    public function getKamarTersediaAttribute()
+{
+    return $this->kamars()
+        ->where('status', 'tersedia')
+        ->count();
+}
+
+    
 }

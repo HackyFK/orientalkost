@@ -239,6 +239,11 @@
 
                                 <!-- Fasilitas -->
                                 <div class="flex flex-wrap gap-2 mb-4">
+                                      {{-- Ukuran kamar --}}
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold flex items-center">
+                                        <i class="fas fa-ruler-combined mr-2 text-accent"></i>
+                                        {{ $kamar->panjang + 0 }} × {{ $kamar->lebar + 0 }} m
+                                    </span>
                                     @foreach ($kamar->fasilitas->take(5) as $fasilitas)
                                         <span
                                             class="bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700 font-medium">

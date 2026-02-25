@@ -217,29 +217,72 @@
                             <div class="flex flex-wrap gap-2 mb-4">
                                 <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
                                     <i class="fas fa-door-open text-accent mr-1"></i>
-                                    {{ $item->kamars->count() }} Kamar
+
+                                    {{ $item->jumlah_kamar }}
+                                    Kamar
                                 </span>
 
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
-                                    <i class="fas fa-wifi text-accent mr-1"></i>WiFi
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
-                                    <i class="fas fa-parking text-accent mr-1"></i>Parkir
-                                </span>
-                                <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
-                                    <i class="fas fa-shield-alt text-accent mr-1"></i>Security
-                                </span>
+                                {{-- fasilitas dari kamar --}}
+                                {{-- 1 fasilitas per kategori --}}
+                                @foreach ($item->fasilitas as $kategori => $fasilitasGroup)
+                                    @php
+                                        $fasilitas = $fasilitasGroup->first();
+                                    @endphp
+
+                                    @if ($fasilitas)
+                                        <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                            <i class="{{ $fasilitas->icon }} text-accent mr-1"></i>
+                                            {{ $fasilitas->nama_fasilitas }}
+                                        </span>
+                                    @endif
+                                @endforeach
                             </div>
 
                             <!-- Status (STATIS) -->
                             <div class="flex gap-3 mb-4">
                                 <span
-                                    class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-check-circle mr-2"></i>Tersedia
+                                    class="{{ $item->kamar_tersedia > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} 
+    px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+
+                                    @if ($item->kamar_tersedia > 0)
+                                        <i class="fas fa-check-circle mr-2"></i>Tersedia
+                                    @else
+                                        <i class="fas fa-times-circle mr-2"></i>Tidak tersedia
+                                    @endif
+
                                 </span>
+
+                                @php
+                                    $gender = strtolower($item->gender);
+
+                                    $config = match ($gender) {
+                                        'putra' => [
+                                            'bg' => 'bg-blue-100 text-blue-700',
+                                            'icon' => 'fa-mars',
+                                            'label' => 'Putra',
+                                        ],
+                                        'putri' => [
+                                            'bg' => 'bg-pink-100 text-pink-700',
+                                            'icon' => 'fa-venus',
+                                            'label' => 'Putri',
+                                        ],
+                                        'campuran' => [
+                                            'bg' => 'bg-purple-100 text-purple-700',
+                                            'icon' => 'fa-venus-mars',
+                                            'label' => 'Campuran',
+                                        ],
+                                        default => [
+                                            'bg' => 'bg-gray-100 text-gray-700',
+                                            'icon' => 'fa-circle',
+                                            'label' => ucfirst($item->gender),
+                                        ],
+                                    };
+                                @endphp
+
                                 <span
-                                    class="bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-semibold flex items-center">
-                                    <i class="fas fa-venus mr-2"></i>Putri
+                                    class="{{ $config['bg'] }} px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                                    <i class="fas {{ $config['icon'] }} mr-2"></i>
+                                    {{ $config['label'] }}
                                 </span>
                             </div>
 
@@ -265,7 +308,9 @@
 
                                 <div class="flex items-center gap-2 text-sm text-purple-700 font-semibold">
                                     <i class="fas fa-bed"></i>
-                                    <span>{{ $item->kamars->count() }} Kamar Tersedia</span>
+
+                                    {{ $item->kamar_tersedia }}
+                                    Kamar Tersedia</span>
                                 </div>
                             </div>
 
@@ -344,7 +389,7 @@
                 Tim kami siap membantu Anda menemukan kos yang sempurna sesuai kebutuhan dan budget
             </p>
             {{-- Tombol Telepon --}}
-           <a href="tel:{{ $settings->contact_phone }}"
+            <a href="tel:{{ $settings->contact_phone }}"
                 class="bg-accent hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-semibold transition shadow-lg inline-flex items-center justify-center">
                 <i class="fas fa-phone-alt mr-2"></i>
                 Hubungi Kami

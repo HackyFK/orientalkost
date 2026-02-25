@@ -79,7 +79,7 @@
         </div>
 
 
-          
+
 
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
@@ -96,7 +96,7 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-100">
-                 
+
                     @forelse ($items as $kamar)
                         <tr class="hover:bg-slate-50/60 transition-colors">
 
@@ -184,12 +184,22 @@
                             {{-- Aksi --}}
                             <td class="px-5 py-3.5">
                                 <div class="flex items-center justify-center gap-2">
+
+                                    {{-- DETAIL --}}
+                                    <a href="{{ route('admin.kamar.show', $kamar) }}"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold rounded-lg border border-blue-100 transition-colors">
+                                        <i class="fa-solid fa-eye text-[10px]"></i>
+                                      
+                                    </a>
+
+                                    {{-- EDIT --}}
                                     <a href="{{ route('admin.kamar.edit', $kamar) }}"
                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 text-xs font-semibold rounded-lg border border-amber-100 transition-colors">
                                         <i class="fa-solid fa-pen text-[10px]"></i>
-                                        Edit
+                                      
                                     </a>
 
+                                    {{-- DELETE --}}
                                     <form action="{{ route('admin.kamar.destroy', $kamar) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus kamar ini?')">
                                         @csrf
@@ -197,9 +207,10 @@
                                         <button type="submit"
                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-500 text-xs font-semibold rounded-lg border border-red-100 transition-colors">
                                             <i class="fa-solid fa-trash text-[10px]"></i>
-                                            Hapus
+                                     
                                         </button>
                                     </form>
+
                                 </div>
                             </td>
 
@@ -223,7 +234,7 @@
         </div>
 
         {{-- Pagination --}}
-         
+
         @if ($items->hasPages())
             <div class="px-5 py-4 border-t border-slate-100">
                 {{ $items->links() }}

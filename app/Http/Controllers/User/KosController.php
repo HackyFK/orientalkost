@@ -21,7 +21,16 @@ class KosController extends Controller
             $settings->{$item->key} = $item->value;
         }
 
-        $query = Kos::with(['primaryImage', 'kamars.fasilitas']);
+        $query = Kos::with([
+        'primaryImage',
+        'kamars.fasilitas'
+    ])
+    ->withCount([
+        'kamars as jumlah_kamar',
+        'kamars as kamar_tersedia' => function ($q) {
+            $q->where('status', 'tersedia');
+        }
+    ]);
 
         if ($request->jenis_kos) {
             $query->where('jenis_kos', $request->jenis_kos);
@@ -41,7 +50,7 @@ class KosController extends Controller
 
         $kos = $query
             ->latest()
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString();
 
         return view('user.kos.index', compact('kos', 'settings'));
@@ -89,7 +98,7 @@ class KosController extends Controller
 
         $kamars = $query
             ->latest()
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString();
 
         return view('user.kos.kamar', compact('kos', 'kamars', 'settings'));

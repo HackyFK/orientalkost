@@ -130,6 +130,11 @@
                             </h2>
 
                             <div class="grid md:grid-cols-2 gap-4">
+                                <span
+                                    class="bg-gray-50 text-gray-700 px-3 py-1 rounded-xl text-sm font-semibold flex items-center">
+                                    <i class="fas fa-ruler-combined mr-2 text-accent"></i>
+                                    {{ $kamar->panjang + 0 }} × {{ $kamar->lebar + 0 }} m
+                                </span>
 
                                 @forelse ($kamar->fasilitas as $fasilitas)
                                     <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
@@ -300,254 +305,232 @@
 
                     <!-- RIGHT COLUMN - BOOKING CARD -->
                     <div class="lg:col-span-1">
-                        <div class="bg-white rounded-3xl shadow-2xl p-8 top-28">
-                            <div class="mb-6">
-                                <p class="text-sm text-text-gray mb-2">Mulai dari</p>
-                                <div class="flex items-baseline space-x-2">
-                                    <span class="text-4xl font-bold text-accent">
-                                        Rp {{ number_format($kamar->harga_bulanan ?? 800000, 0, ',', '.') }}
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden sticky top-28">
+
+                            {{-- Harga --}}
+                            <div class="px-6 py-5 border-b border-slate-100">
+
+                                <p class="text-xs text-slate-400 mb-1">Mulai dari</p>
+
+                                <div class="flex items-baseline gap-2">
+
+                                    <span id="hargaValue" class="text-3xl font-bold text-accent"
+                                        data-harian="{{ $kamar->harga_harian }}"
+                                        data-bulanan="{{ $kamar->harga_bulanan }}"
+                                        data-tahunan="{{ $kamar->harga_tahunan }}">
+
+                                        Rp {{ number_format($kamar->harga_bulanan, 0, ',', '.') }}
+
                                     </span>
-                                    <span class="text-text-gray">/bulan</span>
+
+                                    <span id="hargaSuffix" class="text-sm text-slate-400">
+                                        /bulan
+                                    </span>
+
                                 </div>
+
                             </div>
 
-                            <!-- Jenis Sewa -->
-                            <div class="mb-6">
-                                <label class="block text-sm font-semibold text-primary mb-3">Jenis Sewa</label>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <button
-                                        class="border-2 border-accent bg-accent text-white py-3 rounded-xl font-semibold transition"
-                                        type="button">
-                                        Bulanan
-                                    </button>
-                                    <button
-                                        class="border-2 border-gray-300 text-gray-700 hover:border-accent hover:text-accent py-3 rounded-xl font-semibold transition"
-                                        type="button">
-                                        Tahunan
-                                    </button>
-                                </div>
-                            </div>
+                            <div class="p-6 space-y-5">
 
-                            <!-- Biaya -->
-                            <div class="bg-gray-50 rounded-2xl p-6 mb-6">
-                                <h3 class="font-semibold text-primary mb-4">Rincian Biaya</h3>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-text-gray">Sewa per bulan</span>
-                                        <span class="font-semibold text-primary">Rp 800.000</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-text-gray">Deposit</span>
-                                        <span class="font-semibold text-primary">Rp 500.000</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-text-gray">Listrik (estimasi)</span>
-                                        <span class="font-semibold text-primary">Rp 150.000</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-text-gray">Air</span>
-                                        <span class="font-semibold text-primary">Rp 50.000</span>
-                                    </div>
-                                    <div class="border-t border-gray-300 pt-3 flex justify-between">
-                                        <span class="font-semibold text-primary">Total Awal</span>
-                                        <span class="font-bold text-accent text-xl">Rp 1.500.000</span>
+                                {{-- Jenis Sewa --}}
+                                <div>
+                                    <label
+                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                                        Jenis Sewa
+                                    </label>
+
+                                    <div class="grid grid-cols-3 gap-2">
+
+                                        @if ($kamar->harga_harian)
+                                            <button type="button" onclick="ubahHarga('harian', this)"
+                                                class="btnHarga border-2 border-slate-200 text-slate-600 py-2.5 rounded-xl text-xs font-semibold transition">
+                                                Harian
+                                            </button>
+                                        @endif
+
+
+                                        @if ($kamar->harga_bulanan)
+                                            <button type="button" onclick="ubahHarga('bulanan', this)"
+                                                class="btnHarga border-2 border-accent bg-accent text-white py-2.5 rounded-xl text-xs font-semibold transition">
+                                                Bulanan
+                                            </button>
+                                        @endif
+
+
+                                        @if ($kamar->harga_tahunan)
+                                            <button type="button" onclick="ubahHarga('tahunan', this)"
+                                                class="btnHarga border-2 border-slate-200 text-slate-600 py-2.5 rounded-xl text-xs font-semibold transition">
+                                                Tahunan
+                                            </button>
+                                        @endif
+
                                     </div>
                                 </div>
-                            </div>
 
+                                {{-- CTA Buttons --}}
+                                <div class="space-y-2.5">
 
+                                    {{-- Booking --}}
+                                    @guest
+                                        <button type="button"
+                                            class="w-full bg-slate-300 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-not-allowed relative group">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Booking Sekarang
+                                            <span
+                                                class="absolute -top-9 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">
+                                                Login untuk booking
+                                            </span>
+                                        </button>
+                                    @endguest
 
-                            <!-- CTA Buttons -->
-                            <div class="space-y-3">
-                                @guest
-                                    <button
-                                        class="w-full bg-gray-400 text-white py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center cursor-not-allowed relative group">
+                                    @auth
+                                        <a href="{{ route('user.booking.create', $kamar->id) }}"
+                                            class="w-full bg-accent hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm shadow-orange-200">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Booking Sekarang
+                                        </a>
+                                    @endauth
 
-                                        <i class="fas fa-calendar-check mr-3"></i>
-                                        Booking Sekarang
-
-                                        <!-- Tooltip -->
-                                        <span
-                                            class="absolute -top-10 bg-black text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition">
-                                            Login untuk booking
-                                        </span>
+                                    {{-- WhatsApp --}}
+                                    <button type="button"
+                                        class="w-full border-2 border-accent text-accent hover:bg-accent hover:text-white active:scale-[0.98] py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                        <i class="fab fa-whatsapp text-base"></i>
+                                        Chat WhatsApp
                                     </button>
-                                @endguest
 
-                                @auth
-                                    <a href="{{ route('user.booking.create', $kamar->id) }}"
-                                        class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg transition shadow-lg flex items-center justify-center">
-                                        <i class="fas fa-calendar-check mr-3"></i>
-                                        Booking Sekarang
-                                    </a>
-                                @endauth
-
-                                <button
-                                    class="w-full border-2 border-accent text-accent hover:bg-accent hover:text-white py-4 rounded-xl font-semibold transition flex items-center justify-center"
-                                    type="button">
-                                    <i class="fab fa-whatsapp mr-3 text-xl"></i>
-                                    Chat WhatsApp
-                                </button>
-                                <button type="button" onclick="checkBooking({{ $hasBooked ? 'true' : 'false' }})"
-                                    class="w-full border-2 border-gray-300 hover:border-yellow-400
-    text-yellow-400 py-4 rounded-xl transition flex items-center justify-center">
-
-                                    <i class="fas fa-star text-xl mr-3"></i>
-                                    <span class="font-semibold text-primary tracking-wide">
+                                    {{-- Rating --}}
+                                    <button type="button" onclick="checkBooking({{ $hasBooked ? 'true' : 'false' }})"
+                                        class="w-full border-2 border-slate-200 hover:border-yellow-400 text-slate-600 hover:text-yellow-500 active:scale-[0.98] py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
                                         Rating Kamar
-                                    </span>
-                                </button>
-
-                                {{-- MODAL --}}
-                                <div id="ratingModal"
-                                    class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
-
-                                    <form action="{{ route('user.reviews.store', $kamar->id) }}" method="POST"
-                                        class="bg-white p-6 rounded-xl shadow w-full max-w-md">
-                                        @csrf
-
-                                        <label class="block mb-2 font-semibold">Rating</label>
-                                        <select name="rating" required class="w-full border rounded-lg p-2 mb-4">
-                                            <option value="">Pilih Rating</option>
-                                            <option value="5">⭐⭐⭐⭐⭐</option>
-                                            <option value="4">⭐⭐⭐⭐</option>
-                                            <option value="3">⭐⭐⭐</option>
-                                            <option value="2">⭐⭐</option>
-                                            <option value="1">⭐</option>
-                                        </select>
-
-                                        <textarea name="ulasan" class="w-full border rounded-lg p-3 mb-4" placeholder="Tulis ulasan (opsional)"></textarea>
-
-                                        <button type="submit"
-                                            class="w-full border-2 border-yellow-400 text-yellow-500
-            hover:bg-yellow-400 hover:text-white py-3 rounded-xl transition
-            flex items-center justify-center">
-                                            <i class="fas fa-star mr-2"></i>
-                                            Kirim Rating
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-
-                            @if (session('review_success'))
-                                <div id="successModal"
-                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-
-                                    <div
-                                        class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
-
-                                        <div
-                                            class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500">
-                                            <i class="fas fa-clock text-3xl"></i>
-                                        </div>
-
-                                        <h3 class="text-xl font-bold text-primary mb-2">
-                                            Rating Berhasil Dikirim 🎉
-                                        </h3>
-
-                                        <p class="text-text-gray mb-6">
-                                            Terima kasih! Rating kamu <br>
-                                            <span class="font-semibold text-yellow-500">
-                                                sedang menunggu persetujuan admin
-                                            </span>.
-                                        </p>
-
-                                        <button onclick="closeSuccessModal()"
-                                            class="w-full bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
-                                            Mengerti
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
-
-
-
-
-
-
-
-                            <!-- Popup Pemberitahuan -->
-                            <div id="bookingModal"
-                                class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
-
-                                <div
-                                    class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
-
-                                    <div
-                                        class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-orange-100 text-accent">
-                                        <i class="fas fa-info-circle text-3xl"></i>
-                                    </div>
-
-                                    <h3 class="text-xl font-bold text-primary mb-2">
-                                        Informasi Booking
-                                    </h3>
-
-                                    <p class="text-textGray mb-6">
-                                        Kamar<span class="font-semibold text-accent ml-1">bisa dibooking dari tanggal
-                                            1</span>.
-                                        <br>
-                                        Harap pilih tanggal 1 disetiap bulan yang anda pilih dan berapa lama durasi kos
-                                    </p>
-
-                                    <button id="closeModal" type="button"
-                                        class="w-full bg-accent hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
-                                        MENGERTI!
                                     </button>
 
-                                    <a href="panduan.html"
-                                        class="block w-full bg-primary hover:bg-secondary text-white py-3 rounded-xl font-semibold transition
-          flex items-center justify-center mt-3 gap-3">
-                                        <i class="fas fa-book-open text-lg"></i>
-                                        Baca Panduan
-                                    </a>
-
                                 </div>
-                            </div>
 
-                            @if (session('error'))
-                                <div id="errorModal"
-                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-
-                                    <div
-                                        class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center animate-fadeIn">
-
-                                        <div
-                                            class="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100 text-red-500">
-                                            <i class="fas fa-exclamation-circle text-3xl"></i>
-                                        </div>
-
-                                        <h3 class="text-xl font-bold text-primary mb-2">
-                                            Rating Sudah Ada ⭐
-                                        </h3>
-
-                                        <p class="text-text-gray mb-6">
-                                            {{ session('error') }}
-                                        </p>
-
-                                        <button onclick="closeErrorModal()"
-                                            class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
-                                            Mengerti
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
-
-
-
-                            <!-- Info -->
-                            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                                <div class="flex items-start space-x-3">
-                                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
-                                    <p class="text-sm text-blue-900">
-                                        <strong>Harap Perhatikan:</strong> Sebelum booking harap perhatikan kembali
+                                {{-- Info Box --}}
+                                <div class="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                                    <i class="fas fa-info-circle text-blue-400 mt-0.5 flex-shrink-0 text-sm"></i>
+                                    <p class="text-xs text-blue-700 leading-relaxed">
+                                        <span class="font-semibold">Harap Perhatikan:</span> Pastikan data yang Anda
+                                        masukkan sudah benar sebelum melanjutkan booking.
                                     </p>
                                 </div>
+
                             </div>
-
                         </div>
-
                     </div>
+
+                    {{-- ===== MODALS ===== --}}
+
+                    {{-- Modal Rating --}}
+                    <div id="ratingModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+                        <form action="{{ route('user.reviews.store', $kamar->id) }}" method="POST"
+                            class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+                            @csrf
+                            <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                                <div class="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center">
+                                    <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                </div>
+                                <h3 class="font-semibold text-slate-700 text-sm">Beri Rating Kamar</h3>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <div>
+                                    <label
+                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Rating</label>
+                                    <select name="rating" required
+                                        class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition">
+                                        <option value="">-- Pilih Rating --</option>
+                                        <option value="5">⭐⭐⭐⭐⭐ &nbsp; Sangat Bagus</option>
+                                        <option value="4">⭐⭐⭐⭐ &nbsp; Bagus</option>
+                                        <option value="3">⭐⭐⭐ &nbsp; Cukup</option>
+                                        <option value="2">⭐⭐ &nbsp; Kurang</option>
+                                        <option value="1">⭐ &nbsp; Buruk</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Ulasan
+                                        <span class="normal-case font-normal">(opsional)</span></label>
+                                    <textarea name="ulasan" rows="3" placeholder="Ceritakan pengalaman kamu di kamar ini..."
+                                        class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition resize-none"></textarea>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-yellow-400 hover:bg-yellow-500 active:scale-[0.98] text-white py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-star"></i>
+                                    Kirim Rating
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {{-- Modal Booking Info --}}
+                    <div id="bookingModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+                            <div
+                                class="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-orange-100 text-accent">
+                                <i class="fas fa-info-circle text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-primary mb-2">Informasi Booking</h3>
+                            <p class="text-sm text-slate-500 mb-6 leading-relaxed">
+                                Kamar <span class="font-semibold text-accent">bisa dibooking mulai tanggal 1</span>.<br>
+                                Pilih tanggal 1 di setiap bulan yang Anda inginkan beserta durasi kos.
+                            </p>
+                            <div class="space-y-2.5">
+                                <button id="closeModal" type="button"
+                                    class="w-full bg-accent hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-semibold text-sm transition">
+                                    Mengerti!
+                                </button>
+                                <a href="panduan.html"
+                                    class="w-full border-2 border-slate-200 hover:border-accent text-slate-600 hover:text-accent py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-book-open"></i>
+                                    Baca Panduan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Modal Review Success --}}
+                    @if (session('review_success'))
+                        <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+                                <div
+                                    class="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-500">
+                                    <i class="fas fa-clock text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-primary mb-2">Rating Berhasil Dikirim 🎉</h3>
+                                <p class="text-sm text-slate-500 mb-6 leading-relaxed">
+                                    Terima kasih! Rating kamu sedang<br>
+                                    <span class="font-semibold text-yellow-500">menunggu persetujuan admin</span>.
+                                </p>
+                                <button onclick="closeSuccessModal()"
+                                    class="w-full bg-accent hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-semibold text-sm transition">
+                                    Mengerti
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Modal Error --}}
+                    @if (session('error'))
+                        <div id="errorModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+                                <div
+                                    class="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100 text-red-500">
+                                    <i class="fas fa-exclamation-circle text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-primary mb-2">Rating Sudah Ada ⭐</h3>
+                                <p class="text-sm text-slate-500 mb-6">{{ session('error') }}</p>
+                                <button onclick="closeErrorModal()"
+                                    class="w-full bg-red-500 hover:bg-red-600 active:scale-[0.98] text-white py-3 rounded-xl font-semibold text-sm transition">
+                                    Mengerti
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
+            </div>
 
             </div>
             </div>
@@ -610,6 +593,40 @@
                 if (modal) {
                     modal.classList.add('hidden'); // sembunyikan modal
                 }
+            }
+        </script>
+        <script>
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID').format(angka);
+            }
+
+            function ubahHarga(jenis, tombol) {
+                const hargaElement = document.getElementById('hargaValue');
+                const suffixElement = document.getElementById('hargaSuffix');
+
+                const harga = hargaElement.dataset[jenis];
+
+                hargaElement.innerHTML = 'Rp ' + formatRupiah(harga);
+
+                if (jenis === 'harian')
+                    suffixElement.innerHTML = '/hari';
+
+                if (jenis === 'bulanan')
+                    suffixElement.innerHTML = '/bulan';
+
+                if (jenis === 'tahunan')
+                    suffixElement.innerHTML = '/tahun';
+
+
+                // reset semua tombol
+                document.querySelectorAll('.btnHarga').forEach(btn => {
+                    btn.classList.remove('border-accent', 'bg-accent', 'text-white');
+                    btn.classList.add('border-slate-200', 'text-slate-600');
+                });
+
+                // aktifkan tombol dipilih
+                tombol.classList.remove('border-slate-200', 'text-slate-600');
+                tombol.classList.add('border-accent', 'bg-accent', 'text-white');
             }
         </script>
 

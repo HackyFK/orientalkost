@@ -37,6 +37,8 @@ class AdminKosController extends Controller
             'latitude'   => 'nullable|numeric',
             'longitude'  => 'nullable|numeric',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
+             // TAMBAHAN
+            'gender'     => 'required|in:putra,putri,campuran',
             'owner_id'   => 'nullable|exists:users,id',
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
@@ -77,6 +79,8 @@ class AdminKosController extends Controller
             'longitude'  => 'nullable|numeric',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
             'owner_id'   => 'nullable|exists:users,id',
+             // TAMBAHAN
+            'gender'     => 'required|in:putra,putri,campuran',
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
