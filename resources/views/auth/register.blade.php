@@ -18,6 +18,20 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Tipe Identitas -->
+        <div class="mt-4">
+            <x-input-label for="tipe_identitas" :value="__('Tipe Identitas')" />
+            <select id="tipe_identitas" name="tipe_identitas"
+                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                <option value="">-- Pilih --</option>
+                <option value="nik" {{ old('tipe_identitas') == 'nik' ? 'selected' : '' }}>NIK</option>
+                <option value="nisn" {{ old('tipe_identitas') == 'nisn' ? 'selected' : '' }}>NISN</option>
+                <option value="nim" {{ old('tipe_identitas') == 'nim' ? 'selected' : '' }}>NIM</option>
+                <option value="paspor" {{ old('tipe_identitas') == 'paspor' ? 'selected' : '' }}>Paspor</option>
+            </select>
+            <x-input-error :messages="$errors->get('tipe_identitas')" class="mt-2" />
+        </div>
+
         <!-- NIK Number -->
         <div class="mt-4">
             <x-input-label for="nomor_identitas" :value="__('nomor_identitas')" />

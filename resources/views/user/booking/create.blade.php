@@ -92,14 +92,37 @@
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4">
+
+                        <!-- Pilih Bulan Mulai -->
                         <div>
-                            <label class="block font-medium text-gray-700">Durasi</label>
-                            <input type="number" name="durasi" placeholder="Durasi (bulan/tahun)"
-                                class="input w-full mt-1" min="1" x-model.number="durasi">
+                            <label class="block font-medium text-gray-700">Mulai Sewa (Bulan)</label>
+                            <input type="month" name="bulan_mulai" class="input w-full mt-1" x-model="bulanMulai"
+                                required>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Tanggal mulai otomatis tanggal 1
+                            </p>
                         </div>
+
+                        <!-- Durasi -->
                         <div>
-                            <label class="block font-medium text-gray-700">Tanggal Mulai</label>
-                            <input type="date" name="tanggal_mulai" class="input w-full mt-1" required>
+                            <label class="block font-medium text-gray-700">
+                                Durasi (<span x-text="jenisSewa === 'bulanan' ? 'Bulan' : 'Tahun'"></span>)
+                            </label>
+                            <input type="number" name="durasi" min="1" class="input w-full mt-1"
+                                x-model.number="durasi" required>
+                        </div>
+
+                    </div>
+
+                    <!-- Info Otomatis -->
+                    <div class="bg-blue-50 rounded-xl p-4 mt-4 text-sm space-y-1">
+                        <div class="flex justify-between">
+                            <span>Mulai:</span>
+                            <span x-text="tanggalMulaiFormatted"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Selesai:</span>
+                            <span x-text="tanggalSelesaiFormatted"></span>
                         </div>
                     </div>
 
@@ -150,6 +173,7 @@
 
                     jenisSewa: 'bulanan',
                     durasi: 1,
+                    bulanMulai: '',
 
                     get hargaPerBulan() {
                         return this.jenisSewa === 'bulanan' ?
@@ -173,6 +197,38 @@
 
                     get totalBayar() {
                         return this.subtotal - this.dpNominal
+                    },
+
+                    // ✅ tanggal mulai otomatis tanggal 1
+                    get tanggalMulai() {
+                        if (!this.bulanMulai) return null
+                        return new Date(this.bulanMulai + '-01')
+                    },
+
+                    // ✅ tanggal selesai otomatis sesuai durasi
+                    get tanggalSelesai() {
+                        if (!this.tanggalMulai) return null
+                        let d = new Date(this.tanggalMulai)
+                        d.setMonth(d.getMonth() + this.durasiBulan)
+                        return d
+                    },
+
+                    get tanggalMulaiFormatted() {
+                        if (!this.tanggalMulai) return '-'
+                        return this.tanggalMulai.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })
+                    },
+
+                    get tanggalSelesaiFormatted() {
+                        if (!this.tanggalSelesai) return '-'
+                        return this.tanggalSelesai.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })
                     },
 
                     format(val) {

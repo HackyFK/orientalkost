@@ -9,8 +9,9 @@ use App\Http\Controllers\Admin\AdminKamarController;
 use App\Http\Controllers\Admin\AdminKosController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
-use App\Http\Controllers\PaymentController;
+// use App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\BerandaController;
@@ -123,8 +124,7 @@ Route::name('user.')->group(function () {
 
     Route::get('/payment/{payment}', [MidtransController::class, 'show'])
         ->name('payment.show');
-
-        });
+});
 
 
 
@@ -149,6 +149,17 @@ Route::prefix('admin')
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
+
+        Route::resource('users', AdminUserController::class)
+            ->only(['index', 'show', 'destroy']);
+
+        Route::patch('users/{user}/update-role', [AdminUserController::class, 'updateRole'])
+            ->name('users.updateRole');
+
+        Route::patch('users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])
+            ->name('users.toggleStatus');
+
+
 
         Route::resource('kos', AdminKosController::class);
 
