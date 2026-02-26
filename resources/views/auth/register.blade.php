@@ -19,8 +19,29 @@
     {{-- Overlay blur --}}
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
 
-    {{-- Card --}}
-    <div class="relative z-10 w-full max-w-3xl mx-4 bg-white rounded-3xl shadow-2xl overflow-hidden flex">
+
+        <!-- Tipe Identitas -->
+        <div class="mt-4">
+            <x-input-label for="tipe_identitas" :value="__('Tipe Identitas')" />
+            <select id="tipe_identitas" name="tipe_identitas"
+                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                <option value="">-- Pilih --</option>
+                <option value="nik" {{ old('tipe_identitas') == 'nik' ? 'selected' : '' }}>NIK</option>
+                <option value="nisn" {{ old('tipe_identitas') == 'nisn' ? 'selected' : '' }}>NISN</option>
+                <option value="nim" {{ old('tipe_identitas') == 'nim' ? 'selected' : '' }}>NIM</option>
+                <option value="paspor" {{ old('tipe_identitas') == 'paspor' ? 'selected' : '' }}>Paspor</option>
+            </select>
+            <x-input-error :messages="$errors->get('tipe_identitas')" class="mt-2" />
+        </div>
+
+        <!-- NIK Number -->
+        <div class="mt-4">
+            <x-input-label for="nomor_identitas" :value="__('nomor_identitas')" />
+            <x-text-input id="nomor_identitas" class="block mt-1 w-full" type="text" name="nomor_identitas"
+                :value="old('nomor_identitas')" />
+            <x-input-error :messages="$errors->get('nomor_identitas')" class="mt-2" />
+        </div>
+
 
         {{-- LEFT: Gambar --}}
         <div class="hidden md:flex w-5/12 flex-shrink-0 relative flex-col">

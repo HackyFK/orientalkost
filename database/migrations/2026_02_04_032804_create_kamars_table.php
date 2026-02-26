@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('harga_harian', 12, 2)->nullable();
             $table->decimal('harga_bulanan', 12, 2)->nullable();
             $table->decimal('harga_tahunan', 12, 2)->nullable();
-            $table->integer('deposit')->default(0);
+            $table->integer('deposit')->default(100);
             $table->enum('status', ['tersedia', 'terisi'])->default('tersedia');
             $table->timestamps();
         });

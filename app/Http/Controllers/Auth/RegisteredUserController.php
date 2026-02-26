@@ -27,30 +27,43 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'nomor_identitas' => ['required', 'digits:16', 'unique:users,nomor_identitas'],
-            'phone' => ['required', 'string', 'max:15'],
-            'alamat' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+        'tipe_identitas' => ['required', 'in:nik,nisn,nim,paspor'],
+        'nomor_identitas' => ['required', 'string', 'unique:users,nomor_identitas'],
+        'phone' => ['required', 'string', 'max:15'],
+        'alamat' => ['required', 'string', 'max:255'],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'nomor_identitas' => $request->nomor_identitas,
-            'phone' => $request->phone,
-            'alamat' => $request->alamat,
-            'password' => Hash::make($request->password),
-        ]);
+    // VALIDASI BERDASARKAN TIPE
+    $rulesByType = [
+        'nik' => ['digits:16'],
+        'nisn' => ['digits:10'],
+        'nim' => ['max:20'],
+        'paspor' => ['regex:/^[A-Za-z0-9]+$/', 'max:20'],
+    ];
 
-        event(new Registered($user));
+    $request->validate([
+        'nomor_identitas' => $rulesByType[$request->tipe_identitas]
+    ]);
 
-        Auth::login($user);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'tipe_identitas' => $request->tipe_identitas,
+        'nomor_identitas' => $request->nomor_identitas,
+        'phone' => $request->phone,
+        'alamat' => $request->alamat,
+        'password' => Hash::make($request->password),
+    ]);
 
-        return redirect('/');
-    }
+    event(new Registered($user));
+    Auth::login($user);
+
+    return redirect('/');
+}
 }

@@ -114,7 +114,40 @@
             </div>
 
             {{-- ================= RIGHT SIDEBAR ================= --}}
-            <div class="xl:sticky xl:top-40 space-y-4">
+
+            <div class="xl:sticky xl:top-20 space-y-4">
+
+                {{-- Save Card --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                        <i class="fa-solid fa-floppy-disk text-blue-500 text-xs"></i>
+                        <h2 class="font-bold text-slate-700 text-sm">Simpan Perubahan</h2>
+                    </div>
+                    <div class="p-5">
+                        <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded-lg">
+                            Simpan Pengaturan
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Test Buttons --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+                    <form method="POST" action="{{ route('admin.settings.test.smtp') }}">
+                        @csrf
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                            🔘 Test SMTP
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('admin.settings.test.midtrans') }}">
+                        @csrf
+                        <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-lg">
+                            🔘 Test Midtrans
+                        </button>
+                    </form>
+                </div>
+
 
     {{-- Save Card --}}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -124,6 +157,7 @@
             </div>
             <h2 class="font-semibold text-slate-700 text-sm">Simpan Perubahan</h2>
         </div>
+
         <div class="p-4">
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 text-white text-sm font-semibold py-2.5 rounded-lg shadow-sm shadow-blue-200">
@@ -173,3 +207,4 @@
     </form>
 
 @endsection
+

@@ -74,7 +74,8 @@ class KosKamarSeeder extends Seeder
                     'harga_bulanan'  => 750000 + ($i * 20000),
                     'harga_bulanan'  => 750000 + ($i * 300000),
                     'harga_tahunan'  => 8000000 + ($i * 500000),
-                    'deposit'        => 50000,
+
+                    'deposit'  => 100,
                     'status'         => 'tersedia',
                 ]);
 

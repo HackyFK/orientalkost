@@ -36,30 +36,34 @@ class BookingController extends Controller
     public function store(Request $request, Kamar $kamar)
     {
         $request->validate([
-            'nama_penyewa'   => 'required|string|max:255',
-            'email'          => 'required|email|max:255',
-            'phone'          => 'required|string|max:20',
+            'nama_penyewa'    => 'required|string|max:255',
+            'email'           => 'required|email|max:255',
+            'phone'           => 'required|string|max:20',
             'nomor_identitas' => 'required|string|max:20',
-            'alamat'         => 'required|string|max:255',
-            'jenis_sewa'     => 'required|in:bulanan,tahunan',
-            'durasi'         => 'required|integer|min:1',
-            'tanggal_mulai'  => 'required|date',
+            'alamat'          => 'required|string|max:255',
+            'jenis_sewa'      => 'required|in:bulanan,tahunan',
+            'durasi'          => 'required|integer|min:1',
+            'bulan_mulai'     => 'required|date_format:Y-m',
         ]);
 
         $durasiBulan = $request->jenis_sewa === 'tahunan'
             ? (int) $request->durasi * 12
             : (int) $request->durasi;
 
+        // ✅ tanggal mulai selalu tanggal 1
+        $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
+            ->startOfMonth();
+
+        // ✅ tanggal selesai otomatis
+        $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan);
+
         $hargaPerBulan = $request->jenis_sewa === 'bulanan'
             ? $kamar->harga_bulanan
             : round($kamar->harga_tahunan / 12);
 
-        $subtotal = $hargaPerBulan * $durasiBulan;
-        $dpNominal = round($subtotal * $kamar->deposit / 100);
+        $subtotal   = $hargaPerBulan * $durasiBulan;
+        $dpNominal  = round($subtotal * $kamar->deposit / 100);
         $totalBayar = $subtotal - $dpNominal;
-
-        $tanggalMulai = Carbon::parse($request->tanggal_mulai);
-        $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan);
 
         $booking = Booking::create([
             'kamar_id'        => $kamar->id,
@@ -80,14 +84,13 @@ class BookingController extends Controller
             'status'          => 'pending',
         ]);
 
-        // BUAT PAYMENT DP
         $payment = Payment::create([
-            'booking_id'    => $booking->id,
-            'amount'        => $dpNominal,
-            'payment_type'  => 'dp',
+            'booking_id'     => $booking->id,
+            'amount'         => $dpNominal,
+            'payment_type'   => 'dp',
             'payment_method' => 'midtrans',
-            'reference'     => null,
-            'status'        => 'pending',
+            'reference'      => null,
+            'status'         => 'pending',
         ]);
 
         return redirect()->route('user.payment.show', $payment);
