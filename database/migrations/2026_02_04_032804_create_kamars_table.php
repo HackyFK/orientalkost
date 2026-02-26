@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('lantai')->nullable();
             $table->string('nomor_kamar')->nullable();
             $table->text('deskripsi')->nullable();
+            $table->decimal('panjang', 4, 2)->nullable();
+            $table->decimal('lebar', 4, 2)->nullable();
+            $table->decimal('harga_harian', 12, 2)->nullable();
             $table->decimal('harga_bulanan', 12, 2)->nullable();
             $table->decimal('harga_tahunan', 12, 2)->nullable();
             $table->integer('deposit')->default(100);

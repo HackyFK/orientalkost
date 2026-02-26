@@ -14,7 +14,7 @@
             </div>
 
             <!-- Content -->
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-10">
                 <div
                     class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full text-sm font-medium mb-6">
                     <i class="fas fa-images text-accent"></i>

@@ -6,6 +6,7 @@ use App\Models\Kamar;
 use App\Models\KosImage;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Fasilitas;
 
 class Kos extends Model
 {
@@ -18,6 +19,7 @@ class Kos extends Model
         'latitude',
         'longitude',
         'jenis_sewa',
+        'gender',
         'likes',
     ];
 
@@ -28,7 +30,7 @@ class Kos extends Model
             ->withTimestamps();
     }
 
- 
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -47,9 +49,48 @@ class Kos extends Model
             ->orderBy('id');
     }
 
+    public function fasilitas()
+    {
+        return $this->belongsToMany(
+            Fasilitas::class,
+            'kos_fasilitas'
+        );
+    }
+
     public function primaryImage()
     {
         return $this->hasOne(KosImage::class)
             ->where('is_primary', true);
+    }
+
+    // jumlah semua kamar
+    public function getJumlahKamarAttribute()
+    {
+        return $this->kamars()->count();
+    }
+
+    // jumlah kamar tersedia
+    public function getKamarTersediaAttribute()
+    {
+        return $this->kamars()
+            ->where('status', 'tersedia')
+            ->count();
+    }
+
+    // Status kos
+    public function getStatusAttribute()
+    {
+        $adaKamarTersedia = $this->kamars()
+            ->where('status', 'tersedia') // sesuaikan dengan field status kamar
+            ->exists();
+
+        return $adaKamarTersedia ? 'Tersedia' : 'Tidak tersedia';
+    }
+    public function getFasilitasAttribute()
+    {
+        return $this->kamars
+            ->flatMap->fasilitas
+            ->unique('id')
+            ->groupBy('kategori');
     }
 }

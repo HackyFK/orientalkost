@@ -9,110 +9,100 @@
 
         <!-- HERO SECTION -->
         <section id="home" class="relative min-h-screen flex items-center pt-20"
-            style="background: linear-gradient(rgba(15, 30, 50, 0.7), rgba(30, 47, 77, 0.8)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1920') center/cover;">
+            style="background: linear-gradient(135deg, rgba(10, 20, 40, 0.82), rgba(25, 40, 70, 0.88)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1920') center/cover no-repeat fixed;">
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+            {{-- Decorative blur orbs --}}
+            <div class="absolute top-32 left-16 w-64 h-64 bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-24 right-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
 
-                <!-- Brand -->
-                <div class="text-center mb-6">
-                    <h2 class="text-blue-400 font-semibold tracking-widest uppercase text-sm md:text-base">
-                        Kost & Kamar
-                    </h2>
-                    <p class="text-text-gray text-sm md:text-base mt-1">
-                        Murah • Aman • Strategis • Berkualitas
-                    </p>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full relative z-10">
+
+                {{-- Badge --}}
+                <div class="flex justify-center mb-6">
+                    <span
+                        class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-blue-300 text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
+                        Kost & Kamar Terpercaya
+                    </span>
                 </div>
 
-                <!-- Headline -->
-                <div class="text-center mb-12">
-                    <h1 class="text-accent text-4xl md:text-6xl font-bold mb-6 leading-tight uppercase">
-                        @yield('title', setting('site_name', 'KosKu'))<br>
+                {{-- Headline --}}
+                <div class="text-center mb-5">
+                    <h1 class="text-accent text-5xl md:text-7xl font-bold leading-tight uppercase tracking-tight">
+                        @yield('title', setting('site_name', 'KosKu'))
                     </h1>
-                    <p class="text-text-light text-lg md:text-xl max-w-2xl mx-auto">
-                        {{ setting('site_tagline') }}
-                    </p>
                 </div>
 
-                <!-- Search Box -->
-        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-5xl mx-auto">
+                {{-- Tagline --}}
+                <p class="text-center text-slate-300 text-base md:text-lg max-w-xl mx-auto mb-4 leading-relaxed">
+                    {{ setting('site_tagline', 'Temukan hunian nyaman, aman, dan terjangkau untuk Anda') }}
+                </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-
-                <!-- Jenis Kos -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-venus-mars text-accent mr-2"></i>
-                        Jenis Kos
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Putra</option>
-                        <option>Putri</option>
-                        <option>Campur</option>
-                    </select>
+                {{-- Pills --}}
+                <div class="flex justify-center gap-2 flex-wrap mb-12">
+                    @foreach (['Murah', 'Aman', 'Strategis', 'Berkualitas'] as $tag)
+                        <span
+                            class="inline-flex items-center gap-1.5 bg-tranparant backdrop-blur-sm border border-slate/300 text-slate-300 text-xs px-3 py-1.5 rounded-full">
+                            <i class="fas fa-check text-accent text-[9px]"></i>
+                            {{ $tag }}
+                        </span>
+                    @endforeach
                 </div>
 
-                <!-- Tipe Kamar -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-bed text-accent mr-2"></i>
-                        Tipe Kamar
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Semua Tipe</option>
-                        <option>Standard</option>
-                        <option>AC</option>
-                        <option>KM Dalam</option>
-                        <option>Premium</option>
-                    </select>
-                </div>
+                {{-- Search Box --}}
+                <form method="GET" action="{{ route('user.kos.index') }}">
+                    <div class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-2 flex gap-2 shadow-1xl">
+                        <div class="flex-1 flex items-center gap-3 bg-white rounded-xl px-4">
+                            <i class="fas fa-search text-slate-400 text-sm flex-shrink-0"></i>
+                            <input type="text" name="q" value="{{ request('q') }}"
+                                placeholder="Cari nama kos, alamat, gender, tipe sewa..."
+                                class="w-full py-3.5 text-sm text-slate-700 bg-transparent focus:outline-none placeholder-slate-400">
+                        </div>
+                        <button type="submit"
+                            class="bg-accent hover:bg-orange-600 active:scale-[0.98] text-white px-6 py-3 rounded-xl font-semibold text-sm transition shadow-lg shadow-orange-500/30 flex items-center gap-2 whitespace-nowrap">
+                            <i class="fas fa-search text-xs"></i>
+                            Cari Kos
+                        </button>
+                    </div>
 
-                <!-- Harga -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-money-bill-wave text-accent mr-2"></i>
-                        Rentang Harga
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Semua Harga</option>
-                        <option>< Rp 1 juta</option>
-                        <option>Rp 1 – 2 juta</option>
-                        <option>Rp 2 – 3 juta</option>
-                        <option>> Rp 3 juta</option>
-                    </select>
-                </div>
+                    {{-- Quick filters --}}
+                    <div class="flex justify-center gap-2 flex-wrap mt-4">
+    @foreach([
+        ['label' => 'Putra',    'icon' => 'fa-mars',      'val' => 'putra'],
+        ['label' => 'Putri',    'icon' => 'fa-venus',     'val' => 'putri'],
+        ['label' => 'Campuran', 'icon' => 'fa-venus-mars','val' => 'campuran'],
+    ] as $filter)
+    <button type="submit" name="q" value="{{ $filter['val'] }}" onclick="setActive(this)"
+        class="filter-btn inline-flex items-center gap-1.5
+               bg-accent/80 hover:bg-accent border border-accent
+               hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]
+               text-white text-xs px-4 py-2 rounded-lg font-medium transition-all duration-150 shadow-sm hover:shadow-md hover:shadow-accent/30">
+        <i class="fas {{ $filter['icon'] }} text-xs"></i>
+        {{ $filter['label'] }}
+    </button>
+    @endforeach
+</div>
 
-                <!-- Lokasi -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700 flex items-center">
-                        <i class="fas fa-map-marker-alt text-accent mr-2"></i>
-                        Lokasi
-                    </label>
-                    <select
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent-soft outline-none transition">
-                        <option>Pilih Lokasi</option>
-                        <option>Dekat Kampus</option>
-                        <option>Pusat Kota</option>
-                        <option>Kawasan Strategis</option>
-                    </select>
-                </div>
+<script>
+function setActive(el) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-accent', 'shadow-accent/50', 'shadow-lg');
+        btn.classList.add('bg-accent/80');
+    });
+    el.classList.remove('bg-accent/80');
+    el.classList.add('bg-accent', 'shadow-lg', 'shadow-accent/50');
+}
+</script>
+                </form>
+
             </div>
 
-            <!-- Button -->
-            <button
-                class="w-full bg-accent hover:bg-orange-600 text-white py-4 rounded-xl font-semibold text-lg transition shadow-lg flex items-center justify-center space-x-2">
-                <i class="fas fa-search"></i>
-                <span>Cari Kos Sekarang</span>
-            </button>
-
-        </div>
-
-
-
-
+            {{-- Bottom fade --}}
+            <div
+                class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/30 to-transparent pointer-events-none">
             </div>
+
         </section>
 
 
@@ -143,7 +133,7 @@
                                     @endphp
 
                                     @if ($title)
-                                         <div class="flex items-start space-x-4">
+                                        <div class="flex items-start space-x-4">
 
                                             <div class="bg-accent-soft rounded-full p-3">
                                                 @if ($icon)
@@ -802,7 +792,7 @@
                     spesial!
                 </p>
                 <a href="{{ route('user.kos.index') }}"
-                class="bg-accent hover:bg-orange-600 text-white px-12 py-5 rounded-full text-xl font-bold transition shadow-2xl inline-flex items-center justify-center">
+                    class="bg-accent hover:bg-orange-600 text-white px-12 py-5 rounded-full text-xl font-bold transition shadow-2xl inline-flex items-center justify-center">
                     <i class="fas fa-calendar-check mr-3"></i>
                     Booking Sekarang
                 </a>

@@ -31,9 +31,10 @@
 
                     <div class="p-5 space-y-4">
 
-                        {{-- Kos --}}
+
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kos</label>
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kos</label>
                             <select name="kos_id"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                                 @foreach ($kos as $item)
@@ -47,13 +48,17 @@
                         {{-- Nama & Tipe --}}
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Kamar</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama
+                                    Kamar</label>
                                 <input type="text" name="nama_kamar" value="{{ $kamar->nama_kamar }}"
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="Contoh: Kamar A1">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe Kamar</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe
+                                    Kamar</label>
                                 <input type="text" name="tipe_kamar" value="{{ $kamar->tipe_kamar }}"
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="Contoh: Standard">
@@ -63,22 +68,49 @@
                         {{-- Lantai & Nomor --}}
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Lantai</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Lantai</label>
                                 <input type="number" name="lantai" value="{{ $kamar->lantai }}"
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="1">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nomor Kamar</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nomor
+                                    Kamar</label>
                                 <input type="text" name="nomor_kamar" value="{{ $kamar->nomor_kamar }}"
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="A1">
                             </div>
                         </div>
 
+                        {{-- Panjang & Lebar --}}
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Panjang -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Panjang (m)
+                                </label>
+                                <input type="number" step="0.1" name="panjang" value="{{ $kamar->panjang + 0 }}"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                                    placeholder="3">
+                            </div>
+
+                            <!-- Lebar -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Lebar (m)
+                                </label>
+                                <input type="number" step="0.1" name="lebar" value="{{ $kamar->lebar + 0}}"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                                    placeholder="4">
+                            </div>
+                        </div>
+
                         {{-- Deskripsi --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
                             <textarea name="deskripsi" rows="4"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none"
                                 placeholder="Deskripsi singkat kamar...">{{ $kamar->deskripsi }}</textarea>
@@ -99,10 +131,9 @@
                     <div class="p-5 space-y-3">
                         @foreach ($fasilitas as $kategori => $items)
                             <div x-data="{
-                                    open: true,
-                                    selected: @js($kamar->fasilitas->whereIn('id', $items->pluck('id'))->pluck('id'))
-                                }"
-                                class="border border-slate-200 rounded-xl overflow-hidden">
+                                open: true,
+                                selected: @js($kamar->fasilitas->whereIn('id', $items->pluck('id'))->pluck('id'))
+                            }" class="border border-slate-200 rounded-xl overflow-hidden">
 
                                 {{-- Accordion Header --}}
                                 <button type="button" @click="open = !open"
@@ -112,24 +143,28 @@
                                             {{ ucfirst(str_replace('_', ' ', $kategori)) }}
                                         </span>
                                         <span class="text-xs font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full"
-                                              x-text="selected.length + ' dipilih'"></span>
+                                            x-text="selected.length + ' dipilih'"></span>
                                     </div>
                                     <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"
-                                       :class="open ? 'rotate-180' : ''"></i>
+                                        :class="open ? 'rotate-180' : ''"></i>
                                 </button>
 
                                 {{-- Accordion Content --}}
                                 <div x-show="open" x-transition class="p-4">
                                     <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                                         @foreach ($items as $item)
-                                            <label class="flex items-center gap-2.5 border border-slate-200 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
-                                                   :class="selected.includes({{ $item->id }}) ? 'bg-blue-50 border-blue-300' : 'hover:bg-slate-50'">
+                                            <label
+                                                class="flex items-center gap-2.5 border border-slate-200 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
+                                                :class="selected.includes({{ $item->id }}) ? 'bg-blue-50 border-blue-300' :
+                                                    'hover:bg-slate-50'">
                                                 <input type="checkbox" name="fasilitas[]" value="{{ $item->id }}"
-                                                       x-model="selected" class="accent-blue-500 w-3.5 h-3.5 flex-shrink-0">
+                                                    x-model="selected" class="accent-blue-500 w-3.5 h-3.5 flex-shrink-0">
                                                 @if ($item->icon)
-                                                    <i class="{{ $item->icon }} text-slate-500 text-xs w-3 text-center"></i>
+                                                    <i
+                                                        class="{{ $item->icon }} text-slate-500 text-xs w-3 text-center"></i>
                                                 @endif
-                                                <span class="text-xs font-medium text-slate-600 leading-tight">{{ $item->nama_fasilitas }}</span>
+                                                <span
+                                                    class="text-xs font-medium text-slate-600 leading-tight">{{ $item->nama_fasilitas }}</span>
                                             </label>
                                         @endforeach
                                     </div>
@@ -155,18 +190,33 @@
                     </div>
                     <div class="p-5 space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga Bulanan</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga
+                                harian</label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
+                                <span
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
+                                <input type="number" name="harga_harian" value="{{ $kamar->harga_harian }}"
+                                    class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                                    placeholder="0">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga
+                                Bulanan</label>
+                            <div class="relative">
+                                <span
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
                                 <input type="number" name="harga_bulanan" value="{{ $kamar->harga_bulanan }}"
                                     class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="0">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga Tahunan</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga
+                                Tahunan</label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
+                                <span
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">Rp</span>
                                 <input type="number" name="harga_tahunan" value="{{ $kamar->harga_tahunan }}"
                                     class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                                     placeholder="0">
@@ -186,8 +236,9 @@
                     <div class="p-5">
                         <select name="status"
                             class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
-                            <option value="tersedia" {{ $kamar->status == 'tersedia' ? 'selected' : '' }}>✅ Tersedia</option>
-                            <option value="terisi"   {{ $kamar->status == 'terisi'   ? 'selected' : '' }}>🔴 Terisi</option>
+                            <option value="tersedia" {{ $kamar->status == 'tersedia' ? 'selected' : '' }}>✅ Tersedia
+                            </option>
+                            <option value="terisi" {{ $kamar->status == 'terisi' ? 'selected' : '' }}>🔴 Terisi</option>
                         </select>
                     </div>
                 </div>
@@ -205,14 +256,18 @@
                         @if ($kamar->primaryImage)
                             <div class="rounded-lg overflow-hidden border border-slate-200">
                                 <img src="{{ asset('storage/' . $kamar->primaryImage->image_path) }}"
-                                     class="w-full h-36 object-cover">
+                                    class="w-full h-36 object-cover">
                             </div>
                             <p class="text-xs text-slate-400 text-center">Gambar saat ini</p>
                         @endif
 
-                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors">Klik untuk upload gambar baru</span>
+                        <label
+                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
+                            <i
+                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
+                            <span
+                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors">Klik
+                                untuk upload gambar baru</span>
                             <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB</span>
                             <input type="file" name="image" class="hidden" accept="image/*">
                         </label>
@@ -222,7 +277,7 @@
                 {{-- Action Button --}}
                 <div class="flex gap-3">
                     <a href="{{ route('admin.kamar.index') }}"
-                       class="flex-1 text-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
+                        class="flex-1 text-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
                         Batal
                     </a>
                     <button type="submit"

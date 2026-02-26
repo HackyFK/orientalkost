@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             KosKamarSeeder::class,
             SettingsSeeder::class,
             WebsiteProfileSeeder::class,
+            BlogSeeder::class,
+            GaleriSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

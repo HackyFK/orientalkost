@@ -114,6 +114,7 @@
             </div>
 
             {{-- ================= RIGHT SIDEBAR ================= --}}
+
             <div class="xl:sticky xl:top-20 space-y-4">
 
                 {{-- Save Card --}}
@@ -147,10 +148,63 @@
                     </form>
                 </div>
 
+
+    {{-- Save Card --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                <i class="fa-solid fa-floppy-disk text-blue-500 text-xs"></i>
             </div>
+            <h2 class="font-semibold text-slate-700 text-sm">Simpan Perubahan</h2>
+        </div>
+
+        <div class="p-4">
+            <button type="submit"
+                class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 text-white text-sm font-semibold py-2.5 rounded-lg shadow-sm shadow-blue-200">
+                <i class="fa-solid fa-floppy-disk text-xs"></i>
+                Simpan Pengaturan
+            </button>
+        </div>
+    </div>
+
+    {{-- Test Connection Card --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center">
+                <i class="fa-solid fa-plug text-slate-500 text-xs"></i>
+            </div>
+            <h2 class="font-semibold text-slate-700 text-sm">Uji Koneksi</h2>
+        </div>
+        <div class="p-4 space-y-2.5">
+
+            {{-- Test SMTP --}}
+            <form method="POST" action="{{ route('admin.settings.test.smtp') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center gap-2 bg-sky-50 hover:bg-sky-100 active:scale-[0.98] transition-all duration-150 text-sky-700 border border-sky-200 text-sm font-medium py-2.5 rounded-lg">
+                    <i class="fa-solid fa-envelope text-xs"></i>
+                    Test SMTP
+                </button>
+            </form>
+
+            {{-- Test Midtrans --}}
+            <form method="POST" action="{{ route('admin.settings.test.midtrans') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center gap-2 bg-violet-50 hover:bg-violet-100 active:scale-[0.98] transition-all duration-150 text-violet-700 border border-violet-200 text-sm font-medium py-2.5 rounded-lg">
+                    <i class="fa-solid fa-credit-card text-xs"></i>
+                    Test Midtrans
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
 
         </div>
 
     </form>
 
 @endsection
+

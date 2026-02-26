@@ -14,6 +14,14 @@ class KosKamarSeeder extends Seeder
     {
         $fasilitasIds = Fasilitas::pluck('id')->toArray();
 
+        // daftar ukuran kamar
+        $ukuranKamar = [
+            ['panjang' => 2.00, 'lebar' => 3.00],
+            ['panjang' => 3.00, 'lebar' => 3.00],
+            ['panjang' => 3.00, 'lebar' => 4.00],
+            ['panjang' => 4.00, 'lebar' => 4.00],
+        ];
+
         $dataKos = [
             [
                 'nama_kos'   => 'Kos Harmoni',
@@ -33,11 +41,12 @@ class KosKamarSeeder extends Seeder
         ];
 
         foreach ($dataKos as $index => $kosData) {
+
             $kos = Kos::create([
                 'nama_kos'   => $kosData['nama_kos'],
                 'slug'       => Str::slug($kosData['nama_kos']),
                 'deskripsi'  => 'Kos nyaman dan strategis',
-                'owner_id'  => 2,
+                'owner_id'   => 2,
                 'alamat'     => $kosData['alamat'],
                 'latitude'   => -6.200000 + ($index * 0.01),
                 'longitude'  => 106.816666 + ($index * 0.01),
@@ -46,6 +55,10 @@ class KosKamarSeeder extends Seeder
 
             // 3 kamar per kos
             for ($i = 1; $i <= 3; $i++) {
+
+                // ambil ukuran random
+                $ukuran = collect($ukuranKamar)->random();
+
                 $kamar = Kamar::create([
                     'kos_id'         => $kos->id,
                     'nama_kamar'     => "Kamar $i",
@@ -53,15 +66,22 @@ class KosKamarSeeder extends Seeder
                     'lantai'         => ceil($i / 2),
                     'nomor_kamar'    => $i,
                     'deskripsi'      => 'Kamar bersih dan nyaman',
-                    'harga_bulanan'  => 750000 + ($i * 100000),
+
+                    // ukuran kamar
+                    'panjang'        => $ukuran['panjang'],
+                    'lebar'          => $ukuran['lebar'],
+
+                    'harga_bulanan'  => 750000 + ($i * 20000),
+                    'harga_bulanan'  => 750000 + ($i * 300000),
                     'harga_tahunan'  => 8000000 + ($i * 500000),
+
                     'deposit'  => 100,
                     'status'         => 'tersedia',
                 ]);
 
-                // Ambil 5–8 fasilitas acak
+                // Ambil fasilitas random
                 $randomFasilitas = collect($fasilitasIds)
-                    ->random(rand(5, 8))
+                    ->random(rand(3, min(8, count($fasilitasIds))))
                     ->toArray();
 
                 $kamar->fasilitas()->attach($randomFasilitas);

@@ -13,7 +13,8 @@
 
     {{-- SUCCESS --}}
     @if (session('success'))
-        <div class="mb-5 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-medium">
+        <div
+            class="mb-5 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-medium">
             <i class="fa-solid fa-circle-check text-green-500"></i>
             {{ session('success') }}
         </div>
@@ -55,7 +56,8 @@
 
                         {{-- Owner --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Owner</label>
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Owner</label>
                             <select name="owner_id"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                                 <option value="">-- Pilih Owner --</option>
@@ -69,25 +71,40 @@
 
                         {{-- Nama Kos --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Kos</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama
+                                Kos</label>
                             <input type="text" name="nama_kos" value="{{ old('nama_kos', $ko->nama_kos) }}"
                                 placeholder="Contoh: Kos Melati Indah"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                         </div>
 
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Gender
+                                Kos</label>
+                            <select name="gender"
+                                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                                <option value="">-- Pilih Gender --</option>
+                                <option value="putra" @selected(old('gender', $ko->gender) == 'putra')>Putra</option>
+                                <option value="putri" @selected(old('gender', $ko->gender) == 'putri')>Putri</option>
+                                <option value="campuran" @selected(old('gender', $ko->gender) == 'campuran')>Campuran</option>
+                            </select>
+                        </div>
+
+
+
                         {{-- Deskripsi --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
-                            <textarea name="deskripsi" rows="3"
-                                placeholder="Deskripsi singkat tentang kos..."
+                            <label
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Deskripsi</label>
+                            <textarea name="deskripsi" rows="3" placeholder="Deskripsi singkat tentang kos..."
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('deskripsi', $ko->deskripsi) }}</textarea>
                         </div>
 
                         {{-- Alamat --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat Lengkap</label>
-                            <textarea name="alamat" rows="2"
-                                placeholder="Jalan, nomor, kelurahan, kecamatan..."
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alamat
+                                Lengkap</label>
+                            <textarea name="alamat" rows="2" placeholder="Jalan, nomor, kelurahan, kecamatan..."
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('alamat', $ko->alamat) }}</textarea>
                         </div>
 
@@ -112,28 +129,31 @@
                     <div class="p-5 space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Latitude</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Latitude</label>
                                 <div class="relative">
-                                    <i class="fa-solid fa-arrows-up-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <i
+                                        class="fa-solid fa-arrows-up-down absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
                                     <input type="text" name="latitude" id="latInput"
-                                        value="{{ old('latitude', $ko->latitude) }}"
-                                        placeholder="-7.7970680"
+                                        value="{{ old('latitude', $ko->latitude) }}" placeholder="-7.7970680"
                                         class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Longitude</label>
+                                <label
+                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Longitude</label>
                                 <div class="relative">
-                                    <i class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                    <i
+                                        class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
                                     <input type="text" name="longitude" id="lngInput"
-                                        value="{{ old('longitude', $ko->longitude) }}"
-                                        placeholder="110.3705290"
+                                        value="{{ old('longitude', $ko->longitude) }}" placeholder="110.3705290"
                                         class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
                                 </div>
                             </div>
                         </div>
 
-                        <div id="map" class="w-full h-64 rounded-xl border border-slate-200 shadow-sm overflow-hidden"></div>
+                        <div id="map"
+                            class="w-full h-64 rounded-xl border border-slate-200 shadow-sm overflow-hidden"></div>
                         <p class="text-xs text-slate-400">
                             <i class="fa-solid fa-circle-info mr-1"></i>
                             Klik pada peta atau seret marker untuk mengubah lokasi
@@ -154,24 +174,29 @@
                     {{-- Foto yang sudah ada --}}
                     @if ($ko->images->count() > 0)
                         <div class="px-5 pt-4 pb-2">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Foto Tersimpan</p>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Foto Tersimpan
+                            </p>
                             <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                                 @foreach ($ko->images as $img)
-                                    <div class="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+                                    <div
+                                        class="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
                                         <img src="{{ asset('storage/' . $img->image_path) }}"
-                                             class="w-full h-24 object-cover">
+                                            class="w-full h-24 object-cover">
 
                                         {{-- Primary badge --}}
                                         @if ($img->is_primary)
-                                            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold bg-green-500 text-white px-1.5 py-0.5 rounded-md">
+                                            <span
+                                                class="absolute top-1.5 left-1.5 text-[9px] font-bold bg-green-500 text-white px-1.5 py-0.5 rounded-md">
                                                 Primary
                                             </span>
                                         @endif
 
                                         {{-- Action overlay --}}
-                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
+                                        <div
+                                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
                                             @if (!$img->is_primary)
-                                                <form method="POST" action="{{ route('admin.kos.image.primary', $img) }}">
+                                                <form method="POST"
+                                                    action="{{ route('admin.kos.image.primary', $img) }}">
                                                     @csrf @method('PATCH')
                                                     <button type="submit" title="Jadikan Primary"
                                                         class="w-7 h-7 flex items-center justify-center rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors">
@@ -181,7 +206,7 @@
                                             @endif
 
                                             <form method="POST" action="{{ route('admin.kos.image.delete', $img) }}"
-                                                  onsubmit="return confirm('Hapus foto ini?')">
+                                                onsubmit="return confirm('Hapus foto ini?')">
                                                 @csrf @method('DELETE')
                                                 <button type="submit" title="Hapus"
                                                     class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
@@ -204,16 +229,21 @@
                     {{-- Upload foto baru --}}
                     <div class="p-5 {{ $ko->images->count() > 0 ? 'pt-3 border-t border-slate-100' : '' }}">
                         @if ($ko->images->count() > 0)
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tambah Foto Baru</p>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tambah Foto Baru
+                            </p>
                         @endif
-                        <label class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
+                        <label
+                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
+                            <i
+                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
+                            <span
+                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
                                 Klik untuk upload foto baru
                             </span>
-                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB · Multiple foto diperbolehkan</span>
-                            <input type="file" name="images[]" multiple accept="image/*"
-                                   class="hidden" onchange="previewFotos(this)">
+                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB · Multiple foto
+                                diperbolehkan</span>
+                            <input type="file" name="images[]" multiple accept="image/*" class="hidden"
+                                onchange="previewFotos(this)">
                         </label>
 
                         {{-- Preview foto baru --}}
@@ -235,7 +265,8 @@
                         <h2 class="font-bold text-slate-700 text-sm">Jenis Sewa</h2>
                     </div>
                     <div class="p-5">
-                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe Sewa</label>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe
+                            Sewa</label>
                         <select name="jenis_sewa"
                             class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                             <option value="bulanan" @selected(old('jenis_sewa', $ko->jenis_sewa) === 'bulanan')>📅 Bulanan</option>
@@ -263,7 +294,7 @@
                                 Update Kos
                             </button>
                             <a href="{{ route('admin.kos.index') }}"
-                               class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
+                                class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
                                 Batal
                             </a>
                         </div>
@@ -287,7 +318,9 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+        const marker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
 
         function setLocation(lat, lng) {
             marker.setLatLng([lat, lng]);
@@ -312,7 +345,10 @@
         function previewFotos(input) {
             const grid = document.getElementById('previewGrid');
             grid.innerHTML = '';
-            if (input.files.length === 0) { grid.classList.add('hidden'); return; }
+            if (input.files.length === 0) {
+                grid.classList.add('hidden');
+                return;
+            }
             grid.classList.remove('hidden');
             Array.from(input.files).forEach(file => {
                 const reader = new FileReader();
