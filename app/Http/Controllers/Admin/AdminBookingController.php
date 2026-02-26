@@ -9,70 +9,96 @@ use Illuminate\Http\Request;
 class AdminBookingController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Booking::with('kamar');
+    {
+        $query = Booking::with('kamar');
 
-    // ===============================
-    // FILTER STATUS
-    // ===============================
-    if ($request->filled('status') && $request->status !== 'all') {
-        $query->where('status', $request->status);
+        // ===============================
+        // FILTER STATUS
+        // ===============================
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // ===============================
+        // SEARCH
+        // ===============================
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                // Jika angka → bisa cari berdasarkan ID
+                if (is_numeric($search)) {
+                    $q->orWhere('id', $search);
+                }
+
+                $q->orWhere('nama_penyewa', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('durasi', 'like', "%{$search}%")
+                    ->orWhere('total_bayar', 'like', "%{$search}%")
+                    ->orWhereDate('created_at', $search)
+
+                    ->orWhereHas('kamar', function ($kamar) use ($search) {
+                        $kamar->where('nama_kamar', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('kamar.kos', function ($kos) use ($search) {
+                        $kos->where('nama_kos', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $items = $query->latest()->paginate(6)->withQueryString();
+
+        return view('admin.booking.index', compact('items'));
     }
-
-    // ===============================
-    // SEARCH
-    // ===============================
-    if ($request->filled('search')) {
-
-        $search = $request->search;
-
-        $query->where(function ($q) use ($search) {
-
-            // Jika angka → bisa cari berdasarkan ID
-            if (is_numeric($search)) {
-                $q->orWhere('id', $search);
-            }
-
-            $q->orWhere('nama_penyewa', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%")
-              ->orWhere('phone', 'like', "%{$search}%")
-              ->orWhere('durasi', 'like', "%{$search}%")
-              ->orWhere('total_bayar', 'like', "%{$search}%")
-              ->orWhereDate('created_at', $search)
-
-              ->orWhereHas('kamar', function ($kamar) use ($search) {
-                  $kamar->where('nama_kamar', 'like', "%{$search}%");
-              })
-                ->orWhereHas('kamar.kos', function ($kos) use ($search) {
-              $kos->where('nama_kos', 'like', "%{$search}%");
-          });
-        });
-    }
-
-    $items = $query->latest()->paginate(6)->withQueryString();
-
-    return view('admin.booking.index', compact('items'));
-}
 
     public function show(Booking $booking)
     {
+        $booking->load(['kamar.kos', 'payments']);
+
         return view('admin.booking.show', compact('booking'));
     }
 
     public function updateStatus(Request $request, Booking $booking)
-    {
-        $request->validate([
-            'status' => 'required|in:draft,pending,paid,confirmed,cancelled,expired'
-        ]);
+{
+    // validasi input
+    $request->validate([
+        'status' => 'required|string'
+    ]);
 
-        $booking->update([
-            'status' => $request->status
-        ]);
+    $currentStatus = $booking->status;
+    $newStatus = $request->status;
 
-        return redirect()
-            ->route('admin.booking.index')
-            ->with('success', 'Status booking berhasil diupdate.');
+    // aturan transisi lengkap
+    $validTransitions = [
+
+        'pending' => ['paid', 'cancelled'],
+
+        'paid' => ['confirmed', 'cancelled'],
+
+        'confirmed' => ['expired'],
+
+        'expired' => [],
+
+        'cancelled' => [],
+    ];
+
+    // jika status tidak boleh diubah
+    if (
+        !isset($validTransitions[$currentStatus]) ||
+        !in_array($newStatus, $validTransitions[$currentStatus])
+    ) {
+        return back()->with('error', 'Status tidak bisa diubah.');
     }
+
+    // update status
+    $booking->status = $newStatus;
+    $booking->save();
+
+    return back()->with('success', 'Status berhasil diubah.');
+}
 
     public function destroy(Booking $booking)
     {
@@ -80,6 +106,6 @@ class AdminBookingController extends Controller
 
         return redirect()
             ->route('admin.booking.index')
-            ->with('success', 'Booking berhasil dihapus.');
+            ->with('successhapus', 'Booking berhasil dihapus.');
     }
 }

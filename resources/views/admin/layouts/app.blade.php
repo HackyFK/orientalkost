@@ -153,6 +153,15 @@
                     User
                 </a>
 
+                <a href="{{ route('admin.keuangan.index') }}"
+                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                      {{ $isActive('admin.keuangan.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    <i
+    class="fa-solid fa-money-bill text-center w-4 text-xs {{ $isActive('admin.keuangan.*') ? 'text-blue-400' : 'text-slate-500' }}">
+                    </i>
+                    Keuangan
+                </a>
+
                 {{-- ── Konten ── --}}
                 <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">Konten</p>
 
