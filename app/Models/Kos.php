@@ -53,7 +53,7 @@ class Kos extends Model
     {
         return $this->belongsToMany(
             Fasilitas::class,
-            'kos_fasilitas'
+            'fasilitas_kos'
         );
     }
 
@@ -85,12 +85,5 @@ class Kos extends Model
             ->exists();
 
         return $adaKamarTersedia ? 'Tersedia' : 'Tidak tersedia';
-    }
-    public function getFasilitasAttribute()
-    {
-        return $this->kamars
-            ->flatMap->fasilitas
-            ->unique('id')
-            ->groupBy('kategori');
     }
 }

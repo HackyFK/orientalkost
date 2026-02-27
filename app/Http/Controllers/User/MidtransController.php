@@ -97,7 +97,7 @@ class MidtransController extends Controller
             ],
         ];
 
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        $snapToken = Snap::getSnapToken($params);
 
         return view('user.payment.show', compact('payment', 'snapToken'));
     }

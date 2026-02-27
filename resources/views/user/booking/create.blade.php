@@ -97,9 +97,9 @@
                         <div>
                             <label class="block font-medium text-gray-700">Mulai Sewa (Bulan)</label>
                             <input type="month" name="bulan_mulai" class="input w-full mt-1" x-model="bulanMulai"
-                                required>
+                                :min="minMonth" required>
                             <p class="text-xs text-gray-500 mt-1">
-                                Tanggal mulai otomatis tanggal 1
+                                Tanggal mulai otomatis tanggal 1. Hanya bisa memilih bulan depan ke atas.
                             </p>
                         </div>
 
@@ -108,8 +108,11 @@
                             <label class="block font-medium text-gray-700">
                                 Durasi (<span x-text="jenisSewa === 'bulanan' ? 'Bulan' : 'Tahun'"></span>)
                             </label>
-                            <input type="number" name="durasi" min="1" class="input w-full mt-1"
-                                x-model.number="durasi" required>
+                            <select name="durasi" class="input w-full mt-1" x-model.number="durasi" required>
+                                <template x-for="i in durasiOptions" :key="i">
+                                    <option :value="i" x-text="i"></option>
+                                </template>
+                            </select>
                         </div>
 
                     </div>
@@ -135,10 +138,10 @@
                             <span>Subtotal</span>
                             <span x-text="format(subtotal)"></span>
                         </div>
-                        <div class="flex justify-between">
+                        {{-- <div class="flex justify-between">
                             <span>DP (<span x-text="dpPersen"></span>%)</span>
                             <span x-text="format(dpNominal)"></span>
-                        </div>
+                        </div> --}}
                         <hr>
                         <div class="flex justify-between font-bold text-lg">
                             <span>Bayar Sekarang</span>
@@ -176,15 +179,11 @@
                     bulanMulai: '',
 
                     get hargaPerBulan() {
-                        return this.jenisSewa === 'bulanan' ?
-                            this.hargaBulanan :
-                            Math.round(this.hargaTahunan / 12)
+                        return this.jenisSewa === 'bulanan' ? this.hargaBulanan : Math.round(this.hargaTahunan / 12)
                     },
 
                     get durasiBulan() {
-                        return this.jenisSewa === 'tahunan' ?
-                            this.durasi * 12 :
-                            this.durasi
+                        return this.jenisSewa === 'tahunan' ? this.durasi * 12 : this.durasi
                     },
 
                     get subtotal() {
@@ -229,6 +228,27 @@
                             month: 'long',
                             year: 'numeric'
                         })
+                    },
+
+                    // ✅ minimal bulan sekarang +1
+                    get minMonth() {
+                        let now = new Date()
+                        let nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+                        let month = (nextMonth.getMonth() + 1).toString().padStart(2, '0')
+                        return `${nextMonth.getFullYear()}-${month}`
+                    },
+
+                    // ✅ opsi durasi
+                    get durasiOptions() {
+                        if (this.jenisSewa === 'bulanan') {
+                            return Array.from({
+                                length: 24
+                            }, (_, i) => i + 1)
+                        } else {
+                            return Array.from({
+                                length: 5
+                            }, (_, i) => i + 1)
+                        }
                     },
 
                     format(val) {

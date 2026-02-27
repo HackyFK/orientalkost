@@ -210,27 +210,20 @@
                                     Kamar
                                 </span>
 
-                                {{-- fasilitas dari kamar --}}
-                                {{-- 1 fasilitas per kategori --}}
-                                @foreach ($item->fasilitas as $kategori => $fasilitasGroup)
-                                    @php
-                                        $fasilitas = $fasilitasGroup->first();
-                                    @endphp
-
-                                    @if ($fasilitas)
-                                        <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
-                                            <i class="{{ $fasilitas->icon }} text-accent mr-1"></i>
-                                            {{ $fasilitas->nama_fasilitas }}
-                                        </span>
-                                    @endif
+                                {{-- fasilitas dari kos --}}
+                                @foreach ($item->fasilitas as $fasilitas)
+                                    <span class="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                                        <i class="{{ $fasilitas->icon }} text-accent mr-1"></i>
+                                        {{ $fasilitas->nama_fasilitas }}
+                                    </span>
                                 @endforeach
                             </div>
 
                             <!-- Status (STATIS) -->
                             <div class="flex gap-3 mb-4">
                                 <span
-                                    class="{{ $item->kamar_tersedia > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} 
-    px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                                    class="{{ $item->kamar_tersedia > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}
+                                        px-4 py-2 rounded-full text-sm font-semibold flex items-center">
 
                                     @if ($item->kamar_tersedia > 0)
                                         <i class="fas fa-check-circle mr-2"></i>Tersedia
