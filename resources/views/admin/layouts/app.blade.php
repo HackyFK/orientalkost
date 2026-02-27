@@ -211,8 +211,35 @@
                         A
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-slate-200 text-[13px] font-semibold truncate">Administrator</p>
-                        <p class="text-slate-500 text-[11px]">Super Admin</p>
+                        {{-- Name --}}
+                        @php
+                            $user = auth()->user();
+                        @endphp
+
+                        @if ($user->role === 'admin')
+                            <p class="text-slate-200 text-[13px] font-semibold truncate">
+                                Administrator
+                            </p>
+                            <p class="text-slate-500 text-[11px]">
+                                Super Admin
+                            </p>
+                        @elseif ($user->role === 'owner')
+                            <p class="text-slate-200 text-[13px] font-semibold truncate">
+                                {{ $user->name }}
+                            </p>
+                            <p class="text-slate-500 text-[11px] truncate">
+                                Owner Kos
+                                - {{ $user->kos->pluck('nama_kos')->implode(', ') }}
+                            </p>
+                        @else
+                            <p class="text-slate-200 text-[13px] font-semibold truncate">
+                                {{ $user->name }}
+                            </p>
+                            <p class="text-slate-500 text-[11px]">
+                                Customer
+                            </p>
+                        @endif
+
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

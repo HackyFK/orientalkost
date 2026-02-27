@@ -55,11 +55,9 @@ class Kamar extends Model
     }
 
     public function getKamarTersediaAttribute()
-{
-    return $this->kamars()
-        ->where('status', 'tersedia')
-        ->count();
-}
-
-    
+    {
+        return $this->kamars()
+            ->where('status', 'tersedia')
+            ->count();
+    }
 }

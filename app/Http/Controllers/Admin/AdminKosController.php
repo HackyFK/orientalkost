@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fasilitas;
 use App\Models\Kos;
 use App\Models\KosImage;
 use App\Models\User;
@@ -14,18 +15,42 @@ class AdminKosController extends Controller
 {
     public function index()
     {
-          $items = Kos::with(['primaryImage', 'owner'])
-         ->latest()
-        ->paginate(2)
-        ->withQueryString();
+        $items = Kos::with([
+            'primaryImage',
+            'owner',
+            'fasilitas' // fasilitas khusus kos
+        ])
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
-    return view('admin.kos.index', compact('items'));
+        return view('admin.kos.index', compact('items'));
     }
 
     public function create()
     {
         $owners = User::where('role', 'owner')->get();
-        return view('admin.kos.create', compact('owners'));
+
+        $kategoriKos = [
+            'dapur',
+            'kamar_mandi',
+            'keamanan',
+            'khusus',
+            'laundry',
+            'parkir',
+            'utilitas',
+            'area_bersama',
+        ];
+
+        return view('admin.kos.create', [
+            'owners' => $owners,
+
+            // 🔥 fasilitas khusus kos
+            'fasilitasKos' => Fasilitas::whereIn('kategori', $kategoriKos)
+                ->orderBy('kategori')
+                ->get()
+                ->groupBy('kategori'),
+        ]);
     }
 
     public function store(Request $request)
@@ -37,9 +62,12 @@ class AdminKosController extends Controller
             'latitude'   => 'nullable|numeric',
             'longitude'  => 'nullable|numeric',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
-             // TAMBAHAN
             'gender'     => 'required|in:putra,putri,campuran',
             'owner_id'   => 'nullable|exists:users,id',
+
+            // 🔥 fasilitas kos
+            'fasilitas_kos' => 'nullable|array',
+
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -47,6 +75,10 @@ class AdminKosController extends Controller
 
         $kos = Kos::create($data);
 
+        // 🔥 Sync fasilitas kos
+        $kos->fasilitas()->sync($request->fasilitas_kos ?? []);
+
+        // Upload Images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $i => $image) {
                 $path = $image->store('kos', 'public');
@@ -59,14 +91,37 @@ class AdminKosController extends Controller
             }
         }
 
-        return redirect()->route('admin.kos.index')->with('success', 'Kos berhasil dibuat');
+        return redirect()
+            ->route('admin.kos.index')
+            ->with('success', 'Kos berhasil dibuat');
     }
 
     public function edit(Kos $ko)
     {
-        $ko->load('images');
+        $ko->load(['images', 'fasilitas']);
+
         $owners = User::where('role', 'owner')->get();
-        return view('admin.kos.edit', compact('ko', 'owners'));
+
+        $kategoriKos = [
+            'dapur',
+            'kamar_mandi',
+            'keamanan',
+            'khusus',
+            'laundry',
+            'parkir',
+            'utilitas',
+            'area_bersama',
+        ];
+
+        return view('admin.kos.edit', [
+            'ko' => $ko,
+            'owners' => $owners,
+
+            'fasilitasKos' => Fasilitas::whereIn('kategori', $kategoriKos)
+                ->orderBy('kategori')
+                ->get()
+                ->groupBy('kategori'),
+        ]);
     }
 
     public function update(Request $request, Kos $ko)
@@ -78,9 +133,12 @@ class AdminKosController extends Controller
             'latitude'   => 'nullable|numeric',
             'longitude'  => 'nullable|numeric',
             'jenis_sewa' => 'required|in:bulanan,tahunan',
-            'owner_id'   => 'nullable|exists:users,id',
-             // TAMBAHAN
             'gender'     => 'required|in:putra,putri,campuran',
+            'owner_id'   => 'nullable|exists:users,id',
+
+            // 🔥 fasilitas kos
+            'fasilitas_kos' => 'nullable|array',
+
             'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -88,6 +146,10 @@ class AdminKosController extends Controller
 
         $ko->update($data);
 
+        // 🔥 Sync fasilitas kos
+        $ko->fasilitas()->sync($request->fasilitas_kos ?? []);
+
+        // Upload image tambahan
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('kos', 'public');
@@ -100,7 +162,9 @@ class AdminKosController extends Controller
             }
         }
 
-        return redirect()->route('admin.kos.index')->with('success', 'Kos berhasil diperbarui');
+        return redirect()
+            ->route('admin.kos.index')
+            ->with('success', 'Kos berhasil diperbarui');
     }
 
     public function destroy(Kos $ko)
@@ -132,6 +196,4 @@ class AdminKosController extends Controller
 
         return back()->with('success', 'Primary image diubah');
     }
-
-   
 }

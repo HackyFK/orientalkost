@@ -23,4 +23,12 @@ class Fasilitas extends Model
             'fasilitas_kamar'
         );
     }
+    
+    public function kos()
+    {
+        return $this->belongsToMany(
+            Kos::class,
+            'fasilitas_kos'
+        );
+    }
 }
