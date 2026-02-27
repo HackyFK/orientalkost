@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- SUCCESS MESSAGE --}}
-    @if (session('success'))
+    @if (session('successhapus'))
         <div
             class="mb-5 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-medium">
             <i class="fa-solid fa-circle-check text-green-500"></i>
@@ -91,7 +91,7 @@
 
             {{-- Status filter pills --}}
             <div class="hidden sm:flex items-center gap-1.5">
-                @foreach (['all' => 'Semua', 'pending' => 'Pending', 'paid' => 'Paid', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled'] as $val => $label)
+                @foreach (['all' => 'Semua', 'paid' => 'Paid', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'expired' => 'Selesai'] as $val => $label)
                     <a href="{{ $val === 'all' ? route('admin.booking.index') : route('admin.booking.index', ['status' => $val]) }}"
                         class="px-2.5 py-1 text-xs font-semibold rounded-md transition-colors
                               {{ request('status', 'all') === $val
@@ -190,7 +190,7 @@
                             {{-- Total --}}
                             <td class="px-4 py-4">
                                 <p class="text-xs font-bold text-slate-800">
-                                    Rp {{ number_format($booking->total_bayar, 0, ',', '.') }}
+                                    Rp {{ number_format($booking->subtotal, 0, ',', '.') }}
                                 </p>
                             </td>
 
@@ -198,26 +198,30 @@
                             <td class="px-4 py-4 text-center">
                                 @php
                                     $statusStyle = match ($booking->status) {
-                                        'confirmed' => 'bg-green-50 text-green-600 border-green-100 dot-green',
-                                        'paid' => 'bg-blue-50 text-blue-600 border-blue-100 dot-blue',
-                                        'pending' => 'bg-amber-50 text-amber-600 border-amber-100 dot-amber',
-                                        'cancelled' => 'bg-red-50 text-red-500 border-red-100 dot-red',
-                                        'expired' => 'bg-slate-100 text-slate-500 border-slate-200 dot-slate',
-                                        default => 'bg-slate-100 text-slate-500 border-slate-200 dot-slate',
+                                        'confirmed' => 'bg-green-50 text-green-600 border-green-100',
+                                        'paid' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                        'pending' => 'bg-amber-50 text-amber-600 border-amber-100',
+                                        'cancelled' => 'bg-red-50 text-red-500 border-red-100',
+                                        'expired' => 'bg-slate-90 text-slate-600 border-slate-200',
+                                        default => 'bg-slate-100 text-slate-500 border-slate-200',
                                     };
+
                                     $dotColor = match ($booking->status) {
                                         'confirmed' => 'bg-green-500',
                                         'paid' => 'bg-blue-500',
                                         'pending' => 'bg-amber-400',
                                         'cancelled' => 'bg-red-400',
+                                         'expired' => 'bg-slate-400',
                                         default => 'bg-slate-400',
                                     };
                                 @endphp
-                                <span
+
+                                <button onclick="openStatusPopup({{ $booking->id }}, '{{ $booking->status }}')"
                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border {{ $statusStyle }}">
+
                                     <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
-                                    {{ ucfirst($booking->status) }}
-                                </span>
+                                    {{ $booking->status == 'expired' ? 'Selesai' : ucfirst($booking->status) }}
+                                </button>
                             </td>
 
                             {{-- Tanggal --}}
@@ -237,21 +241,6 @@
                                         class="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-500 transition-colors border border-blue-100">
                                         <i class="fa-solid fa-eye text-[11px]"></i>
                                     </a>
-
-                                    {{-- Update Status --}}
-                                    <form method="POST" action="{{ route('admin.booking.updateStatus', $booking) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status" onchange="this.form.submit()"
-                                            class="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-slate-50 text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer transition">
-                                            @foreach (['draft', 'pending', 'paid', 'confirmed', 'cancelled', 'expired'] as $status)
-                                                <option value="{{ $status }}"
-                                                    {{ $booking->status == $status ? 'selected' : '' }}>
-                                                    {{ ucfirst($status) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
 
                                     {{-- Hapus --}}
                                     <form method="POST" action="{{ route('admin.booking.destroy', $booking) }}"
@@ -280,10 +269,47 @@
                     @endforelse
                 </tbody>
             </table>
+            <div id="statusPopup" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-64">
+
+                    <h3 class="font-semibold mb-4">Ubah Status</h3>
+
+                    <div id="popupButtons" class="space-y-2"></div>
+
+                    <button onclick="closePopup()" class="mt-4 w-full bg-gray-200 py-2 rounded-lg">
+                        Tutup
+                    </button>
+
+                </div>
+            </div>
+            <div id="successPopup" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+
+                <div class="bg-white rounded-xl shadow-lg p-6 w-72 text-center">
+
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-green-100 flex items-center justify-center">
+                        <i class="fa-solid fa-check text-green-500 text-xl"></i>
+                    </div>
+
+                    <h3 class="font-semibold text-slate-700 mb-1">
+                        Berhasil
+                    </h3>
+
+                    <p class="text-sm text-slate-500 mb-4">
+                        Status berhasil diubah
+                    </p>
+
+                    <button onclick="closeSuccessPopup()"
+                        class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg">
+                        OK
+                    </button>
+
+                </div>
+
+            </div>
         </div>
 
-       {{-- Pagination --}}
-         
+        {{-- Pagination --}}
+
         @if ($items->hasPages())
             <div class="px-5 py-4 border-t border-slate-100">
                 {{ $items->links() }}
@@ -291,5 +317,89 @@
         @endif
 
     </div>
+
+
+    {{-- Script --}}
+
+    <script>
+        function openStatusPopup(id, status) {
+            const popup = document.getElementById('statusPopup');
+            const buttons = document.getElementById('popupButtons');
+
+            const csrf = '{{ csrf_token() }}';
+            const baseUrl = "{{ url('admin/booking') }}";
+
+            buttons.innerHTML = '';
+
+            if (status === 'paid') {
+                buttons.innerHTML = `
+            <form method="POST" action="${baseUrl}/${id}/status">
+                <input type="hidden" name="_token" value="${csrf}">
+                <input type="hidden" name="status" value="confirmed">
+
+                <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg mb-2">
+                    Confirmed
+                </button>
+            </form>
+
+            <form method="POST" action="${baseUrl}/${id}/status">
+                <input type="hidden" name="_token" value="${csrf}">
+                <input type="hidden" name="status" value="cancelled">
+
+                <button type="submit"
+                    class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg">
+                    Cancelled
+                </button>
+            </form>
+        `;
+            } else if (status === 'confirmed') {
+                buttons.innerHTML = `
+            <form method="POST" action="${baseUrl}/${id}/status">
+                <input type="hidden" name="_token" value="${csrf}">
+                <input type="hidden" name="status" value="expired">
+
+                <button type="submit"
+                    class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg">
+                    Selesai
+                </button>
+            </form>
+        `;
+            } else {
+                buttons.innerHTML = `
+            <p class="text-gray-500 text-sm">
+                Status tidak dapat diubah
+            </p>
+        `;
+            }
+
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+        }
+
+        function closePopup() {
+            document.getElementById('statusPopup').classList.add('hidden');
+        }
+    </script>
+    <script>
+function closeSuccessPopup()
+{
+    document.getElementById('successPopup').classList.add('hidden');
+}
+
+@if(session('success'))
+document.addEventListener('DOMContentLoaded', function()
+{
+    const popup = document.getElementById('successPopup');
+    popup.classList.remove('hidden');
+    popup.classList.add('flex');
+
+    setTimeout(() =>
+    {
+        popup.classList.add('hidden');
+    }, 2000);
+});
+@endif
+</script>
 
 @endsection

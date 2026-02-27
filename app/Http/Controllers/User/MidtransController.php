@@ -4,10 +4,12 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Keuangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
+
 
 
 class MidtransController extends Controller
@@ -22,36 +24,50 @@ class MidtransController extends Controller
     }
 
     private function markAsPaid($payment, $type)
-    {
-        $payment->update([
+{
+    $payment->update([
+        'status' => 'paid',
+        'payment_method' => $type,
+        'paid_at' => now(),
+    ]);
+
+    $booking = $payment->booking;
+
+    if ($payment->payment_type === 'dp') {
+        $booking->update([
             'status' => 'paid',
             'payment_method' => $type,
             'paid_at' => now(),
         ]);
-
-        $booking = $payment->booking;
-
-        // Jika DP
-        if ($payment->payment_type === 'dp') {
-            $booking->update([
-                'status' => 'paid',
-                'payment_method' => $type,
-                'paid_at' => now(),
-            ]);
-        }
-
-        // Kalau ini pelunasan
-        if ($payment->payment_type === 'pelunasan') {
-            $booking->update([
-                'status' => 'confirmed'
-            ]);
-
-            // Lock kamar
-            $booking->kamar->update([
-                'status' => 'terisi'
-            ]);
-        }
     }
+
+    if ($payment->payment_type === 'pelunasan') {
+        $booking->update([
+            'status' => 'confirmed'
+        ]);
+
+        $booking->kamar->update([
+            'status' => 'terisi'
+        ]);
+    }
+
+    // ✅ MASUKKAN KE KEUANGAN
+    if (!Keuangan::where('reference', $payment->reference)->exists()) {
+
+        $saldoTerakhir = Keuangan::latest()->value('saldo') ?? 0;
+
+        Keuangan::create([
+            'reference' => $payment->reference,
+            'admin_id' => 1, // default admin
+            'kategori' => 'pemasukan',
+            'payment_method' => $type,
+            'pemasukan' => $payment->amount,
+            'pengeluaran' => 0,
+            'saldo' => $saldoTerakhir + $payment->amount,
+            'keterangan' => 'Transaksi kamar',
+        ]);
+    }
+}
 
     public function show(Payment $payment)
     {
@@ -119,17 +135,7 @@ class MidtransController extends Controller
 
         if (in_array($transactionStatus, ['capture', 'settlement'])) {
 
-            $payment->update([
-                'status' => 'paid',
-                'payment_method' => $data['payment_type'],
-                'paid_at' => now(),
-            ]);
-
-            $payment->booking->update([
-                'status' => 'paid',
-                'payment_method' => $data['payment_type'],
-                'paid_at' => now(),
-            ]);
+            $this->markAsPaid($payment, $data['payment_type']);
         }
 
         if (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
@@ -165,18 +171,9 @@ public function notification(Request $request)
 
     if (in_array($transactionStatus, ['capture', 'settlement'])) {
 
-        $payment->update([
-            'status' => 'paid',
-            'payment_method' => $paymentType,
-            'paid_at' => now(),
-        ]);
+    $this->markAsPaid($payment, $paymentType);
 
-        $payment->booking->update([
-            'status' => 'paid',
-            'payment_method' => $paymentType,
-            'paid_at' => now(),
-        ]);
-    }
+}
 
     if (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
 

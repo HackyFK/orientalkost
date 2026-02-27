@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminFasilitasController;
 use App\Http\Controllers\Admin\AdminGaleriController;
 use App\Http\Controllers\Admin\AdminKamarController;
+use App\Http\Controllers\Admin\AdminKeuanganController;
 use App\Http\Controllers\Admin\AdminKosController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
@@ -150,6 +151,15 @@ Route::prefix('admin')
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
+        Route::resource('keuangan', AdminKeuanganController::class)
+            ->only(['index', 'create', 'store']);
+        Route::get(
+            '/keuangan/export',
+            [AdminKeuanganController::class, 'export']
+        )->name('keuangan.export');
+        Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
+            ->name('keuangan.laporan');
+
         Route::resource('users', AdminUserController::class)
             ->only(['index', 'show', 'destroy']);
 
@@ -188,10 +198,12 @@ Route::prefix('admin')
 
         Route::resource('booking', AdminBookingController::class)
             ->only(['index', 'show', 'update', 'destroy']);
-        Route::patch(
-            'booking/{booking}/status',
+
+        Route::post(
+            '/booking/{booking}/status',
             [AdminBookingController::class, 'updateStatus']
         )->name('booking.updateStatus');
+
 
         Route::resource('review', AdminReviewController::class)
             ->only(['index', 'destroy']);
