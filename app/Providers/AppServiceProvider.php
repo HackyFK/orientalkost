@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
- use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\Paginator;
+use App\Models\Payment;
+use App\Observers\PaymentObserver;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -34,5 +36,8 @@ class AppServiceProvider extends ServiceProvider
         Config::set('midtrans.server_key', setting('midtrans_server_key'));
         Config::set('midtrans.client_key', setting('midtrans_client_key'));
         Config::set('midtrans.is_production', setting('midtrans_is_production') === 'true');
+
+        // Pembayaran
+        Payment::observe(PaymentObserver::class);
     }
 }
