@@ -42,10 +42,10 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function kamar()
-    {
-        return $this->belongsTo(Kamar::class);
-    }
+   public function kamar()
+{
+    return $this->belongsTo(Kamar::class, 'kamar_id');
+}
 
     public function payments()
 {
