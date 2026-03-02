@@ -96,7 +96,70 @@
                             <textarea name="alamat" rows="2" placeholder="Jalan, nomor, kelurahan, kecamatan..."
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition resize-none">{{ old('alamat') }}</textarea>
                         </div>
+                    </div>
+                </div>
 
+                {{-- Card: Fasilitas Kos --}}
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <i class="fa-solid fa-building text-emerald-500 text-xs"></i>
+                        </div>
+                        <h2 class="font-bold text-slate-700 text-sm">Fasilitas Kos</h2>
+                    </div>
+
+                    <div class="p-5 space-y-3">
+                        @foreach ($fasilitasKos as $kategori => $items)
+                            <div x-data="{
+                                open: false,
+                                selected: @js(isset($ko) ? $ko->fasilitas->pluck('id') : [])
+                            }" class="border border-slate-200 rounded-xl overflow-hidden">
+
+                                {{-- Accordion Header --}}
+                                <button type="button" @click="open = !open"
+                                    class="w-full flex justify-between items-center px-4 py-3 bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm font-semibold text-slate-700">
+                                            {{ ucfirst(str_replace('_', ' ', $kategori)) }}
+                                        </span>
+
+                                        <span x-show="selected.length > 0"
+                                            class="text-xs font-bold bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full"
+                                            x-text="selected.length + ' dipilih'"></span>
+                                    </div>
+
+                                    <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"
+                                        :class="open ? 'rotate-180' : ''"></i>
+                                </button>
+
+                                {{-- Accordion Content --}}
+                                <div x-show="open" x-transition class="p-4">
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                        @foreach ($items as $item)
+                                            <label
+                                                class="flex items-center gap-2.5 border border-slate-200 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
+                                                :class="selected.includes({{ $item->id }}) ?
+                                                    'bg-emerald-50 border-emerald-300' :
+                                                    'hover:bg-slate-50'">
+
+                                                <input type="checkbox" name="fasilitas_kos[]" value="{{ $item->id }}"
+                                                    x-model="selected" class="accent-emerald-500 w-3.5 h-3.5 flex-shrink-0">
+
+                                                @if ($item->icon)
+                                                    <i
+                                                        class="{{ $item->icon }} text-slate-500 text-xs w-3 text-center"></i>
+                                                @endif
+
+                                                <span class="text-xs font-medium text-slate-600 leading-tight">
+                                                    {{ $item->nama_fasilitas }}
+                                                </span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -136,8 +199,8 @@
                                 <div class="relative">
                                     <i
                                         class="fa-solid fa-arrows-left-right absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
-                                    <input type="text" name="longitude" id="lngInput" value="{{ old('longitude') }}"
-                                        placeholder="110.3705290"
+                                    <input type="text" name="longitude" id="lngInput"
+                                        value="{{ old('longitude') }}" placeholder="110.3705290"
                                         class="w-full border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition font-mono">
                                 </div>
                             </div>

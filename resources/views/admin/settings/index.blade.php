@@ -115,9 +115,6 @@
 
             <div class="xl:sticky xl:top-20 space-y-4">
 
-            
-
-
                 {{-- Save Card --}}
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">

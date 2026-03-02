@@ -50,7 +50,7 @@
                         <th class="px-5 py-3">Owner</th>
                         <th class="px-5 py-3">Alamat</th>
                         <th class="px-5 py-3">Jenis</th>
-                        <th class="px-5 py-3">Koordinat</th>
+                        <th class="px-5 py-3">Fasilitas</th>
                         <th class="px-5 py-3 text-center">Status</th>
                         <th class="px-5 py-3 text-center">Aksi</th>
                     </tr>
@@ -111,21 +111,38 @@
                                 </span>
                             </td>
 
-                            {{-- Koordinat --}}
+                            {{-- Fasilitas --}}
                             <td class="px-5 py-3.5">
-                                @if ($kos->latitude && $kos->longitude)
-                                    <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                                        <i class="fa-solid fa-location-dot text-blue-400"></i>
-                                        <span>{{ number_format($kos->latitude, 5) }},<br>{{ number_format($kos->longitude, 5) }}</span>
-                                    </div>
-                                @else
-                                    <span class="text-xs text-slate-300">—</span>
-                                @endif
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach ($kos->fasilitas as $f)
+                                        <div class="relative group">
+                                            <span
+                                                class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-blue-50 rounded-lg cursor-default transition-colors border border-slate-200 hover:border-blue-200">
+                                                <i
+                                                    class="{{ $f->icon }} text-slate-500 group-hover:text-blue-500 text-xs transition-colors"></i>
+                                            </span>
+                                            {{-- Tooltip --}}
+                                            <div
+                                                class="absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2
+                                                        hidden group-hover:block
+                                                        px-2 py-1 text-xs text-white bg-slate-800 rounded-md whitespace-nowrap shadow-lg pointer-events-none">
+                                                {{ $f->nama_fasilitas }}
+                                                <div
+                                                    class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    @if ($kos->fasilitas->isEmpty())
+                                        <span class="text-xs text-slate-300">—</span>
+                                    @endif
+                                </div>
                             </td>
 
                             <td class="px-5 py-3.5">
                                 <span
-                                    class="{{ $kos->kamar_tersedia > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} 
+                                    class="{{ $kos->kamar_tersedia > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}
                                     px-4 py-2 rounded-full text-sm font-semibold flex items-center">
 
                                     @if ($kos->kamar_tersedia > 0)
