@@ -1,255 +1,265 @@
 @extends('admin.layouts.app')
 
-@section('page-title', 'Laporan Keuangan')
+@section('page-title', 'Laporan Profit')
 
 @section('content')
-
-    {{-- BREADCRUMB --}}
-    <div class="flex items-center gap-2 text-xs text-slate-400 mb-5">
-        <a href="{{ route('admin.keuangan.index') }}" class="hover:text-blue-500 transition-colors">Data Keuangan</a>
-        <i class="fa-solid fa-chevron-right text-[9px]"></i>
-        <span class="text-slate-600 font-medium">Laporan</span>
-    </div>
 
     {{-- PAGE HEADER --}}
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-xl font-bold text-slate-800">Laporan Keuangan</h1>
-            <p class="text-sm text-slate-400 mt-0.5">
-                Ringkasan keuangan
-                @if(request('bulan') && request('tahun'))
-                    periode {{ [1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'][request('bulan')] }} {{ request('tahun') }}
-                @elseif(request('tahun'))
-                    tahun {{ request('tahun') }}
-                @else
-                    semua periode
-                @endif
-            </p>
+            <h1 class="text-xl font-bold text-slate-800">Laporan Profit</h1>
+            <p class="text-sm text-slate-400 mt-0.5">Pendapatan owner dan platform dari booking</p>
         </div>
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.keuangan.export', request()->only('bulan', 'tahun')) }}"
-               class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-50 hover:bg-green-100 text-green-600 text-sm font-semibold rounded-lg border border-green-100 transition-colors">
-                <i class="fa-solid fa-file-excel text-xs"></i>
-                Export Excel
+
+            {{-- Cetak PDF --}}
+            <a href="{{ route('admin.keuangan.laporan.pdf', ['owner_id' => request('owner_id')]) }}"
+               target="_blank"
+               class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-500 text-sm font-semibold rounded-lg border border-red-100 transition-colors">
+                <i class="fa-solid fa-file-pdf text-xs"></i>
+                Cetak PDF
+                @if($ownerName)
+                    <span class="text-red-400 font-normal">— {{ $ownerName }}</span>
+                @endif
             </a>
-            <a href="{{ route('admin.keuangan.index', request()->only('bulan', 'tahun')) }}"
-               class="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
-                <i class="fa-solid fa-arrow-left text-xs"></i>
-                Kembali
-            </a>
+
         </div>
     </div>
 
-    {{-- FILTER BAR --}}
-    <form method="GET" action="{{ route('admin.keuangan.laporan') }}"
-          class="bg-white rounded-xl border border-slate-200 shadow-sm px-5 py-4 mb-5 flex flex-wrap items-end gap-4">
-        <div class="flex-1 min-w-[140px]">
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Bulan</label>
-            <select name="bulan" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
-                <option value="">Semua Bulan</option>
-                @foreach([1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'] as $num => $nama)
-                    <option value="{{ $num }}" @selected(request('bulan') == $num)>{{ $nama }}</option>
-                @endforeach
-            </select>
+    {{-- FILTER + KIRIM BAR --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm px-5 py-4 mb-5">
+        <div class="flex flex-wrap items-end gap-4">
+
+            {{-- Filter Owner --}}
+            <form method="GET" class="flex items-end gap-3 flex-1 min-w-0">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Filter Owner</label>
+                    <select name="owner_id"
+                        class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                        <option value="">Semua Owner</option>
+                        @foreach ($owners as $owner)
+                            <option value="{{ $owner->id }}" @selected($ownerId == $owner->id)>
+                                {{ $owner->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
+                    <i class="fa-solid fa-filter text-xs"></i>
+                    Filter
+                </button>
+                @if(request('owner_id'))
+                    <a href="{{ route('admin.keuangan.laporan') }}"
+                       class="inline-flex items-center gap-1.5 px-3 py-2.5 border border-slate-200 text-slate-500 hover:bg-slate-100 text-sm font-semibold rounded-lg transition-colors">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                        Reset
+                    </a>
+                @endif
+            </form>
+
         </div>
-        <div class="flex-1 min-w-[120px]">
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tahun</label>
-            <select name="tahun" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
-                @foreach(range(now()->year, now()->year - 4) as $y)
-                    <option value="{{ $y }}" @selected(request('tahun', now()->year) == $y)>{{ $y }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="flex gap-2">
-            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
-                <i class="fa-solid fa-filter text-xs"></i>
-                Tampilkan
-            </button>
+    </div>
+
+    {{-- FORM KIRIM --}}
+    <form method="POST" action="{{ route('admin.keuangan.laporan.kirim') }}" id="formKirim">
+        @csrf
+        <input type="hidden" name="owner_id" value="{{ request('owner_id') }}">
+
+        {{-- TABLE CARD --}}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+
+            {{-- Toolbar --}}
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="checkAll"
+                            class="w-4 h-4 accent-blue-500 rounded cursor-pointer">
+                        <span class="text-xs font-semibold text-slate-500">Pilih Semua Pending</span>
+                    </label>
+                    <span id="selectedCount"
+                        class="hidden text-xs font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                        0 dipilih
+                    </span>
+                </div>
+
+                {{-- Tombol Kirim --}}
+                <button type="submit"
+                    onclick="return confirm('Kirim pendapatan ke owner yang dipilih?')"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-green-200">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    Kirim Pendapatan
+                </button>
+            </div>
+
+            {{-- Table --}}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center w-10"></th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Owner</th>
+                            <th class="px-4 py-3">Kos & Kamar</th>
+                            <th class="px-4 py-3 text-right">Total Booking</th>
+                            <th class="px-4 py-3 text-right">Pend. Owner</th>
+                            <th class="px-4 py-3 text-right">Pend. Platform</th>
+                            <th class="px-4 py-3 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @forelse ($laporanOwner as $item)
+                            <tr class="hover:bg-slate-50/60 transition-colors {{ $item->status == 'pending' ? '' : 'opacity-75' }}">
+
+                                {{-- Checkbox --}}
+                                <td class="px-4 py-3.5 text-center">
+                                    @if ($item->status == 'pending')
+                                        <input type="checkbox"
+                                               name="ids[]"
+                                               value="{{ $item->id }}"
+                                               class="checkbox-item w-4 h-4 accent-blue-500 rounded cursor-pointer">
+                                    @else
+                                        <i class="fa-solid fa-check text-green-400 text-xs"></i>
+                                    @endif
+                                </td>
+
+                                {{-- Tanggal --}}
+                                <td class="px-4 py-3.5">
+                                    <p class="text-xs font-semibold text-slate-700">{{ $item->created_at->format('d M Y') }}</p>
+                                    <p class="text-[11px] text-slate-400">{{ $item->created_at->format('H:i') }}</p>
+                                </td>
+
+                                {{-- Owner --}}
+                                <td class="px-4 py-3.5">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                                            {{ strtoupper(substr($item->owner->name ?? '?', 0, 1)) }}
+                                        </div>
+                                        <span class="text-xs font-medium text-slate-700">{{ $item->owner->name ?? '-' }}</span>
+                                    </div>
+                                </td>
+
+                                {{-- Kos & Kamar --}}
+                                <td class="px-4 py-3.5">
+                                    <p class="text-xs font-semibold text-slate-700">{{ $item->booking->kamar->kos->nama_kos ?? '-' }}</p>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">
+                                        <i class="fa-solid fa-door-open mr-1"></i>
+                                        {{ $item->booking->kamar->nama_kamar ?? '-' }}
+                                    </p>
+                                    <p class="text-[11px] text-slate-300 mt-0.5 truncate max-w-[160px]">
+                                        {{ $item->booking->kamar->kos->alamat ?? '' }}
+                                    </p>
+                                </td>
+
+                                {{-- Total Booking --}}
+                                <td class="px-4 py-3.5 text-right">
+                                    <span class="text-xs font-semibold text-slate-700">
+                                        Rp {{ number_format($item->total_booking, 0, ',', '.') }}
+                                    </span>
+                                </td>
+
+                                {{-- Pendapatan Owner --}}
+                                <td class="px-4 py-3.5 text-right">
+                                    <span class="text-xs font-bold text-green-600">
+                                        Rp {{ number_format($item->pendapatan_owner, 0, ',', '.') }}
+                                    </span>
+                                </td>
+
+                                {{-- Pendapatan Platform --}}
+                                <td class="px-4 py-3.5 text-right">
+                                    <span class="text-xs font-bold text-blue-600">
+                                        Rp {{ number_format($item->pendapatan_platform, 0, ',', '.') }}
+                                    </span>
+                                </td>
+
+                                {{-- Status --}}
+                                <td class="px-4 py-3.5 text-center">
+                                    @if ($item->status == 'pending')
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-100">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                                            Pending
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-green-50 text-green-600 border border-green-100">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Terkirim
+                                        </span>
+                                        @if ($item->tanggal_kirim)
+                                            <p class="text-[10px] text-slate-400 mt-1">
+                                                {{ $item->tanggal_kirim->format('d M Y') }}
+                                            </p>
+                                        @endif
+                                    @endif
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-5 py-16 text-center">
+                                    <div class="flex flex-col items-center gap-3 text-slate-300">
+                                        <i class="fa-solid fa-chart-pie text-4xl"></i>
+                                        <p class="text-sm font-medium text-slate-400">Tidak ada data laporan</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Footer summary --}}
+            @if($laporanOwner->count() > 0)
+                <div class="px-5 py-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 bg-slate-50">
+                    <p class="text-xs text-slate-400">
+                        Total <span class="font-semibold text-slate-600">{{ $laporanOwner->count() }}</span> transaksi
+                    </p>
+                    <div class="flex items-center gap-6">
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Total Pend. Owner</p>
+                            <p class="text-sm font-bold text-green-600">Rp {{ number_format($laporanOwner->sum('pendapatan_owner'), 0, ',', '.') }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Total Pend. Platform</p>
+                            <p class="text-sm font-bold text-blue-600">Rp {{ number_format($laporanOwner->sum('pendapatan_platform'), 0, ',', '.') }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Total Booking</p>
+                            <p class="text-sm font-bold text-slate-700">Rp {{ number_format($laporanOwner->sum('total_booking'), 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         </div>
     </form>
 
-    {{-- SUMMARY CARDS --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+    <div class="p-4">
+    {{ $laporanOwner->links() }}
+</div>
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center mb-3 shadow-sm shadow-blue-200">
-                <i class="fa-solid fa-wallet text-white text-sm"></i>
-            </div>
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Saldo Akhir</p>
-            <p class="text-base font-bold text-blue-600 mt-0.5">Rp {{ number_format($saldoAkhir ?? 0, 0, ',', '.') }}</p>
-        </div>
+    <script>
+        const checkAll  = document.getElementById('checkAll');
+        const countBadge = document.getElementById('selectedCount');
+        const checkboxes = document.querySelectorAll('.checkbox-item');
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-            <div class="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center mb-3 shadow-sm shadow-green-200">
-                <i class="fa-solid fa-arrow-trend-up text-white text-sm"></i>
-            </div>
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
-            <p class="text-base font-bold text-green-600 mt-0.5">Rp {{ number_format($totalPemasukan ?? 0, 0, ',', '.') }}</p>
-        </div>
+        function updateCount() {
+            const checked = document.querySelectorAll('.checkbox-item:checked').length;
+            if (checked > 0) {
+                countBadge.textContent = checked + ' dipilih';
+                countBadge.classList.remove('hidden');
+            } else {
+                countBadge.classList.add('hidden');
+            }
+            checkAll.indeterminate = checked > 0 && checked < checkboxes.length;
+            checkAll.checked = checked === checkboxes.length && checkboxes.length > 0;
+        }
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-            <div class="w-9 h-9 rounded-xl bg-red-500 flex items-center justify-center mb-3 shadow-sm shadow-red-200">
-                <i class="fa-solid fa-arrow-trend-down text-white text-sm"></i>
-            </div>
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
-            <p class="text-base font-bold text-red-500 mt-0.5">Rp {{ number_format($totalPengeluaran ?? 0, 0, ',', '.') }}</p>
-        </div>
+        checkAll.addEventListener('change', () => {
+            checkboxes.forEach(cb => cb.checked = checkAll.checked);
+            updateCount();
+        });
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-            <div class="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center mb-3 shadow-sm shadow-amber-200">
-                <i class="fa-solid fa-receipt text-white text-sm"></i>
-            </div>
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Jumlah Transaksi</p>
-            <p class="text-base font-bold text-amber-600 mt-0.5">{{ $totalTransaksi ?? 0 }} transaksi</p>
-        </div>
-
-    </div>
-
-    {{-- REKAP PER BULAN --}}
-    @isset($rekapBulanan)
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-5">
-        <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center">
-                <i class="fa-solid fa-chart-bar text-indigo-500 text-xs"></i>
-            </div>
-            <h2 class="font-bold text-slate-700 text-sm">Rekap Per Bulan — {{ request('tahun', now()->year) }}</h2>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider text-left">
-                        <th class="px-5 py-3">Bulan</th>
-                        <th class="px-5 py-3 text-right">Pemasukan</th>
-                        <th class="px-5 py-3 text-right">Pengeluaran</th>
-                        <th class="px-5 py-3 text-right">Selisih</th>
-                        <th class="px-5 py-3 text-right">Transaksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    @foreach($rekapBulanan as $rekap)
-                        @php $selisih = $rekap->total_pemasukan - $rekap->total_pengeluaran; @endphp
-                        <tr class="hover:bg-slate-50/60 transition-colors">
-                            <td class="px-5 py-3.5 text-sm font-semibold text-slate-700">
-                                {{ [1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'][$rekap->bulan] }}
-                            </td>
-                            <td class="px-5 py-3.5 text-right">
-                                <span class="text-xs font-bold text-green-600">
-                                    Rp {{ number_format($rekap->total_pemasukan, 0, ',', '.') }}
-                                </span>
-                            </td>
-                            <td class="px-5 py-3.5 text-right">
-                                <span class="text-xs font-bold text-red-500">
-                                    Rp {{ number_format($rekap->total_pengeluaran, 0, ',', '.') }}
-                                </span>
-                            </td>
-                            <td class="px-5 py-3.5 text-right">
-                                <span class="text-xs font-bold {{ $selisih >= 0 ? 'text-blue-600' : 'text-red-500' }}">
-                                    {{ $selisih >= 0 ? '+' : '' }}Rp {{ number_format($selisih, 0, ',', '.') }}
-                                </span>
-                            </td>
-                            <td class="px-5 py-3.5 text-right">
-                                <span class="text-xs font-semibold text-slate-500">{{ $rekap->jumlah }}</span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @endisset
-
-    {{-- TABEL TRANSAKSI --}}
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
-            <span class="text-sm font-semibold text-slate-600">
-                Detail Transaksi
-                <span class="ml-2 text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
-                    {{ $data->total() }}
-                </span>
-            </span>
-            <a href="{{ route('admin.keuangan.export', request()->only('bulan', 'tahun')) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-xs font-semibold rounded-lg border border-green-100 transition-colors">
-                <i class="fa-solid fa-file-excel text-[10px]"></i>
-                Export Excel
-            </a>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="bg-slate-50 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
-                        <th class="px-4 py-3">Tanggal</th>
-                        <th class="px-4 py-3">Reference</th>
-                        <th class="px-4 py-3">Kategori</th>
-                        <th class="px-4 py-3">Keterangan</th>
-                        <th class="px-4 py-3 text-right">Pemasukan</th>
-                        <th class="px-4 py-3 text-right">Pengeluaran</th>
-                        <th class="px-4 py-3 text-right">Saldo</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    @forelse($data as $item)
-                        <tr class="hover:bg-slate-50/60 transition-colors">
-                            <td class="px-4 py-3.5">
-                                <p class="text-xs font-semibold text-slate-700">{{ $item->created_at->format('d M Y') }}</p>
-                                <p class="text-[11px] text-slate-400">{{ $item->created_at->format('H:i') }}</p>
-                            </td>
-                            <td class="px-4 py-3.5">
-                                <span class="text-xs font-mono bg-slate-100 text-slate-500 px-2 py-1 rounded-md">{{ $item->reference }}</span>
-                            </td>
-                            <td class="px-4 py-3.5">
-                                @if ($item->kategori == 'pemasukan')
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-green-50 text-green-600 border border-green-100">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Pemasukan
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-red-50 text-red-500 border border-red-100">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> Pengeluaran
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3.5">
-                                <p class="text-xs text-slate-500 max-w-[180px] truncate">{{ $item->keterangan ?: '—' }}</p>
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                @if($item->pemasukan > 0)
-                                    <span class="text-xs font-bold text-green-600">+ Rp {{ number_format($item->pemasukan, 0, ',', '.') }}</span>
-                                @else
-                                    <span class="text-xs text-slate-300">—</span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                @if($item->pengeluaran > 0)
-                                    <span class="text-xs font-bold text-red-500">- Rp {{ number_format($item->pengeluaran, 0, ',', '.') }}</span>
-                                @else
-                                    <span class="text-xs text-slate-300">—</span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                <span class="text-xs font-bold text-blue-600">Rp {{ number_format($item->saldo, 0, ',', '.') }}</span>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="px-5 py-16 text-center">
-                                <div class="flex flex-col items-center gap-3">
-                                    <i class="fa-solid fa-chart-bar text-4xl text-slate-300"></i>
-                                    <p class="text-sm font-medium text-slate-400">Tidak ada transaksi pada periode ini</p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        @if($data->hasPages())
-            <div class="px-5 py-4 border-t border-slate-100 flex items-center justify-between gap-3">
-                <p class="text-xs text-slate-400">
-                    Menampilkan <span class="font-semibold text-slate-600">{{ $data->firstItem() }}–{{ $data->lastItem() }}</span>
-                    dari <span class="font-semibold text-slate-600">{{ $data->total() }}</span> transaksi
-                </p>
-                {{ $data->withQueryString()->links() }}
-            </div>
-        @endif
-    </div>
+        checkboxes.forEach(cb => cb.addEventListener('change', updateCount));
+    </script>
 
 @endsection

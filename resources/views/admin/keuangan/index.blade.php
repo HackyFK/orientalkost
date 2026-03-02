@@ -115,52 +115,52 @@
     {{-- SUMMARY CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-            <div
-                class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm shadow-blue-200">
-                <i class="fa-solid fa-wallet text-white text-base"></i>
-            </div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Saldo</p>
-                <p class="text-lg font-bold text-blue-600 truncate">
-                    Rp {{ number_format($data->first()?->saldo ?? 0, 0, ',', '.') }}
-                </p>
-            </div>
+    {{-- Saldo --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+        <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm shadow-blue-200">
+            <i class="fa-solid fa-wallet text-white text-base"></i>
         </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-            <div
-                class="w-11 h-11 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-green-200">
-                <i class="fa-solid fa-arrow-trend-up text-white text-base"></i>
-            </div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
-                <p class="text-lg font-bold text-green-600 truncate">
-                    Rp {{ number_format($data->sum('pemasukan'), 0, ',', '.') }}
-                </p>
-                @if (request()->hasAny(['bulan', 'tahun']))
-                    <p class="text-[10px] text-slate-400">periode terpilih</p>
-                @endif
-            </div>
+        <div class="min-w-0">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Saldo</p>
+            <p class="text-lg font-bold text-blue-600 truncate">
+                Rp {{ number_format($saldo, 0, ',', '.') }}
+            </p>
         </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-            <div
-                class="w-11 h-11 rounded-xl bg-red-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-red-200">
-                <i class="fa-solid fa-arrow-trend-down text-white text-base"></i>
-            </div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
-                <p class="text-lg font-bold text-red-500 truncate">
-                    Rp {{ number_format($data->sum('pengeluaran'), 0, ',', '.') }}
-                </p>
-                @if (request()->hasAny(['bulan', 'tahun']))
-                    <p class="text-[10px] text-slate-400">periode terpilih</p>
-                @endif
-            </div>
-        </div>
-
     </div>
+
+    {{-- Total Pemasukan --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+        <div class="w-11 h-11 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-green-200">
+            <i class="fa-solid fa-arrow-trend-up text-white text-base"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
+            <p class="text-lg font-bold text-green-600 truncate">
+                Rp {{ number_format($totalPemasukan, 0, ',', '.') }}
+            </p>
+            @if (request()->hasAny(['bulan', 'tahun']))
+                <p class="text-[10px] text-slate-400">periode terpilih</p>
+            @endif
+        </div>
+    </div>
+
+    {{-- Total Pengeluaran --}}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+        <div class="w-11 h-11 rounded-xl bg-red-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-red-200">
+            <i class="fa-solid fa-arrow-trend-down text-white text-base"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
+            <p class="text-lg font-bold text-red-500 truncate">
+                Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}
+            </p>
+            @if (request()->hasAny(['bulan', 'tahun']))
+                <p class="text-[10px] text-slate-400">periode terpilih</p>
+            @endif
+        </div>
+    </div>
+
+</div>  
 
     {{-- TABLE CARD --}}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -192,7 +192,7 @@
                     <tr class="bg-slate-50 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
                         <th class="px-4 py-3">Tanggal</th>
                         <th class="px-4 py-3">Reference</th>
-                        <th class="px-4 py-3">Admin</th>
+                        <th class="px-4 py-3">User</th>
                         <th class="px-4 py-3">Kategori</th>
                         <th class="px-4 py-3">Metode</th>
                         <th class="px-4 py-3">Keterangan</th>

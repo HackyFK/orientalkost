@@ -27,9 +27,9 @@ class Kamar extends Model
     ];
 
     public function kos()
-    {
-        return $this->belongsTo(Kos::class);
-    }
+{
+    return $this->belongsTo(Kos::class, 'kos_id');
+}
 
     public function images()
     {
@@ -59,5 +59,10 @@ class Kamar extends Model
         return $this->kamars()
             ->where('status', 'tersedia')
             ->count();
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }
