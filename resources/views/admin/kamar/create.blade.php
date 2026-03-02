@@ -70,12 +70,27 @@
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
                             </div>
                             <div>
-                                <label
-                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tipe
-                                    Kamar</label>
-                                <input type="text" name="tipe_kamar" value="{{ old('tipe_kamar') }}"
-                                    placeholder="Contoh: Standard"
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Tipe Kamar
+                                </label>
+
+                                <select name="tipe_kamar"
                                     class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+
+                                    <option value="">-- Pilih Tipe Kamar --</option>
+                                    <option value="Kelas 3" {{ old('tipe_kamar') == 'Kelas 3' ? 'selected' : '' }}>Kelas 3
+                                    </option>
+                                    <option value="Kelas 2" {{ old('tipe_kamar') == 'Kelas 2' ? 'selected' : '' }}>Kelas 2
+                                    </option>
+                                    <option value="Kelas 1" {{ old('tipe_kamar') == 'Kelas 1' ? 'selected' : '' }}>Kelas 1
+                                    </option>
+                                    <option value="VIP" {{ old('tipe_kamar') == 'VIP' ? 'selected' : '' }}>VIP
+                                    </option>
+                                    <option value="VVIP" {{ old('tipe_kamar') == 'VVIP' ? 'selected' : '' }}>VVIP
+                                    </option>
+                                    {{-- <option value="Exclusive" {{ old('tipe_kamar') == 'Exclusive' ? 'selected' : '' }}>
+                                        Exclusive</option> --}}
+                                </select>
                             </div>
                         </div>
 

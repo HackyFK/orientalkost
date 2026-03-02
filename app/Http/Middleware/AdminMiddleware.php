@@ -19,13 +19,13 @@ class AdminMiddleware
         // Pastikan user login
         if (!Auth::check()) {
             return redirect()->route('login'); // ganti dengan route login kamu
-            }
-
-            // Pastikan user punya role admin
-            if (Auth::user()->role !== 'admin') {
-                // abort(403, 'Unauthorized'); // bisa juga redirect ke halaman lain
-                return redirect()->route('user.beranda'); // ganti dengan route login kamu
         }
+
+        // Pastikan user punya role admin
+        if (!in_array(Auth::user()->role, ['admin', 'owner'])) {
+            return redirect()->route('user.beranda');
+        }
+
 
         return $next($request);
     }

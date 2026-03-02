@@ -54,6 +54,7 @@ class KosKamarSeeder extends Seeder
             ]);
 
             // 3 kamar per kos
+            $kelas = ['Kelas 3', 'Kelas 2', 'Kelas 1', 'VIP', 'VVIP'];
             for ($i = 1; $i <= 3; $i++) {
 
                 // ambil ukuran random
@@ -62,7 +63,7 @@ class KosKamarSeeder extends Seeder
                 $kamar = Kamar::create([
                     'kos_id'         => $kos->id,
                     'nama_kamar'     => "Kamar $i",
-                    'tipe_kamar'     => $i % 2 === 0 ? 'VIP' : 'Standar',
+                    'tipe_kamar' => $kelas[$i % 5],
                     'lantai'         => ceil($i / 2),
                     'nomor_kamar'    => $i,
                     'deskripsi'      => 'Kamar bersih dan nyaman',
