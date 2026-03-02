@@ -167,6 +167,13 @@ Route::prefix('admin')
         Route::get('/keuangan/laporan/pdf',
             [AdminKeuanganController::class, 'pdf']
         )->name('keuangan.laporan.pdf');
+        Route::get('/keuangan/owner',
+            [AdminKeuanganController::class,'owner'])
+            ->name('keuangan.owner');
+        Route::get(
+        '/keuangan-owner/export',
+        [AdminKeuanganController::class, 'exportOwner']
+    )->name('keuangan.owner.export');
 
 
 
