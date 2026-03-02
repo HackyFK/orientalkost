@@ -8,6 +8,7 @@ use App\Models\Kos;
 use App\Models\KosImage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -15,11 +16,16 @@ class AdminKosController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+
         $items = Kos::with([
             'primaryImage',
             'owner',
-            'fasilitas' // fasilitas khusus kos
+            'fasilitas'
         ])
+            ->when($user->role === 'owner', function ($q) use ($user) {
+                $q->where('owner_id', $user->id);
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -27,9 +33,14 @@ class AdminKosController extends Controller
         return view('admin.kos.index', compact('items'));
     }
 
+
     public function create()
     {
-        $owners = User::where('role', 'owner')->get();
+        $user = auth::user();
+
+        $owners = $user->role === 'admin'
+            ? User::where('role', 'owner')->get()
+            : collect([$user]); // owner hanya bisa pilih dirinya
 
         $kategoriKos = [
             'dapur',
@@ -64,14 +75,13 @@ class AdminKosController extends Controller
             'jenis_sewa' => 'required|in:bulanan,tahunan',
             'gender'     => 'required|in:putra,putri,campuran',
             'owner_id'   => 'nullable|exists:users,id',
-
-            // 🔥 fasilitas kos
-            'fasilitas_kos' => 'nullable|array',
-
-            'images.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $data['slug'] = Str::slug($data['nama_kos']);
+
+        if (auth::user()->role === 'owner') {
+            $data['owner_id'] = auth::id();
+        }
 
         $kos = Kos::create($data);
 
@@ -98,6 +108,10 @@ class AdminKosController extends Controller
 
     public function edit(Kos $ko)
     {
+        if (auth::user()->role === 'owner' && $ko->owner_id !== auth::id()) {
+            abort(403);
+        }
+
         $ko->load(['images', 'fasilitas']);
 
         $owners = User::where('role', 'owner')->get();
@@ -126,6 +140,9 @@ class AdminKosController extends Controller
 
     public function update(Request $request, Kos $ko)
     {
+        if (auth::user()->role === 'owner' && $ko->owner_id !== auth::id()) {
+            abort(403);
+        }
         $data = $request->validate([
             'nama_kos'   => 'required|min:3|unique:kos,nama_kos,' . $ko->id,
             'deskripsi'  => 'nullable',
@@ -169,6 +186,9 @@ class AdminKosController extends Controller
 
     public function destroy(Kos $ko)
     {
+        if (auth::user()->role === 'owner' && $ko->owner_id !== auth::id()) {
+            abort(403);
+        }
         $ko->delete();
         return back()->with('success', 'Kos berhasil dihapus');
     }

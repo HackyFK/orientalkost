@@ -148,101 +148,106 @@ Route::prefix('admin')
     ->middleware(['auth', AdminMiddleware::class])
     ->group(function () {
 
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+        // ADMIN OWNER
+        Route::middleware(['role:admin,owner'])->group(function () {
+            Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+                ->name('dashboard');
 
-        Route::resource('keuangan', AdminKeuanganController::class)
-            ->only(['index', 'create', 'store']);
-        Route::get(
-            '/keuangan/export',
-            [AdminKeuanganController::class, 'export']
-        )->name('keuangan.export');
-        Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
-            ->name('keuangan.laporan');
+            Route::resource('keuangan', AdminKeuanganController::class)
+                ->only(['index', 'create', 'store']);
+            Route::get(
+                '/keuangan/export',
+                [AdminKeuanganController::class, 'export']
+            )->name('keuangan.export');
 
-        Route::resource('users', AdminUserController::class)
-            ->only(['index', 'show', 'destroy']);
+            Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
+                ->name('keuangan.laporan');
 
-        Route::patch('users/{user}/update-role', [AdminUserController::class, 'updateRole'])
-            ->name('users.updateRole');
+            Route::resource('kos', AdminKosController::class);
 
-        Route::patch('users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])
-            ->name('users.toggleStatus');
+            Route::delete(
+                'kos-image/{image}',
+                [AdminKosController::class, 'deleteImage']
+            )->name('kos.image.delete');
 
+            Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
 
-
-        Route::resource('kos', AdminKosController::class);
-
-        Route::delete(
-            'kos-image/{image}',
-            [AdminKosController::class, 'deleteImage']
-        )->name('kos.image.delete');
-
-        Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
-
-        Route::resource('kamar', AdminKamarController::class);
-
-        Route::resource('fasilitas', AdminFasilitasController::class);
-
-        Route::resource('blog', AdminBlogController::class);
-
-        Route::post('blog/{blog}/publish', [AdminBlogController::class, 'publish'])
-            ->name('blog.publish');
-
-        Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
-            ->name('blog.unpublish');
+            Route::resource('kamar', AdminKamarController::class);
+        });
 
 
+        // ADMIN ONLY
+        Route::middleware(['role:admin'])->group(function () {
+            Route::resource('users', AdminUserController::class)
+                ->only(['index', 'show', 'destroy']);
 
-        Route::resource('galeri', AdminGaleriController::class);
+            Route::patch('users/{user}/update-role', [AdminUserController::class, 'updateRole'])
+                ->name('users.updateRole');
 
-        Route::resource('booking', AdminBookingController::class)
-            ->only(['index', 'show', 'update', 'destroy']);
+            Route::patch('users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])
+                ->name('users.toggleStatus');
 
-        Route::post(
-            '/booking/{booking}/status',
-            [AdminBookingController::class, 'updateStatus']
-        )->name('booking.updateStatus');
+            Route::resource('fasilitas', AdminFasilitasController::class);
 
+            Route::resource('blog', AdminBlogController::class);
 
-        Route::resource('review', AdminReviewController::class)
-            ->only(['index', 'destroy']);
+            Route::post('blog/{blog}/publish', [AdminBlogController::class, 'publish'])
+                ->name('blog.publish');
 
-
-        Route::put('/settings', [AdminSettingController::class, 'update'])
-            ->name('settings.update');
-        // });
-
-        Route::get('/reviews', [AdminReviewController::class, 'index'])
-            ->name('reviews.index');
-
-        Route::patch('/admin/reviews/{review}/status', [AdminReviewController::class, 'updateStatus'])
-            ->name('reviews.status');
-
-        Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])
-            ->name('reviews.destroy');
-
-        Route::get('/settings', [AdminSettingController::class, 'index'])
-            ->name('settings.index');
-
-        Route::put('/settings', [AdminSettingController::class, 'update'])
-            ->name('settings.update');
+            Route::post('blog/{blog}/unpublish', [AdminBlogController::class, 'unpublish'])
+                ->name('blog.unpublish');
 
 
+            Route::resource('galeri', AdminGaleriController::class);
 
-        // TEST
-        Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])
-            ->name('settings.test.smtp');
-        //main
-        Route::post('/settings/test-midtrans', [AdminSettingController::class, 'testMidtrans'])
-            ->name('settings.test.midtrans');
+            Route::resource('booking', AdminBookingController::class)
+                ->only(['index', 'show', 'update', 'destroy']);
 
-        Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
-            ->name('website-profile.index');
+            Route::post(
+                '/booking/{booking}/status',
+                [AdminBookingController::class, 'updateStatus']
+            )->name('booking.updateStatus');
 
-        Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
-            ->name('website-profile.edit');
 
-        Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
-            ->name('website-profile.update');
+            Route::resource('review', AdminReviewController::class)
+                ->only(['index', 'destroy']);
+
+
+            Route::put('/settings', [AdminSettingController::class, 'update'])
+                ->name('settings.update');
+            // });
+
+            Route::get('/reviews', [AdminReviewController::class, 'index'])
+                ->name('reviews.index');
+
+            Route::patch('/admin/reviews/{review}/status', [AdminReviewController::class, 'updateStatus'])
+                ->name('reviews.status');
+
+            Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])
+                ->name('reviews.destroy');
+
+            Route::get('/settings', [AdminSettingController::class, 'index'])
+                ->name('settings.index');
+
+            Route::put('/settings', [AdminSettingController::class, 'update'])
+                ->name('settings.update');
+
+
+
+            // TEST
+            Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])
+                ->name('settings.test.smtp');
+            //main
+            Route::post('/settings/test-midtrans', [AdminSettingController::class, 'testMidtrans'])
+                ->name('settings.test.midtrans');
+
+            Route::get('/website-profile', [AdminWebsiteProfileController::class, 'index'])
+                ->name('website-profile.index');
+
+            Route::get('/website-profile/edit', [AdminWebsiteProfileController::class, 'edit'])
+                ->name('website-profile.edit');
+
+            Route::put('/website-profile/update', [AdminWebsiteProfileController::class, 'update'])
+                ->name('website-profile.update');
+        });
     });

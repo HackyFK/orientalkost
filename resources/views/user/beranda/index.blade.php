@@ -257,10 +257,8 @@ function setActive(el) {
                             'WiFi' => 'wifi',
                             'Parkir' => 'parking',
                             'Water Heater' => 'fire',
-                            'Kulkas Mini' => 'snowflake',
                             'TV' => 'tv',
                             'Kamar Mandi Luar' => 'restroom',
-                            'Bathtub' => 'bath',
                         ];
                     @endphp
 
@@ -285,7 +283,7 @@ function setActive(el) {
 
 
                     {{-- Tampilkan fasilitas kamar --}}
-                    @foreach ($jumlahFasilitas as $nama => $fasil)
+                    {{-- @foreach ($jumlahFasilitas as $nama => $fasil)
                         <div
                             class="bg-secondary rounded-2xl p-6 text-center hover:bg-accent transition cursor-pointer group">
                             <div class="text-5xl mb-4">
@@ -294,7 +292,7 @@ function setActive(el) {
                             <h3 class="font-semibold text-lg mb-2">{{ $nama }}</h3>
                             <p class="text-accent-soft group-hover:text-white">{{ $fasil->kamars_count }} Kamar</p>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
 
 
@@ -530,8 +528,8 @@ function setActive(el) {
 
                 <!-- Galeri Wrapper (Glass Effect) -->
                 <div
-                    class="bg-white/90 backdrop-blur-md rounded-[2.5rem] 
-            p-8 md:p-14 lg:p-16 
+                    class="bg-white/90 backdrop-blur-md rounded-[2.5rem]
+            p-8 md:p-14 lg:p-16
             shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)]">
 
                     <!-- Masonry Auto Layout -->
@@ -654,7 +652,7 @@ function setActive(el) {
 
                     @forelse ($blogs as $blog)
                         <article
-                            class="bg-white rounded-2xl shadow-lg overflow-hidden 
+                            class="bg-white rounded-2xl shadow-lg overflow-hidden
                     transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
 
                             <a href="{{ route('user.blog.show', $blog->slug) }}" class="block group">
@@ -668,7 +666,7 @@ function setActive(el) {
                                         class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
                                     <span
-                                        class="absolute top-4 left-4 bg-white/95 text-accent 
+                                        class="absolute top-4 left-4 bg-white/95 text-accent
                                 px-3 py-1.5 rounded-full text-xs font-semibold shadow">
                                         <i class="fas fa-newspaper mr-1"></i>
                                         {{ $blog->slug }}
@@ -693,14 +691,14 @@ function setActive(el) {
                                         <span>•</span>
 
                                         <div
-                                            class="flex items-center gap-1 px-2.5 py-1 
+                                            class="flex items-center gap-1 px-2.5 py-1
                                     bg-blue-50 text-blue-600 rounded-full font-medium">
                                             <i class="fas fa-clock text-blue-500"></i>
                                             <span>{{ $readingTime }} min</span>
                                         </div>
 
                                         <div
-                                            class="flex items-center gap-1 px-2.5 py-1 
+                                            class="flex items-center gap-1 px-2.5 py-1
                                     bg-emerald-50 text-emerald-600 rounded-full font-medium">
                                             <i class="fas fa-eye text-emerald-500"></i>
                                             <span>{{ $blog->views ?? 0 }}</span>
@@ -710,7 +708,7 @@ function setActive(el) {
 
                                     {{-- TITLE --}}
                                     <h3
-                                        class="text-xl font-bold text-primary mb-3 leading-snug 
+                                        class="text-xl font-bold text-primary mb-3 leading-snug
                                 group-hover:text-accent transition">
                                         {{ $blog->judul }}
                                     </h3>
@@ -740,7 +738,7 @@ function setActive(el) {
                                 @auth
                                     <button type="button" onclick="event.stopPropagation(); toggleLike({{ $blog->id }})"
                                         id="like-btn-{{ $blog->id }}"
-                                        class="flex items-center gap-2 px-3 py-1.5 
+                                        class="flex items-center gap-2 px-3 py-1.5
                                 bg-gray-50 hover:bg-gray-100
                                 text-gray-600 rounded-lg
                                 transition duration-200 shadow-sm">
@@ -771,8 +769,8 @@ function setActive(el) {
 
                 <div class="text-center mt-14">
                     <a href="{{ route('user.blog') }}"
-                        class="inline-block bg-accent hover:bg-orange-600 
-                text-white px-8 py-4 rounded-xl font-semibold 
+                        class="inline-block bg-accent hover:bg-orange-600
+                text-white px-8 py-4 rounded-xl font-semibold
                 transition shadow-lg">
                         Lihat Semua Blog
                         <i class="fas fa-arrow-right ml-2"></i>

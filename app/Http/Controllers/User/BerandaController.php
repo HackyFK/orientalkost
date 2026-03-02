@@ -73,15 +73,7 @@ class BerandaController extends Controller
 
         // Fasilitas
         $fasilitasTampil = [
-            'AC',
-            'WiFi',
-            'Parkir',
-            'Water Heater',
-            'Kulkas Mini',
-            'TV',
-            'Kamar Mandi Luar',
-            'Kamar Mandi Dalam',
-            'Bathtub'
+            // 'AC'
         ];
 
         $jumlahFasilitas = Fasilitas::whereIn('nama_fasilitas', $fasilitasTampil)
@@ -93,6 +85,7 @@ class BerandaController extends Controller
         $tipeKamarAll = Kamar::select('tipe_kamar')
             ->selectRaw('COUNT(*) as total')
             ->groupBy('tipe_kamar')
+            ->orderByRaw("FIELD(tipe_kamar, 'Kelas 3', 'Kelas 2', 'Kelas 1', 'VIP', 'VVIP')")
             ->get();
 
         $iframe1 = $this->youtubeEmbed($profile->iframe_1 ?? null);
