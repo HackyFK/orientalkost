@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Midtrans\Config;
 use Midtrans\Snap;
+use App\Models\Booking;
+use App\Models\Payment;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -36,4 +39,8 @@ class PaymentController extends Controller
             'snap_token' => $snapToken
         ]);
     }
+
+    
+
+
 }

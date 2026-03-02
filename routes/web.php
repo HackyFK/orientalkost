@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+use App\Http\Controllers\Admin\LaporanController;
 // use App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\ProfileController;
@@ -159,6 +160,12 @@ Route::prefix('admin')
         )->name('keuangan.export');
         Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
             ->name('keuangan.laporan');
+        Route::post('/keuangan/laporan/kirim', [AdminKeuanganController::class, 'kirimOwner'])
+        ->name('keuangan.laporan.kirim');
+        Route::get('/keuangan/laporan/pdf',
+            [AdminKeuanganController::class, 'pdf']
+        )->name('keuangan.laporan.pdf');
+
 
         Route::resource('users', AdminUserController::class)
             ->only(['index', 'show', 'destroy']);

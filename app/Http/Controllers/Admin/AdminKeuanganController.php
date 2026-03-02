@@ -8,17 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\KeuanganExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\PendapatanOwner;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
 
 class AdminKeuanganController extends Controller
 {
 
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $kategori = $request->kategori;
 
-        // Mulai query builder
+        // Query dasar
         $query = Keuangan::query();
 
         // Filter bulan dan tahun
@@ -29,23 +34,42 @@ class AdminKeuanganController extends Controller
             $query->whereYear('created_at', $tahun);
         }
 
-        // Filter kategori
+        // Filter kategori (opsional)
         if ($kategori) {
             $query->where('kategori', $kategori);
         }
 
-        // Ambil data terbaru, paginate 10 per halaman
-        $data = $query->latest()->paginate(10)->withQueryString();
+        // Ambil data terbaru paling atas
+        $data = Keuangan::query()
+            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
+            ->when($kategori, fn($q) => $q->where('kategori', $kategori))
+            ->orderBy('created_at', 'desc') // <<< data terbaru paling atas
+            ->paginate(10)
+            ->withQueryString();
 
-        // Hitung total pemasukan (filtered)
-        $totalPemasukan = $query->where('kategori', 'pemasukan')->sum('pemasukan');
+        // Hitung total pemasukan dan pengeluaran sesuai filter
+        $totalPemasukan = Keuangan::query()
+            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
+            ->sum('pemasukan');
+
+        $totalPengeluaran = Keuangan::query()
+            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
+            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
+            ->sum('pengeluaran');
+
+        // Hitung saldo
+        $saldo = $totalPemasukan - $totalPengeluaran;
 
         return view('admin.keuangan.index', compact(
             'data',
             'bulan',
             'tahun',
             'kategori',
-            'totalPemasukan'
+            'totalPemasukan',
+            'totalPengeluaran',
+            'saldo'
         ));
     }
 
@@ -88,37 +112,104 @@ class AdminKeuanganController extends Controller
 
         ]);
 
-       return redirect()->route('admin.keuangan.laporan')
-        ->with('success', 'Pengeluaran berhasil ditambahkan');
-
+        return redirect()->route('admin.keuangan.index')
+            ->with('success', 'Pengeluaran berhasil ditambahkan');
     }
 
-    public function laporan()
-{
-    $data = \App\Models\Keuangan::latest()->paginate(10);
 
-    $totalPemasukan = Keuangan::sum('pemasukan');
-    $totalPengeluaran = Keuangan::sum('pengeluaran');
-    $saldo = Keuangan::latest()->value('saldo') ?? 0;
 
-    return view('admin.keuangan.laporan', compact(
-        'data',
-        'totalPemasukan',
-        'totalPengeluaran',
-        'saldo'
-    ));
-}
 
-public function export(Request $request)
-{
-    return Excel::download(
-        new KeuanganExport(
-            $request->bulan,
-            $request->tahun
-        ),
-        'laporan-keuangan.xlsx'
-    );
-}
-    
+    public function laporan(Request $request)
+    {
+        $ownerId = $request->owner_id;
 
+        $owners = User::where('role', 'owner')->get();
+
+        $ownerName = null;
+
+        if ($ownerId) {
+            $owner = User::find($ownerId);
+            $ownerName = $owner?->name;
+        }
+
+        $laporanOwner = PendapatanOwner::with([
+            'owner',
+            'booking.kamar.kos'
+        ])
+            ->when($ownerId, function ($query) use ($ownerId) {
+                $query->where('owner_id', $ownerId);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.keuangan.laporan', compact(
+            'laporanOwner',
+            'owners',
+            'ownerId',
+            'ownerName'
+        ));
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(
+            new KeuanganExport(
+                $request->bulan,
+                $request->tahun
+            ),
+            'laporan-keuangan.xlsx'
+        );
+    }
+
+    public function kirimOwner(Request $request)
+    {
+        $ids = $request->ids ?? [];
+
+        if (count($ids) == 0) {
+
+            return redirect()
+                ->back()
+                ->with('error', 'Pilih minimal 1 data');
+        }
+
+        PendapatanOwner::whereIn('id', $ids)
+            ->update([
+                'status' => 'terkirim',
+                 'tanggal_kirim' => now()
+            ]);
+
+        return redirect()
+            ->back()
+            ->with('success', count($ids) . ' pendapatan berhasil dikirim');
+    }
+
+    public function Pdf(Request $request)
+    {
+        $ownerId = $request->owner_id;
+
+        $query = PendapatanOwner::with([
+            'owner',
+            'booking.kamar.kos'
+        ]);
+
+        if ($ownerId) {
+            $query->where('owner_id', $ownerId);
+        }
+
+        $data = $query->latest()->get();
+
+        $ownerName = null;
+
+        if ($ownerId) {
+            $ownerName = User::find($ownerId)?->name;
+        }
+
+        $pdf = Pdf::loadView('admin.keuangan.laporan_pdf', [
+            'data' => $data,
+            'ownerName' => $ownerName
+        ])->setPaper('A4', 'potrait');
+
+        return $pdf->stream('laporan-profit-owner.pdf');
+    }
 }
