@@ -11,19 +11,29 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminKosImageController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
+    public function index(Request $request)
+{
+    $user = Auth::user();
+    $search = $request->search;
 
-        $items = Kos::with(['owner', 'images'])
-            ->when($user->role === 'owner', function ($q) use ($user) {
-                $q->where('owner_id', $user->id);
-            })
-            ->latest()
-            ->paginate(10);
+    $query = Kos::with(['owner', 'images']);
 
-        return view('admin.kos-images.index', compact('items'));
+    // Jika role owner → hanya ambil kos miliknya
+    if ($user->role === 'owner') {
+        $query->where('owner_id', $user->id);
     }
+
+    // Search nama kos
+    if ($search) {
+        $query->where('nama_kos', 'like', "%{$search}%");
+    }
+
+    $items = $query->latest()
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('admin.kos-images.index', compact('items'));
+}
 
     public function show(Kos $kos)
     {

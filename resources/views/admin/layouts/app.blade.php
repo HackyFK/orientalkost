@@ -381,13 +381,25 @@
 
                 {{-- BAGIAN KANAN --}}
                 <div>
-                    <a href="https://drive.google.com/your-link-here" target="_blank"
-                        class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold rounded-lg border border-blue-100 transition-colors group">
-                        <i class="fa-solid fa-book-open text-[11px]"></i>
-                        <span class="hidden sm:inline">Panduan</span>
-                        <i
-                            class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-50 group-hover:opacity-100 transition-opacity"></i>
-                    </a>
+                    @if (auth()->user()->role === 'admin')
+                        {{-- Link Panduan Admin --}}
+                        <a href="https://drive.google.com/file/d/1gHpo_DYs3MJXihRMeowd7G4hRdHcK96U/view?usp=sharing" target="_blank"
+                            class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold rounded-lg border border-blue-100 transition-colors group">
+                            <i class="fa-solid fa-book-open text-[11px]"></i>
+                            <span class="hidden sm:inline">Panduan Admin</span>
+                            <i
+                                class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                    @elseif(auth()->user()->role === 'owner')
+                        {{-- Link Panduan Owner --}}
+                        <a href="https://drive.google.com/file/d/11YTWWF89GI-Rc-cqHR0RBEbZnUMLCef5/view?usp=sharing" target="_blank"
+                            class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-xs font-semibold rounded-lg border border-green-100 transition-colors group">
+                            <i class="fa-solid fa-book-open text-[11px]"></i>
+                            <span class="hidden sm:inline">Panduan Owner</span>
+                            <i
+                                class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                    @endif
                 </div>
 
             </header>

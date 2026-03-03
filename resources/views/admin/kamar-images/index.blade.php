@@ -21,21 +21,35 @@
                 Atur dan kelola seluruh gambar dari setiap kamar
             </p>
         </div>
-    </div>
+    </div>  
 
     {{-- TABLE CARD --}}
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
         {{-- CARD HEADER --}}
         <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
-            <span class="text-sm font-semibold text-slate-600">
-                Semua Kamar
-                <span
-                    class="ml-2 text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
-                    {{ $items->total() }}
-                </span>
-            </span>
-        </div>
+
+    <span class="text-sm font-semibold text-slate-600">
+        Semua Kamar
+        <span
+            class="ml-2 text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
+            {{ $items->total() }}
+        </span>
+    </span> 
+
+    {{-- Search --}}
+    <form method="GET" action="{{ route('admin.kamar-images.index') }}" class="relative">
+        <input 
+            type="text" 
+            name="search" 
+            value="{{ request('search') }}"
+            placeholder="Cari nama kos / kamar..."
+            class="pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+        >
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+    </form>
+
+</div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
