@@ -6,13 +6,15 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminFasilitasController;
 use App\Http\Controllers\Admin\AdminGaleriController;
 use App\Http\Controllers\Admin\AdminKamarController;
+use App\Http\Controllers\Admin\AdminKamarImageController;
 use App\Http\Controllers\Admin\AdminKeuanganController;
 use App\Http\Controllers\Admin\AdminKosController;
+use App\Http\Controllers\Admin\AdminKosImageController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
-use App\Http\Controllers\Admin\LaporanController;
+// use App\Http\Controllers\Admin\LaporanController;
 // use App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\ProfileController;
@@ -154,6 +156,7 @@ Route::prefix('admin')
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])
                 ->name('dashboard');
 
+
         Route::resource('keuangan', AdminKeuanganController::class)
             ->only(['index', 'create', 'store']);
         Route::get(
@@ -175,21 +178,59 @@ Route::prefix('admin')
         [AdminKeuanganController::class, 'exportOwner']
     )->name('keuangan.owner.export');
 
-
-
             Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
                 ->name('keuangan.laporan');
 
             Route::resource('kos', AdminKosController::class);
 
+            Route::patch(
+                '/kos/{kos}/image/{image}/primary',
+                [AdminKosController::class, 'setPrimaryImage']
+            )->name('kos.image.primary');
+
             Route::delete(
-                'kos-image/{image}',
+                '/kos/{kos}/image/{image}',
                 [AdminKosController::class, 'deleteImage']
             )->name('kos.image.delete');
 
-            Route::patch('kos-image/{image}/primary', [AdminKosController::class, 'setPrimaryImage'])->name('kos.image.primary');
+            Route::prefix('kos-images')->name('kos-images.')->group(function () {
+
+                Route::get('/', [AdminKosImageController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/{kos}', [AdminKosImageController::class, 'show'])
+                    ->name('show');
+
+                Route::post('/{kos}', [AdminKosImageController::class, 'store'])
+                    ->name('store');
+
+                Route::patch('/{kos}/{image}/primary', [AdminKosImageController::class, 'setPrimary'])
+                    ->name('primary');
+
+                Route::delete('/{kos}/{image}', [AdminKosImageController::class, 'destroy'])
+                    ->name('destroy');
+            });
+
 
             Route::resource('kamar', AdminKamarController::class);
+
+            Route::prefix('kamar-images')->name('kamar-images.')->group(function () {
+
+                Route::get('/', [AdminKamarImageController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/{kamar}', [AdminKamarImageController::class, 'show'])
+                    ->name('show');
+
+                Route::post('/{kamar}', [AdminKamarImageController::class, 'store'])
+                    ->name('store');
+
+                Route::patch('/{kamar}/{image}/primary', [AdminKamarImageController::class, 'setPrimary'])
+                    ->name('primary');
+
+                Route::delete('/{kamar}/{image}', [AdminKamarImageController::class, 'destroy'])
+                    ->name('destroy');
+            });
         });
 
 

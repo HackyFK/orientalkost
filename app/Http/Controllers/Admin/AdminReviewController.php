@@ -38,7 +38,7 @@ class AdminReviewController extends Controller
     // default sorting
     $query->latest();
 
-    $reviews = $query->paginate(4)->withQueryString();
+    $reviews = $query->paginate(10)->withQueryString();
 
     return view('admin.reviews.index', compact('reviews'));
 }

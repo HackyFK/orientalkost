@@ -236,88 +236,24 @@
                         <span class="ml-auto text-xs text-slate-400">{{ $ko->images->count() }} foto</span>
                     </div>
 
-                    {{-- Foto yang sudah ada --}}
                     @if ($ko->images->count() > 0)
-                        <div class="px-5 pt-4 pb-2">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Foto
-                                Tersimpan
-                            </p>
+                        <div class="px-5 py-4">
                             <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                                 @foreach ($ko->images as $img)
-                                    <div
-                                        class="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+                                    <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
                                         <img src="{{ asset('storage/' . $img->image_path) }}"
-                                            class="w-full h-24 object-cover">
-
-                                        {{-- Primary badge --}}
-                                        @if ($img->is_primary)
-                                            <span
-                                                class="absolute top-1.5 left-1.5 text-[9px] font-bold bg-green-500 text-white px-1.5 py-0.5 rounded-md">
-                                                Primary
-                                            </span>
-                                        @endif
-
-                                        {{-- Action overlay --}}
-                                        <div
-                                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                                            @if (!$img->is_primary)
-                                                <form method="POST"
-                                                    action="{{ route('admin.kos.image.primary', $img) }}">
-                                                    @csrf @method('PATCH')
-                                                    <button type="submit" title="Jadikan Primary"
-                                                        class="w-7 h-7 flex items-center justify-center rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors">
-                                                        <i class="fa-solid fa-star text-[10px]"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            <form method="POST" action="{{ route('admin.kos.image.delete', $img) }}"
-                                                onsubmit="return confirm('Hapus foto ini?')">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" title="Hapus"
-                                                    class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors">
-                                                    <i class="fa-solid fa-trash text-[10px]"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                            class="w-full h-28 object-cover hover:scale-105 transition-transform duration-200">
                                     </div>
                                 @endforeach
                             </div>
                         </div>
-                        <div class="px-5 pb-2">
-                            <p class="text-[11px] text-slate-400">
-                                <i class="fa-solid fa-circle-info mr-1"></i>
-                                Hover foto untuk set Primary atau hapus. Foto Primary ditampilkan sebagai thumbnail
-                                utama.
-                            </p>
+                    @else
+                        <div class="px-5 py-6 text-center text-sm text-slate-400">
+                            Belum ada foto
                         </div>
                     @endif
-
-                    {{-- Upload foto baru --}}
-                    <div class="p-5 {{ $ko->images->count() > 0 ? 'pt-3 border-t border-slate-100' : '' }}">
-                        @if ($ko->images->count() > 0)
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Tambah Foto
-                                Baru
-                            </p>
-                        @endif
-                        <label
-                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
-                            <i
-                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span
-                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
-                                Klik untuk upload foto baru
-                            </span>
-                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB · Multiple foto
-                                diperbolehkan</span>
-                            <input type="file" name="images[]" multiple accept="image/*" class="hidden"
-                                onchange="previewFotos(this)">
-                        </label>
-
-                        {{-- Preview foto baru --}}
-                        <div id="previewGrid" class="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-3 hidden"></div>
-                    </div>
                 </div>
+
 
             </div>
 

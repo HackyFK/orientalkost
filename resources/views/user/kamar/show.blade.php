@@ -19,49 +19,53 @@
         </section>
 
 
-
+        @php
+            $primaryImage = $kamar->images->firstWhere('is_primary', 1);
+            $otherImages = $kamar->images->where('is_primary', 0);
+        @endphp
 
         <!-- GALLERY SECTION -->
         <section class="pb-8 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                @php
+                    $primaryImage = $kamar->images->firstWhere('is_primary', 1);
+                    $otherImages = $kamar->images->where('is_primary', 0);
+                @endphp
 
                 <div
                     class="grid gap-6
             grid-cols-[repeat(auto-fit,minmax(240px,1fr))]
             auto-rows-[200px]">
 
-                    <!-- Gambar BESAR -->
+                    {{-- ========================= --}}
+                    {{-- GAMBAR UTAMA (PRIMARY) --}}
+                    {{-- ========================= --}}
                     <div
                         class="relative overflow-hidden rounded-3xl shadow-lg
-                md:col-span-2 md:row-span-2 group">
-                        <!-- Gambar Utama -->
-                        <img src="{{ $kamar->images->first()
-                            ? asset('storage/' . $kamar->images->first()->image_path)
+                        md:col-span-2 md:row-span-2 group">
+
+                        <img src="{{ $primaryImage
+                            ? asset('storage/' . $primaryImage->image_path)
                             : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200' }}"
-                            class="w-full h-full object-cover">
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
 
                     </div>
 
 
-                    <!-- Gambar KECIL -->
-                    <div class="relative overflow-hidden rounded-2xl shadow-lg group">
-                        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600"
-                            class="w-full h-full object-cover group-hover:scale-110 transition">
-                    </div>
+                    {{-- ========================= --}}
+                    {{-- GAMBAR LAINNYA --}}
+                    {{-- ========================= --}}
+                    @foreach ($otherImages as $img)
+                        <div class="relative overflow-hidden rounded-2xl shadow-lg group">
 
-                    <!-- Gambar KECIL -->
-                    <div class="relative overflow-hidden rounded-2xl shadow-lg group">
-                        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600"
-                            class="w-full h-full object-cover group-hover:scale-110 transition">
-                    </div>
+                            <img src="{{ asset('storage/' . $img->image_path) }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
-                    <div class="relative overflow-hidden rounded-2xl shadow-lg group">
-                        <img src="https://images.unsplash.com/photo-1586105251261-72a756497a11?w=600"
-                            class="w-full h-full object-cover group-hover:scale-110 transition">
-                    </div>
+                        </div>
+                    @endforeach
 
                 </div>
-
 
             </div>
         </section>
@@ -335,8 +339,7 @@
 
                                 {{-- Jenis Sewa --}}
                                 <div>
-                                    <label
-                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                                         Jenis Sewa
                                     </label>
 

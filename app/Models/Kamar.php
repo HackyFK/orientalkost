@@ -27,13 +27,21 @@ class Kamar extends Model
     ];
 
     public function kos()
-{
-    return $this->belongsTo(Kos::class, 'kos_id');
-}
+    {
+        return $this->belongsTo(Kos::class);
+    }
 
     public function images()
     {
-        return $this->hasMany(KamarImage::class);
+        return $this->hasMany(KamarImage::class)
+            ->orderByDesc('is_primary')
+            ->orderBy('id');
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(KamarImage::class)
+            ->where('is_primary', true);
     }
 
     public function fasilitas()
@@ -47,22 +55,5 @@ class Kamar extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
-    }
-
-    public function primaryImage()
-    {
-        return $this->hasOne(KamarImage::class)->where('is_primary', true);
-    }
-
-    public function getKamarTersediaAttribute()
-    {
-        return $this->kamars()
-            ->where('status', 'tersedia')
-            ->count();
-    }
-
-    public function owner()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
     }
 }

@@ -11,56 +11,47 @@ class AdminUserController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
+        $role   = $request->role;
+        $sort   = $request->sort ?? 'created_at';
+        $direction = $request->direction ?? 'desc';
 
-        $owners = User::where('role', 'owner');
-        $customers = User::where('role', 'customer');
+        $query = User::where('role', '!=', 'admin'); // admin tidak ditampilkan
 
+        // Filter role
+        if ($role && in_array($role, ['owner', 'customer'])) {
+            $query->where('role', $role);
+        }
+
+        // Search
         if ($search) {
-            $owners->where(function ($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('nomor_identitas', 'like', "%$search%");
-            });
-
-            $customers->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('nomor_identitas', 'like', "%$search%");
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('nomor_identitas', 'like', "%$search%");
             });
         }
 
-        $owners = $owners->latest()->paginate(10, ['*'], 'owners_page');
-        $customers = $customers->latest()->paginate(10, ['*'], 'customers_page');
+        // Sorting
+        if (in_array($sort, ['name','email','role','is_active','created_at'])) {
+            $query->orderBy($sort, $direction);
+        }
+
+        $users = $query->paginate(10)->withQueryString();
 
         $stats = [
             'owner' => User::where('role', 'owner')->count(),
             'customer' => User::where('role', 'customer')->count(),
         ];
 
-        if ($request->ajax()) {
-            // optional: pisahkan partial untuk owner & customer
-            return view('admin.users.partials.table', compact('owners', 'customers'))->render();
-        }
-
-        return view('admin.users.index', compact('owners', 'customers', 'stats'));
-    }
-
-    public function show(User $user)
-    {
-        return view('admin.users.show', compact('user'));
-    }
-
-    public function destroy(User $user)
-    {
-        $user->delete();
-
-        return back()->with('success', 'User berhasil dihapus');
+        return view('admin.users.index', compact(
+            'users',
+            'stats',
+            'direction'
+        ));
     }
 
     public function updateRole(User $user)
     {
-        // dd($user->id, $user->role);
-
         if ($user->role === 'customer') {
             $user->update(['role' => 'owner']);
         }
@@ -74,8 +65,12 @@ class AdminUserController extends Controller
             'is_active' => !$user->is_active
         ]);
 
-        return response()->json([
-            'status' => $user->is_active
-        ]);
+        return back();
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return back()->with('success', 'User berhasil dihapus');
     }
 }

@@ -243,30 +243,8 @@
 
                 {{-- Card: Foto Kos --}}
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center">
-                            <i class="fa-solid fa-images text-purple-500 text-xs"></i>
-                        </div>
-                        <h2 class="font-bold text-slate-700 text-sm">Foto Kos</h2>
-                    </div>
-                    <div class="p-5">
-                        <label
-                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-7 cursor-pointer transition-colors group">
-                            <i
-                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span
-                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors text-center">
-                                Klik untuk upload foto kos
-                            </span>
-                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB</span>
-                            <span class="text-[10px] text-blue-400 font-semibold">Multiple foto diperbolehkan</span>
-                            <input type="file" name="images[]" multiple accept="image/*" class="hidden"
-                                id="fotoInput" onchange="previewFotos(this)">
-                        </label>
-
-                        {{-- Preview container --}}
-                        <div id="previewGrid" class="mt-3 grid grid-cols-3 gap-2 hidden"></div>
-                    </div>
+                    {{-- Preview container --}}
+                    <div id="previewGrid" class="mt-3 grid grid-cols-3 gap-2 hidden"></div>
                 </div>
 
                 {{-- Tombol Aksi --}}

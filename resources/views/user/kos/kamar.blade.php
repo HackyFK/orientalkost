@@ -270,7 +270,7 @@
                                         Detail
                                     </a>
 
-                                    <a href="{{ route('user.booking', ['kamar' => $kamar->id]) }}"
+                                    <a href="{{ route('user.booking.create', $kamar->id) }}"
                                         class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl
                                        font-semibold transition shadow-lg text-center">
                                         <i class="fas fa-calendar-check mr-2"></i>

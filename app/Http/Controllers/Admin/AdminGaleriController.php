@@ -16,7 +16,7 @@ class AdminGaleriController extends Controller
             $q->where('judul', 'like', '%' . $request->search . '%');
         })
             ->latest()
-            ->paginate(8)
+            ->paginate(10   )
             ->withQueryString();;
 
         return view('admin.galeri.index', compact('galeris'));

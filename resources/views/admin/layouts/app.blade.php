@@ -128,12 +128,33 @@
                     Kos
                 </a>
 
+                <a href="{{ route('admin.kos-images.index') }}"
+                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        {{ request()->routeIs('admin.kos-images.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    <i
+                        class="fa-solid fa-images w-4 text-center text-xs
+                            {{ request()->routeIs('admin.kos-images.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                    Gambar Kos
+                </a>
+
                 <a href="{{ route('admin.kamar.index') }}"
                     class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.kamar.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
                     <i
                         class="fa-solid fa-door-open w-4 text-center text-xs {{ $isActive('admin.kamar.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
                     Kamar
+                </a>
+
+                <a href="{{ route('admin.kamar-images.index') }}"
+                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        {{ request()->routeIs('admin.kamar-images.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+
+                    <i
+                        class="fa-solid fa-bed w-4 text-center text-xs
+                            {{ request()->routeIs('admin.kamar-images.*') ? 'text-blue-400' : 'text-slate-500' }}">
+                    </i>
+
+                    Gambar Kamar
                 </a>
 
                 @if (auth()->user()->role === 'admin')
@@ -183,6 +204,26 @@
                     {{-- Isi Dropdown --}}
                     <div x-show="open" x-transition class="mt-1 pl-6 flex flex-col gap-1">
 
+
+                        {{-- Keuangan --}}
+                        <a href="{{ route('admin.keuangan.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+           {{ $isActive('admin.keuangan.index') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                            <i
+                                class="fa-solid fa-money-bill text-center w-4 text-xs {{ $isActive('admin.keuangan.index') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Keuangan
+                        </a>
+
+                        {{-- Kos & Kamar --}}
+                        <a href="{{ route('admin.keuangan.laporan') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+           {{ $isActive('admin.keuangan.laporan') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                            <i
+                                class="fa-solid fa-house text-center w-4 text-xs {{ $isActive('admin.keuangan.laporan') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Kos & Kamar
+                        </a>
+
+//
                         @if (auth()->user() && auth()->user()->role === 'admin')
                             {{-- Keuangan --}}
                             <a href="{{ route('admin.keuangan.index') }}"

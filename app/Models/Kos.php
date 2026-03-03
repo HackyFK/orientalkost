@@ -44,10 +44,9 @@ class Kos extends Model
 
     public function images()
     {
-        return $this->hasMany(KosImage::class)
-            ->orderByDesc('is_primary')
-            ->orderBy('id');
+        return $this->hasMany(KosImage::class);
     }
+
 
     public function fasilitas()
     {
