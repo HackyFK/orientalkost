@@ -11,18 +11,32 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminKamarImageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $search = $request->search;
 
         $items = Kamar::with(['kos'])
+            // Filter khusus owner
             ->when($user->role === 'owner', function ($q) use ($user) {
                 $q->whereHas('kos', function ($sub) use ($user) {
                     $sub->where('owner_id', $user->id);
                 });
             })
+
+            // Search nama kamar & nama kos
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($query) use ($search) {
+                    $query->where('nama_kamar', 'like', "%{$search}%")
+                        ->orWhereHas('kos', function ($sub) use ($search) {
+                            $sub->where('nama_kos', 'like', "%{$search}%");
+                        });
+                });
+            })
+
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString(); // supaya search tetap saat pindah halaman
 
         return view('admin.kamar-images.index', compact('items'));
     }
