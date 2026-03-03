@@ -104,16 +104,17 @@
                 @endphp
 
                 @if (auth()->user() && auth()->user()->role === 'admin')
-                {{-- ── Overview ── --}}
-                <p class="px-3 pt-1 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">Overview</p>
+                    {{-- ── Overview ── --}}
+                    <p class="px-3 pt-1 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">Overview
+                    </p>
 
-                <a href="{{ route('admin.dashboard') }}"
-                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.dashboard') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i
-                        class="fa-solid fa-chart-pie w-4 text-center text-xs {{ $isActive('admin.dashboard') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                    Dashboard
-                </a>
+                        <i
+                            class="fa-solid fa-chart-pie w-4 text-center text-xs {{ $isActive('admin.dashboard') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                        Dashboard
+                    </a>
                 @endif
 
                 {{-- ── Manajemen ── --}}
@@ -203,27 +204,6 @@
 
                     {{-- Isi Dropdown --}}
                     <div x-show="open" x-transition class="mt-1 pl-6 flex flex-col gap-1">
-
-
-                        {{-- Keuangan --}}
-                        <a href="{{ route('admin.keuangan.index') }}"
-                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-           {{ $isActive('admin.keuangan.index') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                            <i
-                                class="fa-solid fa-money-bill text-center w-4 text-xs {{ $isActive('admin.keuangan.index') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                            Keuangan
-                        </a>
-
-                        {{-- Kos & Kamar --}}
-                        <a href="{{ route('admin.keuangan.laporan') }}"
-                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-           {{ $isActive('admin.keuangan.laporan') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                            <i
-                                class="fa-solid fa-house text-center w-4 text-xs {{ $isActive('admin.keuangan.laporan') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                            Kos & Kamar
-                        </a>
-
-//
                         @if (auth()->user() && auth()->user()->role === 'admin')
                             {{-- Keuangan --}}
                             <a href="{{ route('admin.keuangan.index') }}"

@@ -19,11 +19,13 @@
             <h1 class="text-xl font-bold text-slate-800">Data Kos</h1>
             <p class="text-sm text-slate-400 mt-0.5">Kelola seluruh data kos yang terdaftar</p>
         </div>
-        <a href="{{ route('admin.kos.create') }}"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
-            <i class="fa-solid fa-plus text-xs"></i>
-            Tambah Kos
-        </a>
+        @if (auth()->user() && auth()->user()->role === 'admin')
+            <a href="{{ route('admin.kos.create') }}"
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
+                <i class="fa-solid fa-plus text-xs"></i>
+                Tambah Kos
+            </a>
+        @endif
     </div>
 
     {{-- TABLE CARD --}}
@@ -162,16 +164,18 @@
                                         <i class="fa-solid fa-pen text-[10px]"></i>
 
                                     </a>
+                                    @if (auth()->user() && auth()->user()->role === 'admin')
+                                        <form method="POST" action="{{ route('admin.kos.destroy', $kos) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                onclick="return confirm('Yakin ingin menghapus kos ini?')"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-500 text-xs font-semibold rounded-lg border border-red-100 transition-colors">
+                                                <i class="fa-solid fa-trash text-[10px]"></i>
 
-                                    <form method="POST" action="{{ route('admin.kos.destroy', $kos) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Yakin ingin menghapus kos ini?')"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-500 text-xs font-semibold rounded-lg border border-red-100 transition-colors">
-                                            <i class="fa-solid fa-trash text-[10px]"></i>
-
-                                        </button>
-                                    </form>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
 

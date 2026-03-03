@@ -157,26 +157,29 @@ Route::prefix('admin')
                 ->name('dashboard');
 
 
-        Route::resource('keuangan', AdminKeuanganController::class)
-            ->only(['index', 'create', 'store']);
-        Route::get(
-            '/keuangan/export',
-            [AdminKeuanganController::class, 'export']
-        )->name('keuangan.export');
-        Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
-            ->name('keuangan.laporan');
-        Route::post('/keuangan/laporan/kirim', [AdminKeuanganController::class, 'kirimOwner'])
-        ->name('keuangan.laporan.kirim');
-        Route::get('/keuangan/laporan/pdf',
-            [AdminKeuanganController::class, 'pdf']
-        )->name('keuangan.laporan.pdf');
-        Route::get('/keuangan/owner',
-            [AdminKeuanganController::class,'owner'])
-            ->name('keuangan.owner');
-        Route::get(
-        '/keuangan-owner/export',
-        [AdminKeuanganController::class, 'exportOwner']
-    )->name('keuangan.owner.export');
+            Route::resource('keuangan', AdminKeuanganController::class)
+                ->only(['index', 'create', 'store']);
+            Route::get(
+                '/keuangan/export',
+                [AdminKeuanganController::class, 'export']
+            )->name('keuangan.export');
+            Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
+                ->name('keuangan.laporan');
+            Route::post('/keuangan/laporan/kirim', [AdminKeuanganController::class, 'kirimOwner'])
+                ->name('keuangan.laporan.kirim');
+            Route::get(
+                '/keuangan/laporan/pdf',
+                [AdminKeuanganController::class, 'pdf']
+            )->name('keuangan.laporan.pdf');
+            Route::get(
+                '/keuangan/owner',
+                [AdminKeuanganController::class, 'owner']
+            )
+                ->name('keuangan.owner');
+            Route::get(
+                '/keuangan-owner/export',
+                [AdminKeuanganController::class, 'exportOwner']
+            )->name('keuangan.owner.export');
 
             Route::get('/keuangan/laporan', [AdminKeuanganController::class, 'laporan'])
                 ->name('keuangan.laporan');
