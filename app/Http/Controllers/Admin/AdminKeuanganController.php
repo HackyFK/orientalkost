@@ -7,6 +7,7 @@ use App\Models\Keuangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\KeuanganExport;
+use App\Exports\KeuanganOwnerExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PendapatanOwner;
 use App\Models\User;
@@ -167,21 +168,62 @@ class AdminKeuanganController extends Controller
         $ids = $request->ids ?? [];
 
         if (count($ids) == 0) {
-
             return redirect()
                 ->back()
                 ->with('error', 'Pilih minimal 1 data');
         }
 
-        PendapatanOwner::whereIn('id', $ids)
-            ->update([
-                'status' => 'terkirim',
-                 'tanggal_kirim' => now()
+        // Ambil data pendapatan owner yang dipilih
+        $pendapatanList = PendapatanOwner::with('owner')
+            ->whereIn('id', $ids)
+            ->where('status', 'pending')
+            ->get();
+
+        if ($pendapatanList->count() == 0) {
+            return redirect()
+                ->back()
+                ->with('error', 'Tidak ada data pending yang dipilih');
+        }
+
+        // Ambil saldo terakhir
+        $saldoTerakhir = Keuangan::latest()->value('saldo') ?? 0;
+
+        foreach ($pendapatanList as $item) {
+
+            // Kurangi saldo
+            $saldoTerakhir -= $item->pendapatan_owner;
+
+            // Simpan ke laporan keuangan sebagai pengeluaran
+            Keuangan::create([
+
+                'reference' => 'OWNER- ' . $item->owner->name,
+
+                'admin_id' => Auth::id(),
+
+                'kategori' => 'pengeluaran',
+
+                'payment_method' => 'transfer',
+
+                'pemasukan' => 0,
+
+                'pengeluaran' => $item->pendapatan_owner,
+
+                'saldo' => $saldoTerakhir,
+
+                'keterangan' => 'pendapatan owner'
+
             ]);
+
+            // Update status pendapatan owner
+            $item->update([
+                'status' => 'terkirim',
+                'tanggal_kirim' => now()
+            ]);
+        }
 
         return redirect()
             ->back()
-            ->with('success', count($ids) . ' pendapatan berhasil dikirim');
+            ->with('success', $pendapatanList->count() . ' pendapatan berhasil dikirim & masuk ke laporan keuangan');
     }
 
     public function Pdf(Request $request)
@@ -212,4 +254,27 @@ class AdminKeuanganController extends Controller
 
         return $pdf->stream('laporan-profit-owner.pdf');
     }
+
+    public function owner(Request $request)
+{
+    $data = PendapatanOwner::with([
+        'owner',
+        'booking.kamar.kos'
+    ])
+    ->where('owner_id', Auth::id()) // ← hanya data owner login
+    ->where('status', 'terkirim')   // ← hanya yang sudah terkirim
+    ->latest()
+    ->paginate(10);
+
+    return view('admin.keuangan.owner', compact('data'));
 }
+
+public function exportOwner(Request $request)
+{
+    return Excel::download(
+        new KeuanganOwnerExport(Auth::id()),
+        'keuangan-owner.xlsx'
+    );
+}
+}
+

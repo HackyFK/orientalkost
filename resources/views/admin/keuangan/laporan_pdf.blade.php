@@ -1,346 +1,316 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="utf-8">
-    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        @page { size: A4 portrait; margin: 0; }
+        @page {
+            size: A4 portrait;
+            margin: 14mm 12mm;
+        }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: #e5e7eb;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 10px;
+            color: #1e293b;
         }
 
-        /* Ukuran kertas A4 */
-        .a4 {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 16px auto;
-            background: #fff;
-            padding: 18mm 1mm 16mm;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        /* CONTAINER */
+        .container {
+            width: 100%;
         }
 
-        @media print {
-            body { background: #fff; }
-            .a4  { margin: 0; box-shadow: none; padding: 14mm 15mm; }
+        /* HEADER */
+        .header {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
         }
 
-        /* Tabel data — fixed layout agar tidak meluap */
-        .dt { width: 100%; border-collapse: collapse; table-layout: fixed; }
-
-        .dt thead tr { background: #1e293b; }
-        .dt thead th {
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 6px 0px;
-            text-align: left;
-            line-height: 1.2;
+        .header-table {
+            width: 100%;
         }
-        .dt thead th.r { text-align: right; }
-        .dt thead th.c { text-align: center; }
 
-        .dt tbody tr:nth-child(even) { background: #f8fafc; }
-        .dt tbody tr { border-bottom: 1px solid #f1f5f9; }
-        .dt tbody td {
+        .company {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .tagline {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        .meta {
+            text-align: right;
+            font-size: 10px;
+        }
+
+        /* TITLE */
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        /* INFO BOX */
+        .box {
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .box-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
+
+        /* TABLE */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #0f172a;
+            color: white;
+            padding: 6px 4px;
+            font-size: 9px;
+        }
+
+        .table td {
             padding: 5px 4px;
-            font-size: 7.5px;
-            color: #334155;
-            vertical-align: top;
-            line-height: 1.4;
-            word-break: break-word;
-            overflow: hidden;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 9px;
         }
-        .dt tbody td.r { text-align: right; }
-        .dt tbody td.c { text-align: center; }
 
-        .sub { font-size: 6.5px; color: #94a3b8; margin-top: 1px; }
-        .no  { color: #94a3b8; }
-        .muted { color: #94a3b8; }
+        .table tr:nth-child(even) {
+            background: #f8fafc;
+        }
 
+        .right {
+            text-align: right;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        /* BADGE */
         .badge {
-            display: inline-block;
-            padding: 1px 4px;
+            padding: 2px 6px;
             border-radius: 3px;
-            font-size: 6.5px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-size: 8px;
+            font-weight: bold;
         }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-sent    { background: #dcfce7; color: #166534; }
-        .badge-default { background: #f1f5f9; color: #475569; }
+
+        .pending {
+            background: #fef3c7;
+        }
+
+        .sent {
+            background: #dcfce7;
+        }
+
+        .default {
+            background: #e2e8f0;
+        }
+
+        /* FOOTER */
+        .footer {
+            border-top: 1px solid #e2e8f0;
+            margin-top: 10px;
+            padding-top: 6px;
+            font-size: 9px;
+            display: flex;
+            justify-content: space-between;
+            color: #64748b;
+        }
     </style>
 </head>
+
 <body>
+    <div class="container">
 
-<div class="a4">
-
-    {{-- ── KOP SURAT ── --}}
-<div class="border-b-2 border-gray-800 pb-4 mb-6">
-
-    <div class="flex justify-between items-start">
-
-        {{-- COMPANY --}}
-        <div>
-            <div class="text-2xl font-bold text-gray-800">
-                @yield('title', setting('site_name', 'KosKu'))
-            </div>
-
-            <div class="text-sm text-gray-500 mt-1">
-                {{ setting('site_tagline') }}
-            </div>
-        </div>
-
-        {{-- META --}}
-        <div class="text-sm text-gray-600 text-right space-y-1">
-
-            <div>
-                No. Laporan:
-                <span class="font-semibold text-gray-800">
-                    LPR/{{ now()->format('Y/m') }}/{{ str_pad(rand(1,999), 3, '0', STR_PAD_LEFT) }}
-                </span>
-            </div>
-
-            <div>
-                Tanggal Cetak:
-                <span class="font-semibold text-gray-800">
-                    {{ now()->format('d M Y') }}
-                </span>
-            </div>
-
-            <div>
-                Jam:
-                <span class="font-semibold text-gray-800">
-                    {{ now()->format('H:i') }} WIB
-                </span>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- ── JUDUL LAPORAN ── --}}
-<div class="mb-6">
-
-    <div class="text-xl font-bold text-gray-800">
-        Laporan Pendapatan Owner
-    </div>
-
-    <div class="text-sm text-gray-500 mt-1">
-
-        @if ($ownerName)
-            Owner:
-            <span class="font-semibold text-gray-700">
-                {{ $ownerName }}
-            </span>
-        @else
-            Seluruh Owner
-        @endif
-
-        <span class="mx-2">•</span>
-
-        Per
-        <span class="font-semibold text-gray-700">
-            {{ now()->format('d M Y') }}
-        </span>
-
-    </div>
-
-</div>
-
-
-{{-- ── INFO BLOCK ── --}}
-<div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-
-    <div class="flex justify-between text-sm text-gray-700">
-
-        <div class="space-y-1">
-
-            <div>
-                Periode Laporan:
-                <span class="font-semibold">
-                    {{ now()->format('M Y') }}
-                </span>
-            </div>
-
-            <div>
-                Total Transaksi:
-                <span class="font-semibold">
-                    {{ count($data) }} transaksi
-                </span>
-            </div>
-
-        </div>
-
-        <div class="space-y-1 text-right">
-
-            <div>
-                Dicetak oleh:
-                <span class="font-semibold">
-                    Admin
-                </span>
-            </div>
-
-            <div>
-                Status Data:
-                <span class="font-semibold text-green-600">
-                    Final
-                </span>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- ── RINGKASAN ── --}}
-<div class="border border-gray-200 rounded-lg p-4 mb-6">
-
-    <div class="text-md font-semibold text-gray-800 mb-3">
-        Ringkasan
-    </div>
-
-    <div class="space-y-2 text-sm">
-
-        <div class="flex justify-between">
-            <span class="text-gray-600">Total Booking Keseluruhan</span>
-            <span class="font-semibold text-gray-800">
-                Rp {{ number_format(collect($data)->sum('total_booking'), 0, ',', '.') }}
-            </span>
-        </div>
-
-        <div class="flex justify-between">
-            <span class="text-gray-600">Total Pendapatan Owner</span>
-            <span class="font-semibold text-green-600">
-                Rp {{ number_format(collect($data)->sum('pendapatan_owner'), 0, ',', '.') }}
-            </span>
-        </div>
-
-        <div class="flex justify-between">
-            <span class="text-gray-600">Total Pendapatan Platform</span>
-            <span class="font-semibold text-blue-600">
-                Rp {{ number_format(collect($data)->sum('pendapatan_platform'), 0, ',', '.') }}
-            </span>
-        </div>
-
-        <hr class="my-2">
-
-        <div class="flex justify-between">
-            <span class="text-gray-600">Jumlah Data</span>
-            <span class="font-semibold text-gray-800">
-                {{ count($data) }} baris
-            </span>
-        </div>
-
-    </div>
-
-</div>
-
-    {{-- ── TABEL DATA ── --}}
-    <table class="dt">
-        <colgroup>
-            <col style="width:16px;">   {{-- No --}}
-            <col style="width:48px;">   {{-- Tanggal --}}
-            <col style="width:10px;">   {{-- Owner --}}
-            <col style="width:auto;">   {{-- Kos & Kamar --}}
-            <col style="width:auto;">   {{-- Alamat --}}
-            <col style="width:68px;">   {{-- Total Booking --}}
-            <col style="width:68px;">   {{-- Pend. Owner --}}
-            <col style="width:70px;">   {{-- Pend. Platform --}}
-            <col style="width:20px;">   {{-- Status --}}
-        </colgroup>
-        <thead>
+        <!-- HEADER -->
+        <table class="header-table header">
             <tr>
-                <th class="c">No</th>
-                <th>Tanggal</th>
-                <th>Owner</th>
-                <th>Kos &amp; Kamar</th>
-                <th>Alamat</th>
-                <th class="r">Total Booking</th>
-                <th class="r">Pend. Owner</th>
-                <th class="r">Pend. Platform</th>
-                <th class="c">Status</th>
+                <td>
+                    <div class="company">
+                        {{ setting('site_name', 'KosKu') }}
+                    </div>
+                    <div class="tagline">
+                        {{ setting('site_tagline') }}
+                    </div>
+                </td>
+
+                <td class="meta">
+                    No: LPR/{{ now()->format('Y/m') }}/{{ str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) }}<br>
+                    Tanggal: {{ now()->format('d M Y') }}<br>
+                    Jam: {{ now()->format('H:i') }} WIB
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse ($data as $item)
+        </table>
+
+
+        <!-- TITLE -->
+        <div class="title">
+            Laporan Pendapatan Owner
+        </div>
+
+        <div class="subtitle">
+            {{ $ownerName ? "Owner: $ownerName" : 'Semua Owner' }}
+        </div>
+
+
+        <!-- SUMMARY -->
+        <div class="box">
+
+            <div class="box-title">
+                Ringkasan
+            </div>
+
+            <div class="box-row">
+                <span>Total Booking</span>
+                <span><b>Rp {{ number_format(collect($data)->sum('total_booking'), 0, ',', '.') }}</b></span>
+            </div>
+
+            <div class="box-row">
+                <span>Pendapatan Owner</span>
+                <span><b>Rp {{ number_format(collect($data)->sum('pendapatan_owner'), 0, ',', '.') }}</b></span>
+            </div>
+
+            <div class="box-row">
+                <span>Pendapatan Platform</span>
+                <span><b>Rp {{ number_format(collect($data)->sum('pendapatan_platform'), 0, ',', '.') }}</b></span>
+            </div>
+
+            <div class="box-row">
+                <span>Total Transaksi</span>
+                <span><b>{{ count($data) }}</b></span>
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <table class="table">
+
+            <thead>
                 <tr>
-                    <td class="c no">{{ $loop->iteration }}</td>
+                    <th width="4%">No</th>
+                    <th width="10%">Tanggal</th>
+                    <th width="14%">Owner</th>
+                    <th width="18%">Kos</th>
+                    <th width="16%">Alamat</th>
+                    <th width="12%">Booking</th>
+                    <th width="12%">Owner</th>
+                    <th width="12%">Platform</th>
+                    <th width="8%">Status</th>
+                </tr>
+            </thead>
 
-                    <td>
-                        {{ $item->created_at->format('d M Y') }}
-                        <div class="sub">{{ $item->created_at->format('H:i') }}</div>
-                    </td>
+            <tbody>
 
-                    <td style="font-weight:600;">{{ $item->owner->name ?? '-' }}</td>
+                @forelse($data as $item)
+                    <tr>
 
-                    <td>
-                        <div style="font-weight:600;">{{ $item->booking->kamar->kos->nama_kos ?? '-' }}</div>
-                        <div class="sub">{{ $item->booking->kamar->nama_kamar ?? '-' }}</div>
-                    </td>
+                        <td class="center">
+                            {{ $loop->iteration }}
+                        </td>
 
-                    <td class="muted">{{ $item->booking->kamar->kos->alamat ?? '-' }}</td>
+                        <td>
+                            {{ $item->created_at->format('d/m/Y') }}
+                        </td>
 
-                    <td class="r" style="font-weight:700;">
-                        Rp {{ number_format($item->total_booking, 0, ',', '.') }}
-                    </td>
+                        <td>
+                            {{ $item->owner->name ?? '-' }}
+                        </td>
 
-                    <td class="r" style="font-weight:700;">
-                        Rp {{ number_format($item->pendapatan_owner, 0, ',', '.') }}
-                    </td>
+                        <td>
+                            {{ $item->booking->kamar->kos->nama_kos ?? '-' }}
+                        </td>
 
-                    <td class="r" style="font-weight:700;">
-                        Rp {{ number_format($item->pendapatan_platform, 0, ',', '.') }}
-                    </td>
+                        <td>
+                            {{ $item->booking->kamar->kos->alamat ?? '-' }}
+                        </td>
 
-                    <td class="c">
-                        @php
-                            $badgeClass = match(strtolower($item->status)) {
-                                'pending'           => 'badge-pending',
-                                'terkirim', 'paid'  => 'badge-sent',
-                                default             => 'badge-default',
-                            };
-                        @endphp
-                        <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
-                        @if ($item->tanggal_kirim)
-                            <div class="sub" style="text-align:center;">
+                        <td class="right">
+                            Rp {{ number_format($item->total_booking, 0, ',', '.') }}
+                        </td>
+
+                        <td class="right">
+                            Rp {{ number_format($item->pendapatan_owner, 0, ',', '.') }}
+                        </td>
+
+                        <td class="right">
+                            Rp {{ number_format($item->pendapatan_platform, 0, ',', '.') }}
+                        </td>
+
+                        <td class="center">
+
+                            @php
+                                $class = match ($item->status) {
+                                    'pending' => 'badge pending',
+                                    'terkirim' => 'badge sent',
+                                    default => 'badge default',
+                                };
+                            @endphp
+
+                            <span class="{{ $class }}">
+                                {{ ucfirst($item->status) }}
+                            </span>
+
+                            @if ($item->tanggal_kirim)
+                                <br>
                                 {{ \Carbon\Carbon::parse($item->tanggal_kirim)->format('d/m/Y') }}
-                            </div>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="9" class="c muted" style="padding:20px;">
-                        Tidak ada data untuk ditampilkan
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                            @endif
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="9" class="center">
+                            Tidak ada data
+                        </td>
+                    </tr>
+                @endforelse
+
+            </tbody>
+
+        </table>
 
 
-    {{-- ── FOOTER ── --}}
-    <div style="border-top:1px solid #e2e8f0; padding-top:7px; display:flex; justify-content:space-between;">
-        <div style="font-size:7px; color:#94a3b8;">
-            Dokumen ini digenerate secara otomatis oleh sistem &mdash; @yield('title', setting('site_name', 'KosKu'))
+        <!-- FOOTER -->
+        <div class="footer">
+
+            <div>
+                Generated by {{ setting('site_name', 'KosKu') }}
+            </div>
+
+            <div>
+                {{ now()->format('d M Y H:i') }}
+            </div>
+
         </div>
-        <div style="font-size:7px; color:#94a3b8;">
-            {{ now()->format('d M Y') }} WIB
-        </div>
+
     </div>
-
-</div>
-
 </body>
+
 </html>
