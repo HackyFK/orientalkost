@@ -93,10 +93,12 @@ class AdminKosController extends Controller
             foreach ($request->file('images') as $i => $image) {
                 $path = $image->store('kos', 'public');
 
+                $isFirst = $kos->images()->count() === 0;
+
                 KosImage::create([
                     'kos_id'     => $kos->id,
                     'image_path' => $path,
-                    'is_primary' => $i === 0
+                    'is_primary' => $isFirst
                 ]);
             }
         }
@@ -193,27 +195,52 @@ class AdminKosController extends Controller
         return back()->with('success', 'Kos berhasil dihapus');
     }
 
-    public function deleteImage(KosImage $image)
+    public function deleteImage(Kos $kos, KosImage $image)
     {
+        if ($image->kos_id !== $kos->id) {
+            abort(404);
+        }
+
+        if (auth::user()->role === 'owner' && $kos->owner_id !== auth::id()) {
+            abort(403);
+        }
+
         Storage::disk('public')->delete($image->image_path);
 
-        $kos = $image->kos;
         $wasPrimary = $image->is_primary;
-
         $image->delete();
 
         if ($wasPrimary) {
-            $kos->images()->first()?->update(['is_primary' => true]);
+            $nextImage = KosImage::where('kos_id', $kos->id)->first();
+            if ($nextImage) {
+                $nextImage->update(['is_primary' => true]);
+            }
         }
+
 
         return back()->with('success', 'Gambar dihapus');
     }
 
-    public function setPrimaryImage(KosImage $image)
+
+    public function setPrimaryImage(Kos $kos, KosImage $image)
     {
-        $image->kos->images()->update(['is_primary' => false]);
+        // Pastikan image milik kos
+        if ($image->kos_id !== $kos->id) {
+            abort(404);
+        }
+
+        // Validasi owner
+        if (auth::user()->role === 'owner' && $kos->owner_id !== auth::id()) {
+            abort(403);
+        }
+
+        // Reset semua primary (tanpa relation)
+        KosImage::where('kos_id', $kos->id)
+            ->update(['is_primary' => false]);
+
+        // Set yang dipilih jadi primary
         $image->update(['is_primary' => true]);
 
-        return back()->with('success', 'Primary image diubah');
+        return back()->with('success', 'Primary image berhasil diubah');
     }
 }

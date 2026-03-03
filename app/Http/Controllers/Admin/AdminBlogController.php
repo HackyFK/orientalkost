@@ -19,7 +19,7 @@ class AdminBlogController extends Controller
                 $q->where('status', $request->status);
             })
            ->latest()
-            ->paginate(4)
+            ->paginate(5)
             ->withQueryString();
 
         return view('admin.blog.index', compact('blogs'));

@@ -51,7 +51,7 @@ class AdminKamarController extends Controller
         }
 
         $items = $query
-            ->paginate(9)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.kamar.index', compact('items', 'allKos'));

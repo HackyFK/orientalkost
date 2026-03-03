@@ -68,32 +68,28 @@
 
                     {{-- Quick filters --}}
                     <div class="flex justify-center gap-2 flex-wrap mt-4">
-    @foreach([
-        ['label' => 'Putra',    'icon' => 'fa-mars',      'val' => 'putra'],
-        ['label' => 'Putri',    'icon' => 'fa-venus',     'val' => 'putri'],
-        ['label' => 'Campuran', 'icon' => 'fa-venus-mars','val' => 'campuran'],
-    ] as $filter)
-    <button type="submit" name="q" value="{{ $filter['val'] }}" onclick="setActive(this)"
-        class="filter-btn inline-flex items-center gap-1.5
-               bg-accent/80 hover:bg-accent border border-accent
-               hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]
-               text-white text-xs px-4 py-2 rounded-lg font-medium transition-all duration-150 shadow-sm hover:shadow-md hover:shadow-accent/30">
-        <i class="fas {{ $filter['icon'] }} text-xs"></i>
-        {{ $filter['label'] }}
-    </button>
-    @endforeach
-</div>
+                        @foreach ([['label' => 'Putra', 'icon' => 'fa-mars', 'val' => 'putra'], ['label' => 'Putri', 'icon' => 'fa-venus', 'val' => 'putri'], ['label' => 'Campuran', 'icon' => 'fa-venus-mars', 'val' => 'campuran']] as $filter)
+                            <button type="submit" name="jenis_kos" value="{{ $filter['val'] }}" onclick="setActive(this)"
+                                class="filter-btn inline-flex items-center gap-1.5
+                                        bg-accent/80 hover:bg-accent border border-accent
+                                        hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]
+                                        text-white text-xs px-4 py-2 rounded-lg font-medium transition-all duration-150 shadow-sm hover:shadow-md hover:shadow-accent/30">
+                                <i class="fas {{ $filter['icon'] }} text-xs"></i>
+                                {{ $filter['label'] }}
+                            </button>
+                        @endforeach
+                    </div>
 
-<script>
-function setActive(el) {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('bg-accent', 'shadow-accent/50', 'shadow-lg');
-        btn.classList.add('bg-accent/80');
-    });
-    el.classList.remove('bg-accent/80');
-    el.classList.add('bg-accent', 'shadow-lg', 'shadow-accent/50');
-}
-</script>
+                    <script>
+                        function setActive(el) {
+                            document.querySelectorAll('.filter-btn').forEach(btn => {
+                                btn.classList.remove('bg-accent', 'shadow-accent/50', 'shadow-lg');
+                                btn.classList.add('bg-accent/80');
+                            });
+                            el.classList.remove('bg-accent/80');
+                            el.classList.add('bg-accent', 'shadow-lg', 'shadow-accent/50');
+                        }
+                    </script>
                 </form>
 
             </div>
