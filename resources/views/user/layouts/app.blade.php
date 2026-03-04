@@ -281,6 +281,11 @@
                                 Profile
                             </a>
 
+                            <!-- History -->
+                            <a href="{{ route('user.booking.history') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                History
+                            </a>
+
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

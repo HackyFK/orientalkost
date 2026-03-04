@@ -24,6 +24,7 @@ use App\Http\Controllers\User\BerandaController;
 // User Controller
 use App\Http\Controllers\User\BlogController;
 use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\BookingHistoryController;
 use App\Http\Controllers\User\GaleriController;
 use App\Http\Controllers\User\KamarController;
 use App\Http\Controllers\User\KosController;
@@ -128,6 +129,9 @@ Route::name('user.')->group(function () {
 
     Route::get('/payment/{payment}', [MidtransController::class, 'show'])
         ->name('payment.show');
+
+    Route::get('/history-booking', [BookingHistoryController::class, 'index'])
+        ->name('booking.history');
 });
 
 
