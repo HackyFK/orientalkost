@@ -257,37 +257,6 @@
                     </div>
                 </div>
 
-                {{-- Card: Gambar --}}
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center">
-                            <i class="fa-solid fa-image text-purple-500 text-xs"></i>
-                        </div>
-                        <h2 class="font-bold text-slate-700 text-sm">Gambar Utama</h2>
-                    </div>
-                    <div class="p-5 space-y-3">
-                        {{-- Preview gambar saat ini --}}
-                        @if ($kamar->primaryImage)
-                            <div class="rounded-lg overflow-hidden border border-slate-200">
-                                <img src="{{ asset('storage/' . $kamar->primaryImage->image_path) }}"
-                                    class="w-full h-36 object-cover">
-                            </div>
-                            <p class="text-xs text-slate-400 text-center">Gambar saat ini</p>
-                        @endif
-
-                        <label
-                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl px-4 py-6 cursor-pointer transition-colors group">
-                            <i
-                                class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 group-hover:text-blue-400 transition-colors"></i>
-                            <span
-                                class="text-xs font-medium text-slate-400 group-hover:text-blue-500 transition-colors">Klik
-                                untuk upload gambar baru</span>
-                            <span class="text-[10px] text-slate-300">JPG, PNG, WEBP – maks 2MB</span>
-                            <input type="file" name="image" class="hidden" accept="image/*">
-                        </label>
-                    </div>
-                </div>
-
                 {{-- Action Button --}}
                 <div class="flex gap-3">
                     <a href="{{ route('admin.kamar.index') }}"
