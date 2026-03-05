@@ -29,7 +29,12 @@ class BookingController extends Controller
 
     public function create(Kamar $kamar)
     {
-        return view('user.booking.create', compact('kamar'));
+        
+        $bookings = Booking::where('kamar_id', $kamar->id)
+            ->whereIn('status', ['pending', 'paid', 'confirmed'])
+            ->get(['tanggal_mulai', 'tanggal_selesai']);
+
+        return view('user.booking.create', compact('kamar', 'bookings'));
     }
 
 
@@ -41,30 +46,68 @@ class BookingController extends Controller
             'phone'           => 'required|string|max:20',
             'nomor_identitas' => 'required|string|max:20',
             'alamat'          => 'required|string|max:255',
-            'jenis_sewa'      => 'required|in:bulanan,tahunan',
+            'jenis_sewa'      => 'required|in:bulanan,tahunan,harian',
             'durasi'          => 'required|integer|min:1',
-            'bulan_mulai'     => 'required|date_format:Y-m',
+            'bulan_mulai'     => 'required_if:jenis_sewa,bulanan,tahunan|date_format:Y-m',
+            'tanggal_mulai' => 'required_if:jenis_sewa,harian|date_format:Y-m-d',
         ]);
 
-        $durasiBulan = $request->jenis_sewa === 'tahunan'
-            ? (int) $request->durasi * 12
-            : (int) $request->durasi;
 
-        // ✅ tanggal mulai selalu tanggal 1
-        $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
-            ->startOfMonth();
+        // =========================
+        // HITUNG TANGGAL
+        // =========================
+        if ($request->jenis_sewa === 'harian') {
 
-        // ✅ tanggal selesai otomatis
-        $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan);
+            $durasi = (int) $request->durasi;
 
-        $hargaPerBulan = $request->jenis_sewa === 'bulanan'
-            ? $kamar->harga_bulanan
-            : round($kamar->harga_tahunan / 12);
+            $tanggalMulai = Carbon::parse($request->tanggal_mulai);
+            $tanggalSelesai = $tanggalMulai->copy()->addDays($durasi);
 
-        $subtotal   = $hargaPerBulan * $durasiBulan;
-        $dpNominal  = round($subtotal * $kamar->deposit / 100);
-        $totalBayar = $subtotal - $dpNominal;
+            $hargaPerUnit = $kamar->harga_harian;
+            $subtotal = $hargaPerUnit * $durasi;
+        } else {
 
+            $durasi = (int) $request->durasi;
+
+            $durasiBulan = $request->jenis_sewa === 'tahunan'
+                ? $durasi * 12
+                : $durasi;
+
+            $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
+                ->startOfMonth();
+
+            $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan);
+
+            $hargaPerUnit = $request->jenis_sewa === 'bulanan'
+                ? $kamar->harga_bulanan
+                : round($kamar->harga_tahunan / 12);
+
+            $subtotal = $hargaPerUnit * $durasiBulan;
+        }
+
+        // =========================
+        // CEK BENTROK (WAJIB)
+        // =========================
+        $bentrok = Booking::where('kamar_id', $kamar->id)
+            ->whereIn('status', ['pending', 'paid', 'confirmed'])
+            ->where(function ($q) use ($tanggalMulai, $tanggalSelesai) {
+                $q->where('tanggal_mulai', '<', $tanggalSelesai)
+                    ->where('tanggal_selesai', '>', $tanggalMulai);
+            })
+            ->exists();
+
+        if ($bentrok) {
+            return back()->withErrors(['Tanggal sudah dibooking'])->withInput();
+        }
+
+        // =========================
+        // HITUNG DP
+        // =========================
+        $totalBayar = $subtotal;
+
+        // =========================
+        // SIMPAN BOOKING
+        // =========================
         $booking = Booking::create([
             'kamar_id'        => $kamar->id,
             'user_id'         => Auth::id(),
@@ -77,19 +120,19 @@ class BookingController extends Controller
             'durasi'          => $request->durasi,
             'tanggal_mulai'   => $tanggalMulai,
             'tanggal_selesai' => $tanggalSelesai,
-            'harga_per_bulan' => $hargaPerBulan,
+
+            'harga_per_bulan' => $hargaPerUnit, // 🔥 TAMBAHKAN INI
+
             'subtotal'        => $subtotal,
-            'dp_nominal'      => $dpNominal,
-            'total_bayar'     => $totalBayar,
+            'total_bayar'     => $subtotal,
             'status'          => 'pending',
         ]);
 
         $payment = Payment::create([
             'booking_id'     => $booking->id,
-            'amount'         => $dpNominal,
-            'payment_type'   => 'dp',
+            'amount'         => $subtotal,   // bayar full
+            'payment_type'   => 'pelunasan',
             'payment_method' => 'midtrans',
-            'reference'      => null,
             'status'         => 'pending',
         ]);
 

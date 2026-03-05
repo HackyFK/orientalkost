@@ -45,7 +45,7 @@ class MidtransController extends Controller
 
         if ($payment->payment_type === 'pelunasan') {
             $booking->update([
-                'status' => 'confirmed'
+                'status' => 'paid'
             ]);
 
             $booking->kamar->update([
@@ -102,15 +102,26 @@ class MidtransController extends Controller
             'tanggal' => now(),
         ]);
     }
+
+
     public function show(Payment $payment)
     {
         $this->initMidtrans();
 
-        // Jika sudah pernah dibuat snap token, jangan generate ulang
+        // 🔐 Cegah akses payment orang lain
+        if ($payment->booking->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Kalau sudah dibayar, langsung ke success
+        if ($payment->status === 'paid') {
+            return redirect()
+                ->route('user.booking.success', $payment->booking);
+        }
+
+        // Buat order ID jika belum ada
         if (!$payment->reference) {
-
-            $orderId = 'PAY-' . $payment->id . '-' . now()->timestamp;
-
+            $orderId = 'PAY-' . $payment->id . '-' . time();
             $payment->update([
                 'reference' => $orderId,
             ]);
@@ -130,7 +141,18 @@ class MidtransController extends Controller
             ],
         ];
 
-        $snapToken = Snap::getSnapToken($params);
+        
+        ([
+            'serverKey' => setting('midtrans_server_key'),
+            'amount' => $payment->amount,
+            'booking' => $payment->booking
+        ]);
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+        } catch (\Exception $e) {
+            ('MIDTRANS ERROR: ' . $e->getMessage());
+        }
 
         return view('user.payment.show', compact('payment', 'snapToken'));
     }

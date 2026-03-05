@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('nomor_identitas')->nullable();
             $table->text('alamat')->nullable();
 
-            $table->enum('jenis_sewa', ['bulanan', 'tahunan']);
+            $table->enum('jenis_sewa', ['bulanan', 'tahunan', 'harian']);
             $table->integer('durasi'); // bulan
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->integer('harga_per_bulan');
             $table->integer('subtotal');
             $table->integer('dp_persen')->default(0);
-            $table->bigInteger('dp_nominal')->nullable(false); // wajib
+            $table->bigInteger('dp_nominal')->nullable()->default(0);
             $table->integer('total_bayar');
 
             $table->enum('status', [
