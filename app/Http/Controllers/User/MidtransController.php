@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Keuangan;
 use App\Models\PendapatanOwner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -109,7 +110,7 @@ class MidtransController extends Controller
         $this->initMidtrans();
 
         // 🔐 Cegah akses payment orang lain
-        if ($payment->booking->user_id !== auth()->id()) {
+        if ($payment->booking->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -141,7 +142,7 @@ class MidtransController extends Controller
             ],
         ];
 
-        
+
         ([
             'serverKey' => setting('midtrans_server_key'),
             'amount' => $payment->amount,
