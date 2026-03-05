@@ -40,7 +40,7 @@ use App\Http\Controllers\user\MidtransController;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/midtrans/notification', [MidtransController::class, 'notification']);
+
 // Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 // Route::post('/pay', [PaymentController::class, 'createTransaction']);
 
@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
 Route::name('user.')->group(function () {
 
     Route::get('/', [BerandaController::class, 'index'])->name('beranda');
+
+    Route::post('/midtrans/notification', [MidtransController::class, 'notification']);
 
     Route::get('/blog', [BlogController::class, 'index'])->name('blog');
     Route::get('/blog/{blog}', [BlogController::class, 'show'])
