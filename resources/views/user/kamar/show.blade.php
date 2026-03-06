@@ -160,6 +160,61 @@
                             </div>
                         </div>
 
+                        <div class="bg-white rounded-3xl shadow-lg p-8 mt-6">
+
+                            <h2 class="text-2xl font-bold text-primary mb-6 flex items-center">
+                                <i class="fas fa-hand-holding-heart text-accent mr-3"></i>
+                                Layanan Tambahan
+                            </h2>
+
+                            <div class="grid md:grid-cols-2 gap-4">
+
+                                @forelse ($layanans as $layanan)
+                                    <div
+                                        class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md hover:bg-white transition-all duration-200">
+
+                                        <div class="flex items-center gap-3">
+
+                                            <div>
+                                                <div class="text-primary font-semibold text-sm">
+                                                    {{ $layanan->nama_layanan }}
+                                                </div>
+
+                                                @if ($layanan->deskripsi)
+                                                    <div class="text-xs text-gray-400">
+                                                        {{ $layanan->deskripsi }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                        </div>
+
+                                        <div class="text-right">
+
+                                            <span class="text-accent font-bold text-sm">
+                                                Rp{{ number_format($layanan->harga) }}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                @empty
+
+                                    <div
+                                        class="md:col-span-2 text-center text-gray-400 text-sm py-6 bg-gray-50 rounded-xl border border-dashed">
+
+                                        <i class="fa-solid fa-circle-info mr-1"></i>
+                                        Tidak ada layanan tambahan
+
+                                    </div>
+                                @endforelse
+
+                            </div>
+
+                        </div>
+
+
 
                         <!-- Deskripsi -->
                         <div class="bg-white rounded-3xl shadow-lg p-8">
@@ -339,7 +394,8 @@
 
                                 {{-- Jenis Sewa --}}
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                                    <label
+                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                                         Jenis Sewa
                                     </label>
 

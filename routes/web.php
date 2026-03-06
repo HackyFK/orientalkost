@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+use App\Http\Controllers\Admin\LayananController;
 // use App\Http\Controllers\Admin\LaporanController;
 // use App\Http\Controllers\PaymentController;
 
@@ -114,14 +115,16 @@ Route::name('user.')->group(function () {
     Route::get('/booking', [BookingController::class, 'index'])
         ->name('booking');
 
-    Route::get('/booking/{kamar}', [BookingController::class, 'create'])
-        ->name('booking.create');
+    Route::get('booking/create/{kamar}', [BookingController::class, 'create'])
+    ->name('booking.create');
 
     Route::get('/booking/{booking}/payment', [BookingController::class, 'payment'])
         ->name('booking.payment');
 
     Route::post('/booking/{kamar}', [BookingController::class, 'store'])
         ->name('booking.store');
+
+    
 
     Route::get('/booking/success/{booking}', [BookingController::class, 'success'])
         ->name('booking.success');
@@ -134,6 +137,12 @@ Route::name('user.')->group(function () {
 
     Route::get('/history-booking', [BookingHistoryController::class, 'index'])
         ->name('booking.history');
+
+    Route::get('/booking/{booking}', [BookingHistoryController::class, 'show'])
+        ->name('booking.show');
+    
+    Route::get('booking/{booking}/struk', [BookingHistoryController::class, 'strukPdf'])
+    ->name('booking.struk');
 });
 
 
@@ -219,6 +228,8 @@ Route::prefix('admin')
                 Route::delete('/{kos}/{image}', [AdminKosImageController::class, 'destroy'])
                     ->name('destroy');
             });
+
+            Route::resource('layanan', LayananController::class);
 
 
             Route::resource('kamar', AdminKamarController::class);

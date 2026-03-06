@@ -56,4 +56,9 @@ class Kamar extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function layanans()
+{
+    return $this->belongsToMany(Layanan::class, 'kamar_layanan');
+}
 }

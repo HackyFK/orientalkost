@@ -23,11 +23,15 @@ class AdminKeuanganController extends Controller
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $kategori = $request->kategori;
+        $tanggal = $request->tanggal;
+        $dari = $request->dari;
+        $sampai = $request->sampai;
+        $hari = $request->hari;
 
-        // Query dasar
+        // 🔹 Query dasar
         $query = Keuangan::query();
 
-        // Filter bulan dan tahun
+        // 🔹 Filter bulan, tahun
         if ($bulan) {
             $query->whereMonth('created_at', $bulan);
         }
@@ -35,32 +39,36 @@ class AdminKeuanganController extends Controller
             $query->whereYear('created_at', $tahun);
         }
 
-        // Filter kategori (opsional)
+        // 🔹 Filter kategori
         if ($kategori) {
             $query->where('kategori', $kategori);
         }
 
-        // Ambil data terbaru paling atas
-        $data = Keuangan::query()
-            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
-            ->when($kategori, fn($q) => $q->where('kategori', $kategori))
-            ->orderBy('created_at', 'desc') // <<< data terbaru paling atas
+        // 🔹 Filter tanggal spesifik
+        if ($tanggal) {
+            $query->whereDate('created_at', $tanggal);
+        }
+
+        // 🔹 Filter range tanggal
+        if ($dari && $sampai) {
+            $query->whereBetween('created_at', [$dari, $sampai]);
+        }
+
+        // 🔹 Filter jumlah hari terakhir
+        if ($hari) {
+            $query->where('created_at', '>=', now()->subDays($hari));
+        }
+
+        // 🔹 Ambil data terbaru paling atas & paginate
+        $data = $query->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
 
-        // Hitung total pemasukan dan pengeluaran sesuai filter
-        $totalPemasukan = Keuangan::query()
-            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
-            ->sum('pemasukan');
+        // 🔹 Hitung total pemasukan dan pengeluaran sesuai filter
+        $totalPemasukan = (clone $query)->sum('pemasukan');
+        $totalPengeluaran = (clone $query)->sum('pengeluaran');
 
-        $totalPengeluaran = Keuangan::query()
-            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan))
-            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
-            ->sum('pengeluaran');
-
-        // Hitung saldo
+        // 🔹 Hitung saldo
         $saldo = $totalPemasukan - $totalPengeluaran;
 
         return view('admin.keuangan.index', compact(
@@ -68,6 +76,10 @@ class AdminKeuanganController extends Controller
             'bulan',
             'tahun',
             'kategori',
+            'tanggal',
+            'dari',
+            'sampai',
+            'hari',
             'totalPemasukan',
             'totalPengeluaran',
             'saldo'
@@ -154,11 +166,18 @@ class AdminKeuanganController extends Controller
 
     public function export(Request $request)
     {
+        $filters = [
+            'bulan' => $request->bulan,
+            'tahun' => $request->tahun,
+            'tanggal' => $request->tanggal,
+            'dari' => $request->dari,
+            'sampai' => $request->sampai,
+            'hari' => $request->hari,
+            'kategori' => $request->kategori,
+        ];
+
         return Excel::download(
-            new KeuanganExport(
-                $request->bulan,
-                $request->tahun
-            ),
+            new KeuanganExport($filters),
             'laporan-keuangan.xlsx'
         );
     }
@@ -256,25 +275,24 @@ class AdminKeuanganController extends Controller
     }
 
     public function owner(Request $request)
-{
-    $data = PendapatanOwner::with([
-        'owner',
-        'booking.kamar.kos'
-    ])
-    ->where('owner_id', Auth::id()) // ← hanya data owner login
-    ->where('status', 'terkirim')   // ← hanya yang sudah terkirim
-    ->latest()
-    ->paginate(10);
+    {
+        $data = PendapatanOwner::with([
+            'owner',
+            'booking.kamar.kos'
+        ])
+            ->where('owner_id', Auth::id()) // ← hanya data owner login
+            ->where('status', 'terkirim')   // ← hanya yang sudah terkirim
+            ->latest()
+            ->paginate(10);
 
-    return view('admin.keuangan.owner', compact('data'));
-}
+        return view('admin.keuangan.owner', compact('data'));
+    }
 
-public function exportOwner(Request $request)
-{
-    return Excel::download(
-        new KeuanganOwnerExport(Auth::id()),
-        'keuangan-owner.xlsx'
-    );
+    public function exportOwner(Request $request)
+    {
+        return Excel::download(
+            new KeuanganOwnerExport(Auth::id()),
+            'keuangan-owner.xlsx'
+        );
+    }
 }
-}
-

@@ -146,6 +146,7 @@
                     Kamar
                 </a>
 
+
                 <a href="{{ route('admin.kamar-images.index') }}"
                     class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                         {{ request()->routeIs('admin.kamar-images.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
@@ -157,7 +158,18 @@
 
                     Gambar Kamar
                 </a>
+                @if (auth()->user()->role === 'owner')
+                <a href="{{ route('admin.layanan.index') }}"
+                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+    {{ $isActive('admin.layanan.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
+                    <i
+                        class="fa-solid fa-concierge-bell w-4 text-center text-xs 
+    {{ $isActive('admin.layanan.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+
+                    Layanan
+                </a>
+                @endif
                 @if (auth()->user()->role === 'admin')
                     <a href="{{ route('admin.fasilitas.index') }}"
                         class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
@@ -383,7 +395,8 @@
                 <div>
                     @if (auth()->user()->role === 'admin')
                         {{-- Link Panduan Admin --}}
-                        <a href="https://drive.google.com/file/d/1gHpo_DYs3MJXihRMeowd7G4hRdHcK96U/view?usp=sharing" target="_blank"
+                        <a href="https://drive.google.com/file/d/1gHpo_DYs3MJXihRMeowd7G4hRdHcK96U/view?usp=sharing"
+                            target="_blank"
                             class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold rounded-lg border border-blue-100 transition-colors group">
                             <i class="fa-solid fa-book-open text-[11px]"></i>
                             <span class="hidden sm:inline">Panduan Admin</span>
@@ -392,7 +405,8 @@
                         </a>
                     @elseif(auth()->user()->role === 'owner')
                         {{-- Link Panduan Owner --}}
-                        <a href="https://drive.google.com/file/d/11YTWWF89GI-Rc-cqHR0RBEbZnUMLCef5/view?usp=sharing" target="_blank"
+                        <a href="https://drive.google.com/file/d/11YTWWF89GI-Rc-cqHR0RBEbZnUMLCef5/view?usp=sharing"
+                            target="_blank"
                             class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-xs font-semibold rounded-lg border border-green-100 transition-colors group">
                             <i class="fa-solid fa-book-open text-[11px]"></i>
                             <span class="hidden sm:inline">Panduan Owner</span>
