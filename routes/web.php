@@ -14,25 +14,21 @@ use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWebsiteProfileController;
+use App\Http\Controllers\Admin\KosDiscountController;
 // use App\Http\Controllers\Admin\LaporanController;
-// use App\Http\Controllers\PaymentController;
-
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\BerandaController;
-
-
-// User Controller
 use App\Http\Controllers\User\BlogController;
 use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\User\BookingHistoryController;
 use App\Http\Controllers\User\GaleriController;
 use App\Http\Controllers\User\KamarController;
 use App\Http\Controllers\User\KosController;
+use App\Http\Controllers\user\MidtransController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\TransaksiController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\user\MidtransController;
 
 
 /*
@@ -156,6 +152,8 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', AdminMiddleware::class])
     ->group(function () {
+        
+        Route::resource('kos-discounts', KosDiscountController::class);
 
         // ADMIN OWNER
         Route::middleware(['role:admin,owner'])->group(function () {

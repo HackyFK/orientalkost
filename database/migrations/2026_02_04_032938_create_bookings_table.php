@@ -16,6 +16,7 @@ return new class extends Migration
 
             // Relasi
             $table->foreignId('kamar_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('discount_id')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
 
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->date('tanggal_selesai');
 
             $table->integer('harga_per_bulan');
+            $table->integer('discount_amount')->default(0);
             $table->integer('subtotal');
             $table->integer('dp_persen')->default(0);
             $table->bigInteger('dp_nominal')->nullable()->default(0);

@@ -11,6 +11,7 @@ class Booking extends Model
 {
     protected $fillable = [
         'kamar_id',
+        'discount_id',
         'user_id',
         'nama_penyewa',
         'email',
@@ -24,6 +25,7 @@ class Booking extends Model
         'harga_per_bulan',
         'dp_nominal',
         'subtotal',
+        'discount_amount',
         'deposit',
         'total_bayar',
         'status',

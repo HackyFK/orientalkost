@@ -85,4 +85,10 @@ class Kos extends Model
 
         return $adaKamarTersedia ? 'Tersedia' : 'Tidak tersedia';
     }
+
+    // Diskon
+    public function discounts()
+    {
+        return $this->hasMany(KosDiscount::class);
+    }
 }

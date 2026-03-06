@@ -29,13 +29,17 @@ class BookingController extends Controller
 
     public function create(Kamar $kamar)
     {
-        
         $bookings = Booking::where('kamar_id', $kamar->id)
             ->whereIn('status', ['pending', 'paid', 'confirmed'])
             ->get(['tanggal_mulai', 'tanggal_selesai']);
 
-        return view('user.booking.create', compact('kamar', 'bookings'));
+        $discounts = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
+            ->where('is_active', true)
+            ->get();
+
+        return view('user.booking.create', compact('kamar', 'bookings', 'discounts'));
     }
+
 
 
     public function store(Request $request, Kamar $kamar)
@@ -61,7 +65,7 @@ class BookingController extends Controller
             $durasi = (int) $request->durasi;
 
             $tanggalMulai = Carbon::parse($request->tanggal_mulai);
-            $tanggalSelesai = $tanggalMulai->copy()->addDays($durasi);
+            $tanggalSelesai = $tanggalMulai->copy()->addDays($durasi)->subDay();
 
             $hargaPerUnit = $kamar->harga_harian;
             $subtotal = $hargaPerUnit * $durasi;
@@ -76,13 +80,47 @@ class BookingController extends Controller
             $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
                 ->startOfMonth();
 
-            $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan);
+            $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan)->subDay();
 
             $hargaPerUnit = $request->jenis_sewa === 'bulanan'
                 ? $kamar->harga_bulanan
                 : round($kamar->harga_tahunan / 12);
 
             $subtotal = $hargaPerUnit * $durasiBulan;
+
+            // DISKON
+            $discount = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
+                ->where('is_active', true)
+                ->get()
+                ->first(function ($promo) use ($subtotal, $request, $durasi) {
+
+                    if ($promo->jenis_sewa && $promo->jenis_sewa != $request->jenis_sewa) {
+                        return false;
+                    }
+
+                    if ($promo->min_durasi && $durasi < $promo->min_durasi) {
+                        return false;
+                    }
+
+                    if ($promo->min_total && $subtotal < $promo->min_total) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+            $discountAmount = 0;
+
+            if ($discount) {
+
+                if ($discount->type == 'percent') {
+
+                    $discountAmount = ($subtotal * $discount->value) / 100;
+                } else {
+
+                    $discountAmount = $discount->value;
+                }
+            }
         }
 
         // =========================
@@ -103,7 +141,7 @@ class BookingController extends Controller
         // =========================
         // HITUNG DP
         // =========================
-        $totalBayar = $subtotal;
+        $totalBayar = $subtotal - $discountAmount;
 
         // =========================
         // SIMPAN BOOKING
@@ -121,16 +159,18 @@ class BookingController extends Controller
             'tanggal_mulai'   => $tanggalMulai,
             'tanggal_selesai' => $tanggalSelesai,
 
-            'harga_per_bulan' => $hargaPerUnit, // 🔥 TAMBAHKAN INI
+            'harga_per_bulan' => $hargaPerUnit,
 
-            'subtotal'        => $subtotal,
-            'total_bayar'     => $subtotal,
+            'subtotal' => $subtotal,
+            'discount_amount' => $discountAmount,
+            'total_bayar' => $totalBayar,
+            'discount_id' => $discount?->id,
             'status'          => 'pending',
         ]);
 
         $payment = Payment::create([
             'booking_id'     => $booking->id,
-            'amount'         => $subtotal,   // bayar full
+            'amount'         => $totalBayar,
             'payment_type'   => 'pelunasan',
             'payment_method' => 'midtrans',
             'status'         => 'pending',
