@@ -20,9 +20,14 @@ class AdminKosController extends Controller
 
         $items = Kos::with([
             'primaryImage',
-            'owner',
-            'fasilitas'
+            'owner'
         ])
+            ->withCount([
+                'kamars as kamar_count',
+                'kamars as kamar_tersedia_count' => function ($q) {
+                    $q->where('status', 'tersedia');
+                }
+            ])
             ->when($user->role === 'owner', function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             })

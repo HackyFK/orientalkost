@@ -52,7 +52,7 @@
                         <th class="px-5 py-3">Owner</th>
                         <th class="px-5 py-3">Alamat</th>
                         <th class="px-5 py-3">Jenis</th>
-                        <th class="px-5 py-3">Fasilitas</th>
+                        <th class="px-5 py-3 text-center">Jumlah Kamar</th>
                         <th class="px-5 py-3 text-center">Status</th>
                         <th class="px-5 py-3 text-center">Aksi</th>
                     </tr>
@@ -113,32 +113,26 @@
                                 </span>
                             </td>
 
-                            {{-- Fasilitas --}}
-                            <td class="px-5 py-3.5">
-                                <div class="flex flex-wrap gap-1.5">
-                                    @foreach ($kos->fasilitas as $f)
-                                        <div class="relative group">
-                                            <span
-                                                class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-blue-50 rounded-lg cursor-default transition-colors border border-slate-200 hover:border-blue-200">
-                                                <i
-                                                    class="{{ $f->icon }} text-slate-500 group-hover:text-blue-500 text-xs transition-colors"></i>
-                                            </span>
-                                            {{-- Tooltip --}}
-                                            <div
-                                                class="absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2
-                                                        hidden group-hover:block
-                                                        px-2 py-1 text-xs text-white bg-slate-800 rounded-md whitespace-nowrap shadow-lg pointer-events-none">
-                                                {{ $f->nama_fasilitas }}
-                                                <div
-                                                    class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                            {{-- Jumlah Kamar --}}
+                            <td class="px-5 py-3.5 text-center">
+                                <div class="flex flex-col items-center">
 
-                                    @if ($kos->fasilitas->isEmpty())
-                                        <span class="text-xs text-slate-300">—</span>
-                                    @endif
+                                    {{-- total kamar --}}
+                                    <span
+                                        class="inline-flex items-center justify-center
+                                                min-w-[36px] px-3 py-1.5
+                                                bg-indigo-50 text-indigo-600
+                                                text-xs font-bold rounded-lg border border-indigo-100">
+
+                                        {{ $kos->kamar_count }}
+
+                                    </span>
+
+                                    {{-- kamar tersedia --}}
+                                    <span class="text-[11px] text-emerald-600 mt-1 font-medium">
+                                        {{ $kos->kamar_tersedia_count }} tersedia
+                                    </span>
+
                                 </div>
                             </td>
 
