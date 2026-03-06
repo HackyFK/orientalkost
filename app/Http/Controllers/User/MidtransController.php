@@ -36,32 +36,26 @@ class MidtransController extends Controller
 
         $booking = $payment->booking;
 
-        if ($payment->payment_type === 'dp') {
-            $booking->update([
-                'status' => 'paid',
-                'payment_method' => $type,
-                'paid_at' => now(),
-            ]);
-        }
+        $booking->update([
+            'status' => 'paid',
+            'payment_method' => $type,
+            'paid_at' => now(),
+        ]);
 
         if ($payment->payment_type === 'pelunasan') {
-            $booking->update([
-                'status' => 'paid'
-            ]);
-
             $booking->kamar->update([
                 'status' => 'terisi'
             ]);
         }
 
-        // ✅ MASUKKAN KE KEUANGAN
+        // MASUKKAN KE KEUANGAN
         if (!Keuangan::where('reference', $payment->reference)->exists()) {
 
             $saldoTerakhir = Keuangan::latest()->value('saldo') ?? 0;
 
             Keuangan::create([
                 'reference' => $payment->reference,
-                'admin_id' => 1, // default admin
+                'admin_id' => 1,
                 'kategori' => 'pemasukan',
                 'payment_method' => $type,
                 'pemasukan' => $payment->amount,
@@ -90,8 +84,8 @@ class MidtransController extends Controller
 
         $ownerId = $booking->kamar->kos->owner_id;
 
-        $total = $booking->subtotal;
-        // kalau subtotal kosong, jangan simpan
+        $total = $booking->total_bayar;
+        // kalau total_bayar kosong, jangan simpan
         if ($total <= 0) return;
 
         PendapatanOwner::create([

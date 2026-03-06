@@ -13,17 +13,25 @@ class KeuanganExport implements FromCollection, WithHeadings, WithMapping, WithE
 {
     protected $bulan;
     protected $tahun;
+    protected $tanggal;
+    protected $dari;
+    protected $sampai;
 
-    public function __construct($bulan = null, $tahun = null)
+    public function __construct($filters = [])
     {
-        $this->bulan = $bulan;
-        $this->tahun = $tahun;
+        $this->bulan = $filters['bulan'] ?? null;
+        $this->tahun = $filters['tahun'] ?? null;
+        $this->tanggal = $filters['tanggal'] ?? null;
+        $this->dari = $filters['dari'] ?? null;
+        $this->sampai = $filters['sampai'] ?? null;
     }
 
     public function collection()
     {
         return Keuangan::when($this->bulan, fn($q) => $q->whereMonth('created_at', $this->bulan))
                        ->when($this->tahun, fn($q) => $q->whereYear('created_at', $this->tahun))
+                       ->when($this->tanggal, fn($q) => $q->whereDate('created_at', $this->tanggal))
+                       ->when($this->dari && $this->sampai, fn($q) => $q->whereBetween('created_at', [$this->dari, $this->sampai]))
                        ->with('admin')
                        ->orderBy('created_at', 'desc')
                        ->get();
@@ -65,10 +73,10 @@ class KeuanganExport implements FromCollection, WithHeadings, WithMapping, WithE
             AfterSheet::class => function(AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
 
-                // Buat header bold
+                // Header bold
                 $sheet->getStyle('A1:I1')->getFont()->setBold(true);
 
-                // Tambahkan border ke seluruh tabel
+                // Border seluruh tabel
                 $highestRow = $sheet->getHighestRow();
                 $highestColumn = $sheet->getHighestColumn();
                 $sheet->getStyle("A1:{$highestColumn}{$highestRow}")
@@ -79,8 +87,8 @@ class KeuanganExport implements FromCollection, WithHeadings, WithMapping, WithE
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 
-                // Format kolom Pemasukan, Pengeluaran, Saldo sebagai angka dengan ribuan
-                $sheet->getStyle("F2:H{$highestRow}")
+                // Format kolom Pemasukan, Pengeluaran, Saldo sebagai angka ribuan
+                $sheet->getStyle("G2:I{$highestRow}")
                       ->getNumberFormat()
                       ->setFormatCode('#,##0');
             },

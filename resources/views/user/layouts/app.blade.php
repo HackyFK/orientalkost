@@ -264,12 +264,19 @@
 
 
                 @auth
-                    <!-- Jika SUDAH login -->
                     <div class="relative hidden md:block">
+
                         <!-- Button User -->
                         <button id="user-menu-button"
-                            class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center focus:outline-none">
-                            <i class="fas fa-user"></i>
+                            class="flex items-center gap-1 px-2 py-1 rounded-full bg-accent text-white
+               hover:bg-accent/90 transition">
+
+                            <div class="w-8 h-8 flex items-center justify-center">
+                                <i class="fas fa-user text-sm"></i>
+                            </div>
+
+                            <!-- Icon Segitiga -->
+                            <i class="fas fa-chevron-down text-[10px]"></i>
                         </button>
 
                         <!-- Dropdown -->
@@ -282,7 +289,8 @@
                             </a>
 
                             <!-- History -->
-                            <a href="{{ route('user.booking.history') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <a href="{{ route('user.booking.history') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                                 History
                             </a>
 
@@ -293,6 +301,7 @@
                                     Logout
                                 </button>
                             </form>
+
                         </div>
                     </div>
                 @endauth

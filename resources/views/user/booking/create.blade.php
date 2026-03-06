@@ -41,7 +41,7 @@
             </div>
 
             <form method="POST" action="{{ route('user.booking.store', $kamar) }}" class="space-y-8"
-                x-data='bookingForm(@json($bookings), @json($discounts))' x-init="init()">
+              x-data='bookingForm(@json($bookings), @json($layanan), @json($discounts))' x-init="init()"
                 @csrf
 
                 <h2 class="text-xl font-bold text-accent text-center flex items-center gap-2 justify-center mb-4">
@@ -142,7 +142,7 @@
                     </div>
 
                     <!-- Info booking yang sudah ada -->
-                    {{-- <template x-if="bookings.length > 0">
+                    <template x-if="bookings.length > 0">
                         <div class="pt-2 border-t border-blue-200 mt-2">
                             <p class="font-medium text-blue-700 mb-1">📋 Periode sudah terisi:</p>
                             <template x-for="b in bookings" :key="b.tanggal_mulai">
@@ -152,12 +152,38 @@
                                 </p>
                             </template>
                         </div>
-                    </template> --}}
+                    </template>
 
                     <!-- Peringatan bentrok -->
                     <div x-show="isBentrok" class="bg-red-50 text-red-600 p-3 rounded-lg text-sm mt-2">
                         ⚠️ Periode ini sudah dibooking. Silakan pilih bulan/tanggal lain.
                     </div>
+                </div>
+
+                <div class="border rounded-xl p-4">
+
+                    <label class="flex items-center gap-2 cursor-pointer font-semibold">
+                        <input type="checkbox" x-model="showLayanan">
+                        Tambah Layanan
+                    </label>
+
+                    <div x-show="showLayanan" x-transition class="mt-3 space-y-2">
+
+                        @foreach ($layanan as $l)
+                            <label class="flex items-center gap-2 cursor-pointer">
+
+                                <input type="checkbox" name="layanan[]" value="{{ $l->id }}"
+                                    x-model="selectedLayanan">
+
+                                {{ $l->nama_layanan }}
+                                -
+                                Rp {{ number_format($l->harga, 0, ',', '.') }}
+
+                            </label>
+                        @endforeach
+
+                    </div>
+
                 </div>
 
                 <!-- RINGKASAN -->
@@ -177,15 +203,43 @@
                     </div>
 
                     <div class="flex justify-between text-green-600">
-                        <span>Diskon</span>
-                        <span>- <span x-text="format(discount)"></span></span>
-                    </div>
+      <span>Diskon</span>
+      <span>- <span x-text="format(discount)"></span></span>
+  </div>
 
-                    <hr>
-                    <div class="flex justify-between font-bold text-lg">
-                        <span>Total Bayar</span>
-                        <span x-text="format(totalBayar)" class="text-accent"></span>
-                    </div>
+  <template x-if="selectedLayanan.length > 0">
+      <div class="space-y-1">
+
+          <div class="font-semibold text-sm text-gray-600">
+              Opsi Layanan
+          </div>
+
+          <template x-for="(id,index) in selectedLayanan" :key="id">
+
+              <div class="flex justify-between text-sm">
+
+                  <span>
+                      <span x-text="index+1"></span>.
+                      <span x-text="layanan.find(l => l.id == id)?.nama_layanan"></span>
+                  </span>
+
+                  <span class="text-green-600">
+                      <span x-text="format(layanan.find(l => l.id == id)?.harga)"></span>
+                  </span>
+
+              </div>
+
+          </template>
+
+      </div>
+  </template>
+
+  <hr>
+
+  <div class="flex justify-between font-bold text-lg">
+      <span>Total Bayar</span>
+      <span x-text="format(grandTotal)" class="text-accent"></span>
+  </div>
                 </div>
 
                 <button type="submit" :disabled="isBentrok || !inputMulai"
@@ -201,11 +255,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        function bookingForm(bookings, discounts) {
-            return {
-                bookings: bookings,
-                discounts: discounts,
 
+function bookingForm(bookings, layanan, discounts) {
+    return {
+        bookings: bookings,
+        layanan: layanan,
+        discounts: discounts,
+
+        selectedLayanan: [],
+        showLayanan: false,
                 hargaHarian: {{ (int) ($kamar->harga_harian ?? 0) }},
                 hargaBulanan: {{ (int) $kamar->harga_bulanan }},
                 hargaTahunan: {{ (int) $kamar->harga_tahunan }},
@@ -376,10 +434,21 @@
                     return this.hargaPerUnit * this.durasi
                 },
 
+
+                get layananTotal() {
+        return this.selectedLayanan.reduce((total, id) => {
+            const l = this.layanan.find(x => x.id == id)
+            return total + (l ? parseInt(l.harga) : 0)
+        }, 0)
+    },
+
+get grandTotal() {
+    return this.subtotal - this.discount + this.layananTotal
+},
+
                 get totalBayar() {
                     return this.subtotal - this.discount
                 },
-
 
                 get satuanDurasi() {
                     if (this.jenisSewa === 'harian') return 'Hari'

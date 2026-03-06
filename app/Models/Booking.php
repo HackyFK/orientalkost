@@ -34,15 +34,22 @@ class Booking extends Model
         'paid_at',
     ];
 
-    protected $dates = [
-        'tanggal_mulai',
-        'tanggal_selesai',
-        'paid_at',
-    ];
+    protected $casts = [
+    'tanggal_mulai' => 'datetime',
+    'tanggal_selesai' => 'datetime',
+    'paid_at' => 'datetime',
+];
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function layanans()
+{
+    return $this->belongsToMany(Layanan::class, 'booking_layanan');
+}
 
     public function kamar()
     {

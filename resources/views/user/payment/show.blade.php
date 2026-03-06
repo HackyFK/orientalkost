@@ -6,6 +6,9 @@
         <div class="bg-white p-8 rounded-3xl shadow-lg text-center">
             <h1 class="text-2xl font-bold mb-6">Pembayaran</h1>
 
+
+    <div class="bg-white p-8 rounded-3xl shadow-lg text-center">
+        <h1 class="text-2xl font-bold mb-6">Pelunasan Bayar</h1>
             <p class="mb-4">
                 Total Bayar:
                 <span class="font-bold text-lg">

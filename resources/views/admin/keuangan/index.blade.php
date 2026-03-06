@@ -62,6 +62,22 @@
             </select>
         </div>
 
+        {{-- Dari Tanggal --}}
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Dari</label>
+            <input type="date" name="dari" value="{{ request('dari') }}"
+                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+        </div>
+
+        {{-- Sampai Tanggal --}}
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Sampai</label>
+            <input type="date" name="sampai" value="{{ request('sampai') }}"
+                class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+        </div>
+
+        
+
         {{-- Kategori --}}
         <div class="flex-1 min-w-[140px]">
             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kategori</label>
@@ -90,22 +106,58 @@
         </div>
 
         {{-- Label filter aktif --}}
-        @if (request()->hasAny(['bulan', 'tahun', 'kategori']))
+        @if (request()->hasAny(['tanggal', 'bulan', 'tahun', 'kategori', 'dari', 'sampai', 'hari']))
             <div class="w-full flex items-center gap-1.5 flex-wrap pt-1">
                 <span class="text-[11px] text-slate-400">Filter aktif:</span>
+
+                {{-- Tanggal spesifik --}}
+                @if (request('tanggal'))
+                    <span
+                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        Tanggal: {{ \Carbon\Carbon::parse(request('tanggal'))->format('d-m-Y') }}
+                    </span>
+                @endif
+
+                {{-- Bulan --}}
                 @if (request('bulan'))
                     <span
                         class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        Bulan:
                         {{ [1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'][request('bulan')] }}
                     </span>
                 @endif
+
+                {{-- Tahun --}}
                 @if (request('tahun'))
                     <span
-                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">{{ request('tahun') }}</span>
+                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        Tahun: {{ request('tahun') }}
+                    </span>
                 @endif
+
+                {{-- Kategori --}}
                 @if (request('kategori'))
                     <span
-                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">{{ ucfirst(request('kategori')) }}</span>
+                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        Kategori: {{ ucfirst(request('kategori')) }}
+                    </span>
+                @endif
+
+                {{-- Range dari–sampai --}}
+                @if (request('dari') && request('sampai'))
+                    <span
+                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        Dari: {{ \Carbon\Carbon::parse(request('dari'))->format('d-m-Y') }} s/d
+                        {{ \Carbon\Carbon::parse(request('sampai'))->format('d-m-Y') }}
+                    </span>
+                @endif
+
+                {{-- Rentang hari terakhir --}}
+                @if (request('hari'))
+                    <span
+                        class="text-[11px] font-semibold bg-blue-50 text-blue-500 border border-blue-100 px-2 py-0.5 rounded-md">
+                        {{ request('hari') }} Hari Terakhir
+                    </span>
                 @endif
             </div>
         @endif
@@ -115,52 +167,55 @@
     {{-- SUMMARY CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
 
-    {{-- Saldo --}}
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-        <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm shadow-blue-200">
-            <i class="fa-solid fa-wallet text-white text-base"></i>
+        {{-- Saldo --}}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+            <div
+                class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm shadow-blue-200">
+                <i class="fa-solid fa-wallet text-white text-base"></i>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Saldo</p>
+                <p class="text-lg font-bold text-blue-600 truncate">
+                    Rp {{ number_format($saldo, 0, ',', '.') }}
+                </p>
+            </div>
         </div>
-        <div class="min-w-0">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Saldo</p>
-            <p class="text-lg font-bold text-blue-600 truncate">
-                Rp {{ number_format($saldo, 0, ',', '.') }}
-            </p>
-        </div>
-    </div>
 
-    {{-- Total Pemasukan --}}
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-        <div class="w-11 h-11 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-green-200">
-            <i class="fa-solid fa-arrow-trend-up text-white text-base"></i>
+        {{-- Total Pemasukan --}}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+            <div
+                class="w-11 h-11 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-green-200">
+                <i class="fa-solid fa-arrow-trend-up text-white text-base"></i>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
+                <p class="text-lg font-bold text-green-600 truncate">
+                    Rp {{ number_format($totalPemasukan, 0, ',', '.') }}
+                </p>
+                @if (request()->hasAny(['bulan', 'tahun']))
+                    <p class="text-[10px] text-slate-400">periode terpilih</p>
+                @endif
+            </div>
         </div>
-        <div class="min-w-0">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
-            <p class="text-lg font-bold text-green-600 truncate">
-                Rp {{ number_format($totalPemasukan, 0, ',', '.') }}
-            </p>
-            @if (request()->hasAny(['bulan', 'tahun']))
-                <p class="text-[10px] text-slate-400">periode terpilih</p>
-            @endif
-        </div>
-    </div>
 
-    {{-- Total Pengeluaran --}}
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
-        <div class="w-11 h-11 rounded-xl bg-red-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-red-200">
-            <i class="fa-solid fa-arrow-trend-down text-white text-base"></i>
+        {{-- Total Pengeluaran --}}
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+            <div
+                class="w-11 h-11 rounded-xl bg-red-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-red-200">
+                <i class="fa-solid fa-arrow-trend-down text-white text-base"></i>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
+                <p class="text-lg font-bold text-red-500 truncate">
+                    Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}
+                </p>
+                @if (request()->hasAny(['bulan', 'tahun']))
+                    <p class="text-[10px] text-slate-400">periode terpilih</p>
+                @endif
+            </div>
         </div>
-        <div class="min-w-0">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
-            <p class="text-lg font-bold text-red-500 truncate">
-                Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}
-            </p>
-            @if (request()->hasAny(['bulan', 'tahun']))
-                <p class="text-[10px] text-slate-400">periode terpilih</p>
-            @endif
-        </div>
-    </div>
 
-</div>  
+    </div>
 
     {{-- TABLE CARD --}}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -168,17 +223,29 @@
         {{-- Toolbar --}}
         <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
             <span class="text-sm font-semibold text-slate-600">
-                {{ request()->hasAny(['bulan', 'tahun']) ? 'Transaksi (Terfilter)' : 'Semua Transaksi' }}
+                {{-- Judul sesuai filter --}}
+                @if (request()->hasAny(['tanggal', 'bulan', 'tahun', 'dari', 'sampai']))
+                    Transaksi (Terfilter)
+                @else
+                    Semua Transaksi
+                @endif
+
                 <span class="ml-2 text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
                     {{ $data->total() }}
                 </span>
             </span>
+
             {{-- Quick export inline --}}
-            <a href="{{ route('admin.keuangan.export', request()->only('bulan', 'tahun', 'kategori')) }}"
+            <a href="{{ route('admin.keuangan.export', request()->only('tanggal', 'bulan', 'tahun', 'kategori', 'dari', 'sampai')) }}"
                 class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-xs font-semibold rounded-lg border border-green-100 transition-colors">
                 <i class="fa-solid fa-file-excel text-[10px]"></i>
-                Export {{ request()->hasAny(['bulan', 'tahun']) ? 'Periode Ini' : 'Semua Data' }}
-                @if (!request()->hasAny(['bulan', 'tahun']))
+                Export
+                @if (request()->hasAny(['tanggal', 'bulan', 'tahun', 'dari', 'sampai']))
+                    Periode Ini
+                @else
+                    Semua Data
+                @endif
+                @if (!request()->hasAny(['tanggal', 'bulan', 'tahun', 'dari', 'sampai']))
                     <span class="hidden sm:inline text-[10px] font-normal text-green-400">· gunakan filter untuk
                         memisah</span>
                 @endif
@@ -224,7 +291,8 @@
                                         class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0">
                                         {{ strtoupper(substr($item->admin->name ?? '?', 0, 1)) }}
                                     </div>
-                                    <span class="text-xs font-medium text-slate-700">{{ $item->admin->name ?? '-' }}</span>
+                                    <span
+                                        class="text-xs font-medium text-slate-700">{{ $item->admin->name ?? '-' }}</span>
                                 </div>
                             </td>
 

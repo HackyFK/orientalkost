@@ -190,7 +190,7 @@
                             {{-- Total --}}
                             <td class="px-4 py-4">
                                 <p class="text-xs font-bold text-slate-800">
-                                    Rp {{ number_format($booking->subtotal, 0, ',', '.') }}
+                                    Rp {{ number_format($booking->total_bayar, 0, ',', '.') }}
                                 </p>
                             </td>
 

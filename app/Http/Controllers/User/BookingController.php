@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Kamar;
+use App\Models\Layanan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,15 +30,21 @@ class BookingController extends Controller
 
     public function create(Kamar $kamar)
     {
+
+        // Booking kamar yang masih aktif
         $bookings = Booking::where('kamar_id', $kamar->id)
             ->whereIn('status', ['pending', 'paid', 'confirmed'])
             ->get(['tanggal_mulai', 'tanggal_selesai']);
 
+        // Layanan sesuai kos kamar
+        $layanan = Layanan::where('kos_id', $kamar->kos_id)->get();
+
+        // Discount kos
         $discounts = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
             ->where('is_active', true)
             ->get();
 
-        return view('user.booking.create', compact('kamar', 'bookings', 'discounts'));
+        return view('user.booking.create', compact('kamar', 'bookings', 'layanan', 'discounts'));
     }
 
 
@@ -123,6 +130,12 @@ class BookingController extends Controller
             }
         }
 
+        $layananTotal = 0;
+
+        if ($request->filled('layanan')) {
+    $layananTotal = Layanan::whereIn('id', $request->layanan)->sum('harga');
+}
+
         // =========================
         // CEK BENTROK (WAJIB)
         // =========================
@@ -141,7 +154,8 @@ class BookingController extends Controller
         // =========================
         // HITUNG DP
         // =========================
-        $totalBayar = $subtotal - $discountAmount;
+
+        $totalBayar = $subtotal + $layananTotal - $discountAmount;
 
         // =========================
         // SIMPAN BOOKING
@@ -165,12 +179,16 @@ class BookingController extends Controller
             'discount_amount' => $discountAmount,
             'total_bayar' => $totalBayar,
             'discount_id' => $discount?->id,
+
             'status'          => 'pending',
         ]);
 
+        if ($request->filled('layanan')) {
+    $booking->layanans()->sync($request->layanan);
+}
         $payment = Payment::create([
             'booking_id'     => $booking->id,
-            'amount'         => $totalBayar,
+            'amount'         => $totalBayar,   // bayar full
             'payment_type'   => 'pelunasan',
             'payment_method' => 'midtrans',
             'status'         => 'pending',

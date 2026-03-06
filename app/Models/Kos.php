@@ -36,6 +36,15 @@ class Kos extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    public function layanan()
+    {
+        return $this->hasMany(Layanan::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function kamars()
     {
