@@ -152,11 +152,15 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', AdminMiddleware::class])
     ->group(function () {
-        
+
         Route::resource('kos-discounts', KosDiscountController::class);
 
         // ADMIN OWNER
         Route::middleware(['role:admin,owner'])->group(function () {
+
+            Route::resource('booking', AdminBookingController::class)
+                ->only(['index', 'show', 'update', 'destroy']);
+                
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])
                 ->name('dashboard');
 
@@ -265,8 +269,7 @@ Route::prefix('admin')
 
             Route::resource('galeri', AdminGaleriController::class);
 
-            Route::resource('booking', AdminBookingController::class)
-                ->only(['index', 'show', 'update', 'destroy']);
+
 
             Route::post(
                 '/booking/{booking}/status',
