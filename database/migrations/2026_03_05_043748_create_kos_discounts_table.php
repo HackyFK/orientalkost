@@ -24,6 +24,9 @@ return new class extends Migration
             // nilai diskon
             $table->integer('value');
 
+            // !!
+            $table->integer('max_discount')->nullable();
+
             // syarat minimal
             $table->integer('min_durasi')->nullable();
             $table->bigInteger('min_total')->nullable();

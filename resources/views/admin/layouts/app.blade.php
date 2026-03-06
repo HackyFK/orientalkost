@@ -190,6 +190,7 @@
                             class="fa-solid fa-couch w-4 text-center text-xs {{ $isActive('admin.fasilitas.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
                         Fasilitas
                     </a>
+                @endif
 
                     <a href="{{ route('admin.booking.index') }}"
                         class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
@@ -201,138 +202,140 @@
                         {{-- <span class="ml-auto text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded-full leading-none">3</span> --}}
                     </a>
 
-
-                    <a href="{{ route('admin.users.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                    @if (auth()->user() && auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.users.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                         {{ request()->routeIs('admin.users.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-users w-4 text-center text-xs {{ request()->routeIs('admin.users.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        User
-                    </a>
-                @endif
+                            <i
+                                class="fa-solid fa-users w-4 text-center text-xs {{ request()->routeIs('admin.users.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            User
+                        </a>
+                    @endif
 
 
-                @php
-                    $laporanActive = $isActive('admin.keuangan.*') || $isActive('admin.keuangan.owner');
-                @endphp
+                    @php
+                        $laporanActive = $isActive('admin.keuangan.*') || $isActive('admin.keuangan.owner');
+                    @endphp
 
-                <div x-data="{ open: {{ $laporanActive ? 'true' : 'false' }} }" class="relative">
+                    <div x-data="{ open: {{ $laporanActive ? 'true' : 'false' }} }" class="relative">
 
-                    {{-- Judul Dropdown --}}
-                    <button @click="open = !open"
-                        class="w-full flex items-center justify-between gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        {{-- Judul Dropdown --}}
+                        <button @click="open = !open"
+                            class="w-full flex items-center justify-between gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
             {{ $laporanActive ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
-                        <span class="flex items-center gap-3">
-                            <i
-                                class="fa-solid fa-file-lines text-center w-4 text-xs
+                            <span class="flex items-center gap-3">
+                                <i
+                                    class="fa-solid fa-file-lines text-center w-4 text-xs
                 {{ $laporanActive ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                            Laporan
-                        </span>
+                                Laporan
+                            </span>
 
-                        <i :class="open ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'" class="text-xs"></i>
-                    </button>
+                            <i :class="open ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'"
+                                class="text-xs"></i>
+                        </button>
 
-                    {{-- Isi Dropdown --}}
-                    <div x-show="open" x-transition class="mt-1 pl-6 flex flex-col gap-1">
+                        {{-- Isi Dropdown --}}
+                        <div x-show="open" x-transition class="mt-1 pl-6 flex flex-col gap-1">
 
-                        @if (auth()->user() && auth()->user()->role === 'admin')
-                            {{-- Keuangan --}}
-                            <a href="{{ route('admin.keuangan.index') }}"
-                                class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                            @if (auth()->user() && auth()->user()->role === 'admin')
+                                {{-- Keuangan --}}
+                                <a href="{{ route('admin.keuangan.index') }}"
+                                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                     {{ $isActive('admin.keuangan.index') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
-                                <i
-                                    class="fa-solid fa-money-bill text-center w-4 text-xs
+                                    <i
+                                        class="fa-solid fa-money-bill text-center w-4 text-xs
                     {{ $isActive('admin.keuangan.index') ? 'text-blue-400' : 'text-slate-500' }}"></i>
 
-                                Keuangan
-                            </a>
+                                    Keuangan
+                                </a>
 
-                            {{-- Kos & Kamar --}}
-                            <a href="{{ route('admin.keuangan.laporan') }}"
-                                class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                                {{-- Kos & Kamar --}}
+                                <a href="{{ route('admin.keuangan.laporan') }}"
+                                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                     {{ $isActive('admin.keuangan.laporan') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
-                                <i
-                                    class="fa-solid fa-house text-center w-4 text-xs
+                                    <i
+                                        class="fa-solid fa-house text-center w-4 text-xs
                     {{ $isActive('admin.keuangan.laporan') ? 'text-blue-400' : 'text-slate-500' }}"></i>
 
-                                Kos & Kamar
-                            </a>
-                        @endif
+                                    Kos & Kamar
+                                </a>
+                            @endif
 
 
-                        @if (auth()->user() && auth()->user()->role === 'owner')
-                            <a href="{{ route('admin.keuangan.owner') }}"
-                                class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                            @if (auth()->user() && auth()->user()->role === 'owner')
+                                <a href="{{ route('admin.keuangan.owner') }}"
+                                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                     {{ $isActive('admin.keuangan.owner') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
-                                <i
-                                    class="fa-solid fa-wallet text-center w-4 text-xs
+                                    <i
+                                        class="fa-solid fa-wallet text-center w-4 text-xs
                     {{ $isActive('admin.keuangan.owner') ? 'text-blue-400' : 'text-slate-500' }}"></i>
 
-                                Keuangan Owner
+                                    Keuangan Owner
 
-                            </a>
-                        @endif
+                                </a>
+                            @endif
 
+                        </div>
                     </div>
-                </div>
 
 
-                @if (auth()->user()->role === 'admin')
-                    {{-- ── Konten ── --}}
-                    <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">Konten
-                    </p>
+                    @if (auth()->user()->role === 'admin')
+                        {{-- ── Konten ── --}}
+                        <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">
+                            Konten
+                        </p>
 
-                    <a href="{{ route('admin.blog.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        <a href="{{ route('admin.blog.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.blog.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-newspaper w-4 text-center text-xs {{ $isActive('admin.blog.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        Blog
-                    </a>
+                            <i
+                                class="fa-solid fa-newspaper w-4 text-center text-xs {{ $isActive('admin.blog.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Blog
+                        </a>
 
-                    <a href="{{ route('admin.galeri.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        <a href="{{ route('admin.galeri.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.galeri.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-images w-4 text-center text-xs {{ $isActive('admin.galeri.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        Galeri
-                    </a>
+                            <i
+                                class="fa-solid fa-images w-4 text-center text-xs {{ $isActive('admin.galeri.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Galeri
+                        </a>
 
-                    <a href="{{ route('admin.review.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        <a href="{{ route('admin.review.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.review.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-star w-4 text-center text-xs {{ $isActive('admin.review.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        Rating & Review
-                    </a>
-                @endif
+                            <i
+                                class="fa-solid fa-star w-4 text-center text-xs {{ $isActive('admin.review.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Rating & Review
+                        </a>
+                    @endif
 
-                @if (auth()->user()->role === 'admin')
-                    {{-- ── Konfigurasi ── --}}
-                    <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">
-                        Konfigurasi
-                    </p>
+                    @if (auth()->user()->role === 'admin')
+                        {{-- ── Konfigurasi ── --}}
+                        <p class="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500/70">
+                            Konfigurasi
+                        </p>
 
-                    <a href="{{ route('admin.website-profile.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        <a href="{{ route('admin.website-profile.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.website-profile.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-globe w-4 text-center text-xs {{ $isActive('admin.website-profile.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        Profil Website
-                    </a>
+                            <i
+                                class="fa-solid fa-globe w-4 text-center text-xs {{ $isActive('admin.website-profile.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Profil Website
+                        </a>
 
-                    <a href="{{ route('admin.settings.index') }}"
-                        class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        <a href="{{ route('admin.settings.index') }}"
+                            class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
                       {{ $isActive('admin.settings.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                        <i
-                            class="fa-solid fa-gear w-4 text-center text-xs {{ $isActive('admin.settings.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-                        Pengaturan
-                    </a>
-                @endif
+                            <i
+                                class="fa-solid fa-gear w-4 text-center text-xs {{ $isActive('admin.settings.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                            Pengaturan
+                        </a>
+                    @endif
 
             </nav>
 
