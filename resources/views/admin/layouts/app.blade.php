@@ -166,10 +166,22 @@
                     <i
                         class="fa-solid fa-concierge-bell w-4 text-center text-xs 
     {{ $isActive('admin.layanan.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
-
                     Layanan
                 </a>
                 @endif
+                <a href="{{ route('admin.kos-discounts.index') }}"
+                    class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
+                        {{ request()->routeIs('admin.kos-discounts.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+
+                    <i
+                        class="fa-solid fa-tags w-4 text-center text-xs
+                            {{ request()->routeIs('admin.kos-discounts.*') ? 'text-blue-400' : 'text-slate-500' }}">
+                    </i>
+
+                    Diskon
+                </a>
+
+
                 @if (auth()->user()->role === 'admin')
                     <a href="{{ route('admin.fasilitas.index') }}"
                         class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
@@ -200,51 +212,65 @@
                 @endif
 
 
-                <div x-data="{ open: {{ $isActive('admin.keuangan.*') ? 'true' : 'false' }} }" class="relative">
+                @php
+                    $laporanActive = $isActive('admin.keuangan.*') || $isActive('admin.keuangan.owner');
+                @endphp
+
+                <div x-data="{ open: {{ $laporanActive ? 'true' : 'false' }} }" class="relative">
 
                     {{-- Judul Dropdown --}}
                     <button @click="open = !open"
                         class="w-full flex items-center justify-between gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-        {{ $isActive('admin.keuangan.*') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+            {{ $laporanActive ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+
                         <span class="flex items-center gap-3">
                             <i
-                                class="fa-solid fa-file-lines text-center w-4 text-xs {{ $isActive('admin.keuangan.*') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                                class="fa-solid fa-file-lines text-center w-4 text-xs
+                {{ $laporanActive ? 'text-blue-400' : 'text-slate-500' }}"></i>
                             Laporan
                         </span>
+
                         <i :class="open ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'" class="text-xs"></i>
                     </button>
 
                     {{-- Isi Dropdown --}}
                     <div x-show="open" x-transition class="mt-1 pl-6 flex flex-col gap-1">
+
                         @if (auth()->user() && auth()->user()->role === 'admin')
                             {{-- Keuangan --}}
                             <a href="{{ route('admin.keuangan.index') }}"
                                 class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-           {{ $isActive('admin.keuangan.index') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    {{ $isActive('admin.keuangan.index') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+
                                 <i
-                                    class="fa-solid fa-money-bill text-center w-4 text-xs {{ $isActive('admin.keuangan.index') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                                    class="fa-solid fa-money-bill text-center w-4 text-xs
+                    {{ $isActive('admin.keuangan.index') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+
                                 Keuangan
                             </a>
 
                             {{-- Kos & Kamar --}}
                             <a href="{{ route('admin.keuangan.laporan') }}"
                                 class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-           {{ $isActive('admin.keuangan.laporan') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    {{ $isActive('admin.keuangan.laporan') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+
                                 <i
-                                    class="fa-solid fa-house text-center w-4 text-xs {{ $isActive('admin.keuangan.laporan') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                                    class="fa-solid fa-house text-center w-4 text-xs
+                    {{ $isActive('admin.keuangan.laporan') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+
                                 Kos & Kamar
                             </a>
                         @endif
 
-                        {{-- Kos & Kamar --}}
+
                         @if (auth()->user() && auth()->user()->role === 'owner')
                             <a href="{{ route('admin.keuangan.owner') }}"
                                 class="relative flex items-center gap-3 px-3 py-[9px] rounded-lg text-[13px] font-medium transition-all duration-150
-   {{ $isActive('admin.keuangan.owner') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    {{ $isActive('admin.keuangan.owner') ? 'nav-active bg-blue-500/10 text-slate-100' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
 
                                 <i
                                     class="fa-solid fa-wallet text-center w-4 text-xs
-       {{ $isActive('admin.keuangan.owner') ? 'text-blue-400' : 'text-slate-500' }}"></i>
+                    {{ $isActive('admin.keuangan.owner') ? 'text-blue-400' : 'text-slate-500' }}"></i>
 
                                 Keuangan Owner
 

@@ -41,7 +41,7 @@
             </div>
 
             <form method="POST" action="{{ route('user.booking.store', $kamar) }}" class="space-y-8"
-                x-data='bookingForm(@json($bookings), @json($layanan))' x-init="init()">
+              x-data='bookingForm(@json($bookings), @json($layanan), @json($discounts))' x-init="init()"
                 @csrf
 
                 <h2 class="text-xl font-bold text-accent text-center flex items-center gap-2 justify-center mb-4">
@@ -191,45 +191,55 @@
                     <h3 class="text-lg font-bold text-accent flex items-center gap-2">
                         <i class="fas fa-receipt"></i> Ringkasan Booking
                     </h3>
-                    <div class="flex justify-between">
-                        <span>Harga per <span x-text="satuanDurasi"></span></span>
-                        <span x-text="format(hargaPerUnit)"></span>
-                    </div>
+
                     <div class="flex justify-between">
                         <span>Durasi</span>
                         <span x-text="durasi + ' ' + satuanDurasi"></span>
                     </div>
-                    <template x-if="selectedLayanan.length > 0">
-                        <div class="space-y-1">
 
-                            <div class="font-semibold text-sm text-gray-600">
-                                Opsi Layanan
-                            </div>
-
-                            <template x-for="(id,index) in selectedLayanan" :key="id">
-
-                                <div class="flex justify-between text-sm">
-
-                                    <span>
-                                        <span x-text="index+1"></span>.
-                                        <span x-text="layanan.find(l => l.id == id)?.nama_layanan"></span>
-                                    </span>
-
-                                    <span class="text-green-600">
-                                        <span x-text="format(layanan.find(l => l.id == id)?.harga)"></span>
-                                    </span>
-
-                                </div>
-
-                            </template>
-
-                        </div>
-                    </template>
-                    <hr>
-                    <div class="flex justify-between font-bold text-lg">
-                        <span>Total Bayar</span>
-                        <span x-text="format(grandTotal)" class="text-accent"></span>
+                    <div class="flex justify-between">
+                        <span>Harga per <span x-text="satuanDurasi"></span></span>
+                        <span x-text="format(hargaPerUnit)"></span>
                     </div>
+
+                    <div class="flex justify-between text-green-600">
+      <span>Diskon</span>
+      <span>- <span x-text="format(discount)"></span></span>
+  </div>
+
+  <template x-if="selectedLayanan.length > 0">
+      <div class="space-y-1">
+
+          <div class="font-semibold text-sm text-gray-600">
+              Opsi Layanan
+          </div>
+
+          <template x-for="(id,index) in selectedLayanan" :key="id">
+
+              <div class="flex justify-between text-sm">
+
+                  <span>
+                      <span x-text="index+1"></span>.
+                      <span x-text="layanan.find(l => l.id == id)?.nama_layanan"></span>
+                  </span>
+
+                  <span class="text-green-600">
+                      <span x-text="format(layanan.find(l => l.id == id)?.harga)"></span>
+                  </span>
+
+              </div>
+
+          </template>
+
+      </div>
+  </template>
+
+  <hr>
+
+  <div class="flex justify-between font-bold text-lg">
+      <span>Total Bayar</span>
+      <span x-text="format(grandTotal)" class="text-accent"></span>
+  </div>
                 </div>
 
                 <button type="submit" :disabled="isBentrok || !inputMulai"
@@ -245,13 +255,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        function bookingForm(bookings, layanan) {
-            return {
-                bookings: bookings,
-                layanan: layanan,
-                selectedLayanan: [],
-                showLayanan: false,
 
+function bookingForm(bookings, layanan, discounts) {
+    return {
+        bookings: bookings,
+        layanan: layanan,
+        discounts: discounts,
+
+        selectedLayanan: [],
+        showLayanan: false,
                 hargaHarian: {{ (int) ($kamar->harga_harian ?? 0) }},
                 hargaBulanan: {{ (int) $kamar->harga_bulanan }},
                 hargaTahunan: {{ (int) $kamar->harga_tahunan }},
@@ -422,15 +434,20 @@
                     return this.hargaPerUnit * this.durasi
                 },
 
-                get layananTotal() {
-                    return this.selectedLayanan.reduce((total, id) => {
-                        const l = this.layanan.find(x => x.id == id)
-                        return total + (l ? parseInt(l.harga) : 0)
-                    }, 0)
-                },
 
-                get grandTotal() {
-                    return this.subtotal + this.layananTotal
+                get layananTotal() {
+        return this.selectedLayanan.reduce((total, id) => {
+            const l = this.layanan.find(x => x.id == id)
+            return total + (l ? parseInt(l.harga) : 0)
+        }, 0)
+    },
+
+get grandTotal() {
+    return this.subtotal - this.discount + this.layananTotal
+},
+
+                get totalBayar() {
+                    return this.subtotal - this.discount
                 },
 
                 get satuanDurasi() {
@@ -450,6 +467,32 @@
                         length: 5
                     }, (_, i) => i + 1)
                 },
+
+                get discount() {
+
+                    let subtotal = this.hargaPerUnit * this.durasi
+                    let durasi = this.durasi
+
+                    let promo = this.discounts.find(d => {
+
+                        if (d.jenis_sewa && d.jenis_sewa !== this.jenisSewa) return false
+
+                        if (d.min_durasi && durasi < d.min_durasi) return false
+
+                        if (d.min_total && subtotal < d.min_total) return false
+
+                        return true
+                    })
+
+                    if (!promo) return 0
+
+                    if (promo.type === 'percent') {
+                        return subtotal * promo.value / 100
+                    }
+
+                    return promo.value
+                },
+
 
                 format(val) {
                     return 'Rp ' + Number(val).toLocaleString('id-ID')
