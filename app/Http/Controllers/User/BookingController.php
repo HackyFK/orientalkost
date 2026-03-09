@@ -63,7 +63,8 @@ class BookingController extends Controller
             'tanggal_mulai' => 'required_if:jenis_sewa,harian|date_format:Y-m-d',
         ]);
 
-
+        $discount = null;
+        $discountAmount = 0;
         // =========================
         // HITUNG TANGGAL
         // =========================
@@ -104,27 +105,74 @@ class BookingController extends Controller
             $discount = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
                 ->where('is_active', true)
                 ->get()
-                ->first(function ($promo) use ($subtotal, $request, $durasi) {
+                ->first(function ($promo) use ($subtotal, $request, $durasi, $tanggalMulai) {
 
+                    // cek jenis sewa
                     if ($promo->jenis_sewa && $promo->jenis_sewa != $request->jenis_sewa) {
                         return false;
                     }
 
+                    // cek minimal durasi
                     if ($promo->min_durasi && $durasi < $promo->min_durasi) {
                         return false;
                     }
 
+                    // cek minimal total
                     if ($promo->min_total && $subtotal < $promo->min_total) {
                         return false;
                     }
 
+                    // =====================
+                    // CEK RANGE TANGGAL
+                    // =====================
+                    if ($promo->start_date && $tanggalMulai->lt($promo->start_date)) {
+                        return false;
+                    }
+
+                    if ($promo->end_date && $tanggalMulai->gt($promo->end_date)) {
+                        return false;
+                    }
+
+                    // =====================
+                    // CEK HARI AKTIF
+                    // =====================
+                    if ($promo->days && count($promo->days)) {
+
+                        $day = strtolower($tanggalMulai->format('D'));
+
+                        $map = [
+                            'mon' => 'mon',
+                            'tue' => 'tue',
+                            'wed' => 'wed',
+                            'thu' => 'thu',
+                            'fri' => 'fri',
+                            'sat' => 'sat',
+                            'sun' => 'sun',
+                        ];
+
+                        $day = $map[$day] ?? null;
+
+                        if (!in_array($day, $promo->days)) {
+                            return false;
+                        }
+                    }
+
                     return true;
                 });
-
+                
             if ($discount) {
-                $discountAmount = $discount->type === 'percent'
-                    ? ($subtotal * $discount->value) / 100
-                    : $discount->value;
+
+                if ($discount->type == 'percent') {
+
+                    $discountAmount = ($subtotal * $discount->value) / 100;
+                } else {
+
+                    $discountAmount = $discount->value;
+                }
+
+                if ($discount->max_discount) {
+                    $discountAmount = min($discountAmount, $discount->max_discount);
+                }
             }
         }
 

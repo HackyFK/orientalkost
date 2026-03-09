@@ -131,7 +131,7 @@
                         <i class="fa-solid fa-credit-card text-green-500 text-xs"></i>
                     </div>
                     <h2 class="font-bold text-slate-700 text-sm">Data Pembayaran</h2>
-                    
+
                 </div>
 
                 @if ($booking->payments)
@@ -275,84 +275,84 @@
                         };
                     @endphp
 
-                    <div class="flex items-center justify-center gap-3 py-3 rounded-xl border {{ $statusStyle['bg'] }}">
-                        <i class="fa-solid {{ $statusStyle['icon'] }} text-base"></i>
-                        <span class="text-sm font-bold {{ $statusStyle['text'] }}">
-                            {{ $statusLabel[$booking->status] ?? ucfirst($booking->status) }}</span>
-                    </div>
 
                     {{-- Update Status --}}
-                    {{-- Update Status --}}
-<form action="{{ route('admin.booking.updateStatus', $booking->id) }}" method="POST">
-    @csrf
+                    <form action="{{ route('admin.booking.updateStatus', $booking->id) }}" method="POST">
+                        @csrf
 
-    @if (count($options) > 0)
+                        @if (count($options) > 0)
 
-        <div class="space-y-3">
+                            <div class="space-y-3">
 
-            {{-- Label status saat ini --}}
-            <div class="flex items-center justify-between">
-                <span class="text-xs text-slate-400">Status saat ini:</span>
-                @php
-                    $currentStyle = match($booking->status) {
-                        'confirmed' => 'bg-green-50 text-green-600 border-green-100 dot-bg-green-500',
-                        'paid'      => 'bg-blue-50 text-blue-600 border-blue-100',
-                        'pending'   => 'bg-amber-50 text-amber-600 border-amber-100',
-                        'cancelled' => 'bg-red-50 text-red-500 border-red-100',
-                        'expired'   => 'bg-slate-100 text-slate-500 border-slate-200',
-                        default     => 'bg-slate-100 text-slate-500 border-slate-200',
-                    };
-                    $currentDot = match($booking->status) {
-                        'confirmed' => 'bg-green-500',
-                        'paid'      => 'bg-blue-500',
-                        'pending'   => 'bg-amber-400',
-                        'cancelled' => 'bg-red-400',
-                        default     => 'bg-slate-400',
-                    };
-                @endphp
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border {{ $currentStyle }}">
-                    <span class="w-1.5 h-1.5 rounded-full {{ $currentDot }}"></span>
-                    {{ $statusLabel[$booking->status] }}
-                </span>
-            </div>
+                                {{-- Label status saat ini --}}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-slate-400">Status saat ini:</span>
+                                    @php
+                                        $currentStyle = match ($booking->status) {
+                                            'confirmed'
+                                                => 'bg-green-50 text-green-600 border-green-100 dot-bg-green-500',
+                                            'paid' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                            'pending' => 'bg-amber-50 text-amber-600 border-amber-100',
+                                            'cancelled' => 'bg-red-50 text-red-500 border-red-100',
+                                            'expired' => 'bg-slate-100 text-slate-500 border-slate-200',
+                                            default => 'bg-slate-100 text-slate-500 border-slate-200',
+                                        };
+                                        $currentDot = match ($booking->status) {
+                                            'confirmed' => 'bg-green-500',
+                                            'paid' => 'bg-blue-500',
+                                            'pending' => 'bg-amber-400',
+                                            'cancelled' => 'bg-red-400',
+                                            default => 'bg-slate-400',
+                                        };
+                                    @endphp
+                                </div>
+                                
+                                <div
+                                    class="flex items-center justify-center gap-3 py-3 rounded-xl border {{ $statusStyle['bg'] }}">
+                                    <i class="fa-solid {{ $statusStyle['icon'] }} text-base"></i>
+                                    <span class="text-sm font-bold {{ $statusStyle['text'] }}">
+                                        {{ $statusLabel[$booking->status] ?? ucfirst($booking->status) }}</span>
+                                </div>
 
-            {{-- Dropdown --}}
-            <div class="relative">
-                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-[10px] pointer-events-none"></i>
-                <select name="status"
-                    class="w-full appearance-none border border-slate-200 rounded-lg px-3 py-2.5 pr-8 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition cursor-pointer">
-                    <option value="" selected disabled>Pilih status baru...</option>
-                    @foreach ($options as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
+                                @if (auth()->user() && auth()->user()->role === 'admin')
+                                    {{-- Dropdown --}}
+                                    <div class="relative">
+                                        <i
+                                            class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 text-[10px] pointer-events-none"></i>
+                                        <select name="status"
+                                            class="w-full appearance-none border border-slate-200 rounded-lg px-3 py-2.5 pr-8 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition cursor-pointer">
+                                            <option value="" selected disabled>Pilih status baru...</option>
+                                            @foreach ($options as $value => $label)
+                                                <option value="{{ $value }}">{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-            {{-- Submit --}}
-            <button type="submit"
-                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
-                <i class="fa-solid fa-rotate text-xs"></i>
-                Update Status
-            </button>
+                                    {{-- Submit --}}
+                                    <button type="submit"
+                                        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm shadow-blue-200">
+                                        <i class="fa-solid fa-rotate text-xs"></i>
+                                        Update Status
+                                    </button>
+                                @endif
 
-        </div>
+                            </div>
+                        @else
+                            {{-- Status final --}}
+                            <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-slate-600">Status sudah final</p>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">Booking ini tidak dapat diubah lagi</p>
+                                </div>
+                            </div>
 
-    @else
+                        @endif
 
-        {{-- Status final --}}
-        <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
-            <div class="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center flex-shrink-0">
-                <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
-            </div>
-            <div>
-                <p class="text-xs font-semibold text-slate-600">Status sudah final</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Booking ini tidak dapat diubah lagi</p>
-            </div>
-        </div>
-
-    @endif
-
-</form>
+                    </form>
                 </div>
             </div>
 

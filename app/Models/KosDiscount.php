@@ -11,6 +11,7 @@ class KosDiscount extends Model
         'nama',
         'type',
         'value',
+        'max_discount',
         'min_durasi',
         'min_total',
         'jenis_sewa',

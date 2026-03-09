@@ -211,7 +211,7 @@
                                         'paid' => 'bg-blue-500',
                                         'pending' => 'bg-amber-400',
                                         'cancelled' => 'bg-red-400',
-                                         'expired' => 'bg-slate-400',
+                                        'expired' => 'bg-slate-400',
                                         default => 'bg-slate-400',
                                     };
                                 @endphp
@@ -242,16 +242,18 @@
                                         <i class="fa-solid fa-eye text-[11px]"></i>
                                     </a>
 
-                                    {{-- Hapus --}}
-                                    <form method="POST" action="{{ route('admin.booking.destroy', $booking) }}"
-                                        onsubmit="return confirm('Yakin ingin menghapus booking ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" title="Hapus"
-                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors border border-red-100">
-                                            <i class="fa-solid fa-trash text-[11px]"></i>
-                                        </button>
-                                    </form>
+                                    @if (auth()->user() && auth()->user()->role === 'admin')
+                                        {{-- Hapus --}}
+                                        <form method="POST" action="{{ route('admin.booking.destroy', $booking) }}"
+                                            onsubmit="return confirm('Yakin ingin menghapus booking ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" title="Hapus"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-500 transition-colors border border-red-100">
+                                                <i class="fa-solid fa-trash text-[11px]"></i>
+                                            </button>
+                                        </form>
+                                    @endif
 
                                 </div>
                             </td>
@@ -382,24 +384,21 @@
         }
     </script>
     <script>
-function closeSuccessPopup()
-{
-    document.getElementById('successPopup').classList.add('hidden');
-}
+        function closeSuccessPopup() {
+            document.getElementById('successPopup').classList.add('hidden');
+        }
 
-@if(session('success'))
-document.addEventListener('DOMContentLoaded', function()
-{
-    const popup = document.getElementById('successPopup');
-    popup.classList.remove('hidden');
-    popup.classList.add('flex');
+        @if (session('success'))
+            document.addEventListener('DOMContentLoaded', function() {
+                const popup = document.getElementById('successPopup');
+                popup.classList.remove('hidden');
+                popup.classList.add('flex');
 
-    setTimeout(() =>
-    {
-        popup.classList.add('hidden');
-    }, 2000);
-});
-@endif
-</script>
+                setTimeout(() => {
+                    popup.classList.add('hidden');
+                }, 2000);
+            });
+        @endif
+    </script>
 
 @endsection
