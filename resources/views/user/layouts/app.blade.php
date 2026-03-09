@@ -2,27 +2,20 @@
 <html lang="id">
 
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- SEO Meta Tags -->
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- SEO Meta Tags -->
     <meta name="description" content="{{ setting('seo_description', 'Website kos modern dan terpercaya') }}">
     <meta name="keywords" content="{{ setting('seo_keywords', 'kos, kamar, sewa kos') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>
-        @yield('title', setting('site_name', 'KosKu'))
-    </title>
-
+    <title> @yield('title', setting('site_name', 'KosKu')) </title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-
     <script>
         tailwind.config = {
             theme: {
@@ -192,236 +185,86 @@
     </style>
 </head>
 
-<body class="bg-white">
-
-    <!-- NAVBAR -->
+<body class="bg-white"> <!-- NAVBAR -->
     <nav class="bg-primary fixed w-full top-0 z-50 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
-                    <span class="text-text-light text-2xl font-bold">
-                        {{ setting('site_name', 'KosKu') }}
-                    </span>
-
-                </div>
-
+            <div class="flex justify-between items-center h-20"> <!-- Logo -->
+                <div class="flex items-center space-x-3"> <i
+                        class="fa-brands fa-galactic-senate text-accent text-3xl"></i> <span
+                        class="text-text-light text-2xl font-bold"> {{ setting('site_name', 'KosKu') }} </span> </div>
                 <!-- Menu Desktop -->
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="{{ route('user.beranda') }}"
-                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-home text-sm"></i>
-                        <span>Home</span>
-                    </a>
-
-                    <a href="{{ route('user.kos.index') }}"
-                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-building text-sm"></i>
-                        <span>Kos</span>
-                    </a>
-
-                    <a href="{{ route('user.galeri') }}"
-                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-images text-sm"></i>
-                        <span>Galeri</span>
-                    </a>
-
-                    <a href="{{ route('user.blog') }}"
-                        class="flex items-center gap-2 text-text-light hover:text-accent transition">
-                        <i class="fas fa-blog text-sm"></i>
-                        <span>Blog</span>
-                    </a>
-
-
-                </div>
-
-
-                <!-- Right -->
-                <div class="flex items-center space-x-3 relative">
-
-                    @guest
-                        <!-- Login -->
-                        <a href="{{ route('login') }}"
-                            class="hidden md:inline-flex items-center px-4 py-2 rounded-full border border-white/30
-                   text-text-light hover:border-accent hover:text-accent
-                   transition duration-300 font-medium">
-                            Login
-                        </a>
-
-                        <!-- Register -->
-                        <a href="{{ route('register') }}"
-                            class="hidden md:inline-flex items-center px-5 py-2 rounded-full
-                   bg-accent hover:bg-orange-600 text-white
-                   shadow-lg hover:shadow-xl
-                   transition duration-300 font-semibold">
-                            Register
-                        </a>
-                    @endguest
-
-                </div>
-
-
-                @auth
-                    <div class="relative hidden md:block">
-
-                        <!-- Button User -->
+                <div class="hidden lg:flex items-center space-x-8"> <a href="{{ route('user.beranda') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition"> <i
+                            class="fas fa-home text-sm"></i> <span>Home</span> </a> <a
+                        href="{{ route('user.kos.index') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition"> <i
+                            class="fas fa-building text-sm"></i> <span>Kos</span> </a> <a
+                        href="{{ route('user.galeri') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition"> <i
+                            class="fas fa-images text-sm"></i> <span>Galeri</span> </a> <a
+                        href="{{ route('user.blog') }}"
+                        class="flex items-center gap-2 text-text-light hover:text-accent transition"> <i
+                            class="fas fa-blog text-sm"></i> <span>Blog</span> </a> </div> <!-- Right -->
+                <div class="flex items-center space-x-3 relative"> @guest <!-- Login --> <a href="{{ route('login') }}"
+                            class="hidden md:inline-flex items-center px-4 py-2 rounded-full border border-white/30 text-text-light hover:border-accent hover:text-accent transition duration-300 font-medium">
+                            Login </a> <!-- Register --> <a href="{{ route('register') }}"
+                            class="hidden md:inline-flex items-center px-5 py-2 rounded-full bg-accent hover:bg-orange-600 text-white shadow-lg hover:shadow-xl transition duration-300 font-semibold">
+                            Register </a> @endguest </div> @auth <div class="relative hidden md:block"> <!-- Button User -->
                         <button id="user-menu-button"
-                            class="flex items-center gap-1 px-2 py-1 rounded-full bg-accent text-white
-               hover:bg-accent/90 transition">
-
-                            <div class="w-8 h-8 flex items-center justify-center">
-                                <i class="fas fa-user text-sm"></i>
-                            </div>
-
-                            <!-- Icon Segitiga -->
-                            <i class="fas fa-chevron-down text-[10px]"></i>
-                        </button>
-
-                        <!-- Dropdown -->
+                            class="flex items-center gap-1 px-2 py-1 rounded-full bg-accent text-white hover:bg-accent/90 transition">
+                            <div class="w-8 h-8 flex items-center justify-center"> <i class="fas fa-user text-sm"></i>
+                            </div> <!-- Icon Segitiga --> <i class="fas fa-chevron-down text-[10px]"></i>
+                        </button> <!-- Dropdown -->
                         <div id="user-dropdown"
                             class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg py-2 z-50">
-
-                            <!-- Profile -->
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                Profile
-                            </a>
-
-                            <!-- History -->
-                            <a href="{{ route('user.booking.history') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                History
-                            </a>
-
-                            <!-- Logout -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    Logout
-                                </button>
+                            <!-- Profile --> <a href="{{ route('profile.edit') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"> Profile </a> <!-- History --> <a
+                                href="{{ route('user.booking.history') }}"
+                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"> History </a> <!-- Logout -->
+                            <form method="POST" action="{{ route('logout') }}"> @csrf <button type="submit"
+                                    class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"> Logout </button>
                             </form>
-
                         </div>
-                    </div>
-                @endauth
-
-                <!-- Toggle -->
-                <button id="menu-toggle" class="lg:hidden text-text-light text-2xl">
-                    <i class="fas fa-bars"></i>
-                </button>
+                </div> @endauth <!-- Toggle --> <button id="menu-toggle" class="lg:hidden text-text-light text-2xl"> <i
+                        class="fas fa-bars"></i> </button>
             </div>
-
-
-
         </div>
-        </div>
-
-        <!-- MENU MOBILE -->
+        </div> <!-- MENU MOBILE -->
         <div id="mobile-menu" class="hidden lg:hidden bg-primary border-t border-white/10">
-
-            <div class="px-6 py-6 space-y-5">
-
-                <!-- Menu -->
-                <a href="{{ route('user.beranda') }}"
-                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
-                    <i class="fas fa-home w-5"></i>
-                    <span>Home</span>
-                </a>
-
-                <a href="{{ route('user.kos.index') }}"
-                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
-                    <i class="fas fa-building w-5"></i>
-                    <span>Kos</span>
-                </a>
-
-                <a href="{{ route('user.galeri') }}"
-                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
-                    <i class="fas fa-images w-5"></i>
-                    <span>Galeri</span>
-                </a>
-
-                <a href="{{ route('user.blog') }}"
-                    class="flex items-center gap-3 text-text-light hover:text-accent transition">
-                    <i class="fas fa-blog w-5"></i>
-                    <span>Blog</span>
-                </a>
-
-                <a href="#kontak" class="flex items-center gap-3 text-text-light hover:text-accent transition">
-                    <i class="fas fa-envelope w-5"></i>
-                    <span>Kontak</span>
-                </a>
-
-                <!-- Divider -->
-                <div class="border-t border-white/10 pt-5"></div>
-
-                @guest
-                    <!-- Login -->
-                    <a href="{{ route('login') }}"
-                        class="block text-center px-4 py-2 rounded-full border border-white/30
-                       text-text-light hover:border-accent hover:text-accent
-                       transition duration-300 font-medium">
-                        Login
-                    </a>
-
-                    <!-- Register -->
-                    <a href="{{ route('register') }}"
-                        class="block text-center px-5 py-2 rounded-full
-                       bg-accent hover:bg-orange-600 text-white
-                       shadow-lg transition duration-300 font-semibold">
-                        Register
-                    </a>
-                @endguest
-
-                @auth
-                    <div class="space-y-3">
-
-                        <div class="text-text-light font-semibold">
-                            {{ Auth::user()->name }}
-                        </div>
-
-                        <a href="{{ route('profile.edit') }}" class="block text-text-gray hover:text-accent transition">
-                            Profile
-                        </a>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="block text-text-gray hover:text-accent transition">
-                                Logout
-                            </button>
-                        </form>
-
-                    </div>
-                @endauth
-
+            <div class="px-6 py-6 space-y-5"> <!-- Menu --> <a href="{{ route('user.beranda') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition"> <i
+                        class="fas fa-home w-5"></i> <span>Home</span> </a> <a href="{{ route('user.kos.index') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition"> <i
+                        class="fas fa-building w-5"></i> <span>Kos</span> </a> <a href="{{ route('user.galeri') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition"> <i
+                        class="fas fa-images w-5"></i> <span>Galeri</span> </a> <a href="{{ route('user.blog') }}"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition"> <i
+                        class="fas fa-blog w-5"></i> <span>Blog</span> </a> <a href="#kontak"
+                    class="flex items-center gap-3 text-text-light hover:text-accent transition"> <i
+                        class="fas fa-envelope w-5"></i> <span>Kontak</span> </a> <!-- Divider -->
+                <div class="border-t border-white/10 pt-5"></div> @guest <!-- Login --> <a href="{{ route('login') }}"
+                        class="block text-center px-4 py-2 rounded-full border border-white/30 text-text-light hover:border-accent hover:text-accent transition duration-300 font-medium">
+                        Login </a> <!-- Register --> <a href="{{ route('register') }}"
+                        class="block text-center px-5 py-2 rounded-full bg-accent hover:bg-orange-600 text-white shadow-lg transition duration-300 font-semibold">
+                        Register </a> @endguest @auth <div class="space-y-3">
+                        <div class="text-text-light font-semibold"> {{ Auth::user()->name }} </div> <a
+                            href="{{ route('profile.edit') }}" class="block text-text-gray hover:text-accent transition">
+                            Profile </a>
+                        <form method="POST" action="{{ route('logout') }}"> @csrf <button type="submit"
+                                class="block text-text-gray hover:text-accent transition"> Logout </button> </form>
+                </div> @endauth
             </div>
         </div>
-    </nav>
-
-
-    {{-- KONTEN HALAMAN --}}
-    <main class="pt-3">
-        @yield('content')
-    </main>
-
-
-    <!-- FOOTER -->
+    </nav> {{-- KONTEN HALAMAN --}} <main class="pt-3"> @yield('content') </main> <!-- FOOTER -->
     <footer id="kontak" class="bg-secondary text-text-light py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-12">
                 <div>
-                    <div class="flex items-center space-x-3 mb-6">
-                        <i class="fa-brands fa-galactic-senate text-accent text-3xl"></i>
-                        <span class="text-2xl font-bold">@yield('title', setting('site_name', 'KosKu'))</span>
-                    </div>
-                    <p class="text-text-gray leading-relaxed mb-4">
-                        {{ setting('seo_description') }}
-                    </p>
-
-
-
+                    <div class="flex items-center space-x-3 mb-6"> <i
+                            class="fa-brands fa-galactic-senate text-accent text-3xl"></i> <span
+                            class="text-2xl font-bold">@yield('title', setting('site_name', 'KosKu'))</span> </div>
+                    <p class="text-text-gray leading-relaxed mb-4"> {{ setting('seo_description') }} </p>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-bold mb-6">Menu</h3>
                     <ul class="space-y-3">
@@ -435,162 +278,126 @@
                                 class="text-text-gray hover:text-accent transition">Halaman Blog</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-bold mb-6">Sosial Media</h3>
                     <div class="flex items-center gap-3 flex-wrap">
-
                         @if (setting('social_facebook'))
                             <a href="{{ setting('social_facebook') }}" target="_blank"
                                 class="flex flex-col items-center gap-1.5 group w-14">
                                 <div
-                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
-                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
-                                    <i class="fab fa-facebook-f text-sm text-white"></i>
-                                </div>
-                                <span
+                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30 flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                    <i class="fab fa-facebook-f text-sm text-white"></i> </div> <span
                                     class="text-xs text-slate-400 group-hover:text-white transition text-center">Facebook</span>
                             </a>
-                        @endif
-
-                        @if (setting('social_youtube'))
-                            <a href="{{ setting('social_youtube') }}" target="_blank"
-                                class="flex flex-col items-center gap-1.5 group w-14">
-                                <div
-                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
-                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
-                                    <i class="fab fa-youtube text-sm text-white"></i>
-                                </div>
-                                <span
-                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">Youtube</span>
-                            </a>
-                        @endif
-
-                        @if (setting('social_instagram'))
-                            <a href="{{ setting('social_instagram') }}" target="_blank"
-                                class="flex flex-col items-center gap-1.5 group w-14">
-                                <div
-                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
-                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
-                                    <i class="fab fa-instagram text-sm text-white"></i>
-                                </div>
-                                <span
-                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">Instagram</span>
-                            </a>
-                        @endif
-
-                        @if (setting('contact_whatsapp'))
-                            <a href="https://wa.me/{{ setting('contact_whatsapp') }}" target="_blank"
-                                class="flex flex-col items-center gap-1.5 group w-14">
-                                <div
-                                    class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30
-                        flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
-                                    <i class="fab fa-whatsapp text-sm text-white"></i>
-                                </div>
-                                <span
-                                    class="text-xs text-slate-400 group-hover:text-white transition text-center">WhatsApp</span>
-                            </a>
-                        @endif
-
+                            @endif @if (setting('social_youtube'))
+                                <a href="{{ setting('social_youtube') }}" target="_blank"
+                                    class="flex flex-col items-center gap-1.5 group w-14">
+                                    <div
+                                        class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30 flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                        <i class="fab fa-youtube text-sm text-white"></i> </div> <span
+                                        class="text-xs text-slate-400 group-hover:text-white transition text-center">Youtube</span>
+                                </a>
+                                @endif @if (setting('social_instagram'))
+                                    <a href="{{ setting('social_instagram') }}" target="_blank"
+                                        class="flex flex-col items-center gap-1.5 group w-14">
+                                        <div
+                                            class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30 flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                            <i class="fab fa-instagram text-sm text-white"></i> </div> <span
+                                            class="text-xs text-slate-400 group-hover:text-white transition text-center">Instagram</span>
+                                    </a>
+                                    @endif @if (setting('contact_whatsapp'))
+                                        <a href="https://wa.me/{{ setting('contact_whatsapp') }}" target="_blank"
+                                            class="flex flex-col items-center gap-1.5 group w-14">
+                                            <div
+                                                class="w-11 h-11 rounded-full bg-accent hover:bg-white/10 border border-white/15 hover:border-white/30 flex items-center justify-center transition-all duration-150 group-hover:-translate-y-0.5">
+                                                <i class="fab fa-whatsapp text-sm text-white"></i> </div> <span
+                                                class="text-xs text-slate-400 group-hover:text-white transition text-center">WhatsApp</span>
+                                        </a>
+                                    @endif
                     </div>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-bold mb-6">Kontak</h3>
                     <ul class="space-y-4">
-                        <li class="flex items-start space-x-3">
-                            <i class="fas fa-map-marker-alt text-accent mt-1"></i>
-                            <span class="text-text-gray">
-                                {!! nl2br(e(setting('contact_address'))) !!}
-                            </span>
-
-                        </li>
-                        <li class="flex items-center space-x-3">
-                            <i class="fas fa-phone text-accent"></i>
-                            <span class="text-text-gray">
-                                {{ setting('contact_phone') }}
-                            </span>
-
-                        </li>
-                        <li class="flex items-center space-x-3">
-                            <i class="fas fa-envelope text-accent"></i>
-                            <span class="text-text-gray">
-                                {{ setting('contact_email') }}
-                            </span>
-
-                        </li>
-                        <li class="flex items-center space-x-3">
-                            <i class="fas fa-clock text-accent"></i>
-                            <span class="text-text-gray">
-                                {{ setting('operational_hours') }}
-                            </span>
-
-                        </li>
+                        <li class="flex items-start space-x-3"> <i class="fas fa-map-marker-alt text-accent mt-1"></i>
+                            <span class="text-text-gray"> {!! nl2br(e(setting('contact_address'))) !!} </span> </li>
+                        <li class="flex items-center space-x-3"> <i class="fas fa-phone text-accent"></i> <span
+                                class="text-text-gray"> {{ setting('contact_phone') }} </span> </li>
+                        <li class="flex items-center space-x-3"> <i class="fas fa-envelope text-accent"></i> <span
+                                class="text-text-gray"> {{ setting('contact_email') }} </span> </li>
+                        <li class="flex items-center space-x-3"> <i class="fas fa-clock text-accent"></i> <span
+                                class="text-text-gray"> {{ setting('operational_hours') }} </span> </li>
                     </ul>
                 </div>
             </div>
-
             <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-                <p class="text-text-gray">
-                    &copy; 2026 KosKu. All rights reserved. Made with <i class="fas fa-heart text-accent"></i> for
-                    better living
-                </p>
+                <p class="text-text-gray"> &copy; 2026 KosKu. All rights reserved. Made with <i
+                        class="fas fa-heart text-accent"></i> for better living </p>
             </div>
         </div>
     </footer>
+    <!-- USER DROPDOWN -->
+<script>
+    const userButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
 
-    <script>
-        const userButton = document.getElementById('user-menu-button');
-        const userDropdown = document.getElementById('user-dropdown');
+    if (userButton && userDropdown) {
 
-        if (userButton) {
-            userButton.addEventListener('click', function() {
-                userDropdown.classList.toggle('hidden');
-            });
+        // Toggle dropdown
+        userButton.addEventListener('click', function () {
+            userDropdown.classList.toggle('hidden');
+        });
 
-            // Tutup dropdown jika klik di luar
-            window.addEventListener('click', function(e) {
-                if (!userButton.contains(e.target) && !userDropdown.contains(e.target)) {
-                    userDropdown.classList.add('hidden');
-                }
-            });
-        }
-    </script>
+        // Tutup dropdown jika klik di luar
+        window.addEventListener('click', function (e) {
+            if (!userButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
 
-    <script>
-        const videos = [
-            'o95awKNftsE',
-            '-2prh4Nzk14'
-        ];
+    }
+</script>
 
-        let index = 0;
-        const iframe = document.getElementById('mainVideo');
 
-        function updateVideo() {
+<!-- VIDEO SLIDER -->
+<script>
+    const videos = ['o95awKNftsE', '-2prh4Nzk14'];
+    let index = 0;
+    const iframe = document.getElementById('mainVideo');
+
+    function updateVideo() {
+        if (iframe) {
             iframe.src = `https://www.youtube.com/embed/${videos[index]}?autoplay=1`;
         }
+    }
 
-        function nextVideo() {
-            index = (index + 1) % videos.length;
-            updateVideo();
-        }
+    function nextVideo() {
+        index = (index + 1) % videos.length;
+        updateVideo();
+    }
 
-        function prevVideo() {
-            index = (index - 1 + videos.length) % videos.length;
-            updateVideo();
-        }
-    </script>
+    function prevVideo() {
+        index = (index - 1 + videos.length) % videos.length;
+        updateVideo();
+    }
+</script>
 
-    <!-- navbar -->
-    <script>
-        const toggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('mobile-menu');
 
+<!-- MOBILE NAVBAR -->
+<script>
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+
+    if (toggle && menu) {
         toggle.addEventListener('click', () => {
             menu.classList.toggle('hidden');
         });
-    </script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    }
+</script>
+
+
+<!-- ALPINE JS -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 
 </html>

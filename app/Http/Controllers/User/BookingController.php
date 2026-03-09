@@ -68,9 +68,12 @@ class BookingController extends Controller
         // =========================
         // HITUNG TANGGAL
         // =========================
-        if ($request->jenis_sewa === 'harian') {
+        $durasi = (int) $request->durasi;
 
-            $durasi = (int) $request->durasi;
+        $discount = null;       // <-- TAMBAHKAN INI
+        $discountAmount = 0;    // default diskon
+
+        if ($request->jenis_sewa === 'harian') {
 
             $tanggalMulai = Carbon::parse($request->tanggal_mulai);
             $tanggalSelesai = $tanggalMulai->copy()->addDays($durasi)->subDay();
@@ -79,8 +82,6 @@ class BookingController extends Controller
             $subtotal = $hargaPerUnit * $durasi;
         } else {
 
-            $durasi = (int) $request->durasi;
-
             $durasiBulan = $request->jenis_sewa === 'tahunan'
                 ? $durasi * 12
                 : $durasi;
@@ -88,7 +89,9 @@ class BookingController extends Controller
             $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
                 ->startOfMonth();
 
-            $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan)->subDay();
+            $tanggalSelesai = $tanggalMulai->copy()
+                ->addMonths($durasiBulan)
+                ->subDay();
 
             $hargaPerUnit = $request->jenis_sewa === 'bulanan'
                 ? $kamar->harga_bulanan
@@ -96,7 +99,9 @@ class BookingController extends Controller
 
             $subtotal = $hargaPerUnit * $durasiBulan;
 
+            // =========================
             // DISKON
+            // =========================
             $discount = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
                 ->where('is_active', true)
                 ->get()
@@ -154,7 +159,6 @@ class BookingController extends Controller
 
                     return true;
                 });
-
                 
             if ($discount) {
 
