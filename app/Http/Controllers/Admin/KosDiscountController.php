@@ -47,6 +47,7 @@ class KosDiscountController extends Controller
             'nama' => 'required|string|max:255',
             'type' => 'required|in:percent,fixed',
             'value' => 'required|numeric|min:1',
+            'max_discount' => 'nullable|numeric|min:0',
 
             'min_durasi' => 'nullable|integer|min:1',
             'min_total' => 'nullable|numeric|min:0',
@@ -67,6 +68,7 @@ class KosDiscountController extends Controller
             'nama' => $request->nama,
             'type' => $request->type,
             'value' => $request->value,
+            'max_discount' => $request->max_discount,
 
             'min_durasi' => $request->min_durasi,
             'min_total' => $request->min_total,
@@ -109,6 +111,7 @@ class KosDiscountController extends Controller
             'nama' => 'required|string|max:255',
             'type' => 'required|in:percent,fixed',
             'value' => 'required|numeric|min:1',
+            'max_discount' => 'nullable|numeric|min:0',
 
             'min_durasi' => 'nullable|integer|min:1',
             'min_total' => 'nullable|numeric|min:0',
@@ -128,6 +131,8 @@ class KosDiscountController extends Controller
             'nama' => $request->nama,
             'type' => $request->type,
             'value' => $request->value,
+            'max_discount' => $request->max_discount,
+
 
             'min_durasi' => $request->min_durasi,
             'min_total' => $request->min_total,

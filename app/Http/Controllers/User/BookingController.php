@@ -63,7 +63,8 @@ class BookingController extends Controller
             'tanggal_mulai' => 'required_if:jenis_sewa,harian|date_format:Y-m-d',
         ]);
 
-
+        $discount = null;
+        $discountAmount = 0;
         // =========================
         // HITUNG TANGGAL
         // =========================
@@ -154,9 +155,7 @@ class BookingController extends Controller
                     return true;
                 });
 
-
-            $discountAmount = 0;
-
+                
             if ($discount) {
 
                 if ($discount->type == 'percent') {
@@ -166,14 +165,18 @@ class BookingController extends Controller
 
                     $discountAmount = $discount->value;
                 }
+
+                if ($discount->max_discount) {
+                    $discountAmount = min($discountAmount, $discount->max_discount);
+                }
             }
         }
 
         $layananTotal = 0;
 
         if ($request->filled('layanan')) {
-    $layananTotal = Layanan::whereIn('id', $request->layanan)->sum('harga');
-}
+            $layananTotal = Layanan::whereIn('id', $request->layanan)->sum('harga');
+        }
 
         // =========================
         // CEK BENTROK (WAJIB)
@@ -223,8 +226,8 @@ class BookingController extends Controller
         ]);
 
         if ($request->filled('layanan')) {
-    $booking->layanans()->sync($request->layanan);
-}
+            $booking->layanans()->sync($request->layanan);
+        }
         $payment = Payment::create([
             'booking_id'     => $booking->id,
             'amount'         => $totalBayar,   // bayar full
