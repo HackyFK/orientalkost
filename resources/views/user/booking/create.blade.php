@@ -41,11 +41,13 @@
             </div>
 
             <form method="POST" action="{{ route('user.booking.store', $kamar) }}" class="space-y-8"
-              x-data='bookingForm(@json($bookings), @json($layanan), @json($discounts))' x-init="init()"
+                x-data='bookingForm(@json($bookings), @json($layanan), @json($discounts))'
+                x-init="init()">
+
                 @csrf
 
-                <h2 class="text-xl font-bold text-accent text-center flex items-center gap-2 justify-center mb-4">
-                    <i class="fas fa-user"></i> Data Diri
+                <h2class="text-xl font-bold text-accent text-center flex items-center gap-2 justify-center mb-4">
+                <i class="fas fa-user"></i> Data Diri
                 </h2>
 
                 <div class="grid md:grid-cols-2 gap-4">
@@ -203,43 +205,43 @@
                     </div>
 
                     <div class="flex justify-between text-green-600">
-      <span>Diskon</span>
-      <span>- <span x-text="format(discount)"></span></span>
-  </div>
+                        <span>Diskon</span>
+                        <span>- <span x-text="format(discount)"></span></span>
+                    </div>
 
-  <template x-if="selectedLayanan.length > 0">
-      <div class="space-y-1">
+                    <template x-if="selectedLayanan.length > 0">
+                        <div class="space-y-1">
 
-          <div class="font-semibold text-sm text-gray-600">
-              Opsi Layanan
-          </div>
+                            <div class="font-semibold text-sm text-gray-600">
+                                Opsi Layanan
+                            </div>
 
-          <template x-for="(id,index) in selectedLayanan" :key="id">
+                            <template x-for="(id,index) in selectedLayanan" :key="id">
 
-              <div class="flex justify-between text-sm">
+                                <div class="flex justify-between text-sm">
 
-                  <span>
-                      <span x-text="index+1"></span>.
-                      <span x-text="layanan.find(l => l.id == id)?.nama_layanan"></span>
-                  </span>
+                                    <span>
+                                        <span x-text="index+1"></span>.
+                                        <span x-text="layanan.find(l => l.id == id)?.nama_layanan"></span>
+                                    </span>
 
-                  <span class="text-green-600">
-                      <span x-text="format(layanan.find(l => l.id == id)?.harga)"></span>
-                  </span>
+                                    <span class="text-green-600">
+                                        <span x-text="format(layanan.find(l => l.id == id)?.harga)"></span>
+                                    </span>
 
-              </div>
+                                </div>
 
-          </template>
+                            </template>
 
-      </div>
-  </template>
+                        </div>
+                    </template>
 
-  <hr>
+                    <hr>
 
-  <div class="flex justify-between font-bold text-lg">
-      <span>Total Bayar</span>
-      <span x-text="format(grandTotal)" class="text-accent"></span>
-  </div>
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Total Bayar</span>
+                        <span x-text="format(grandTotal)" class="text-accent"></span>
+                    </div>
                 </div>
 
                 <button type="submit" :disabled="isBentrok || !inputMulai"
@@ -255,15 +257,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        function bookingForm(bookings, layanan, discounts) {
+            return {
+                bookings: bookings,
+                layanan: layanan,
+                discounts: discounts,
 
-function bookingForm(bookings, layanan, discounts) {
-    return {
-        bookings: bookings,
-        layanan: layanan,
-        discounts: discounts,
-
-        selectedLayanan: [],
-        showLayanan: false,
+                selectedLayanan: [],
+                showLayanan: false,
                 hargaHarian: {{ (int) ($kamar->harga_harian ?? 0) }},
                 hargaBulanan: {{ (int) $kamar->harga_bulanan }},
                 hargaTahunan: {{ (int) $kamar->harga_tahunan }},
@@ -431,20 +432,29 @@ function bookingForm(bookings, layanan, discounts) {
                 },
 
                 get subtotal() {
-                    return this.hargaPerUnit * this.durasi
+
+                    if (this.jenisSewa === 'harian') {
+                        return this.hargaHarian * this.durasi
+                    }
+
+                    if (this.jenisSewa === 'bulanan') {
+                        return this.hargaBulanan * this.durasi
+                    }
+
+                    return this.hargaTahunan * this.durasi
                 },
 
 
                 get layananTotal() {
-        return this.selectedLayanan.reduce((total, id) => {
-            const l = this.layanan.find(x => x.id == id)
-            return total + (l ? parseInt(l.harga) : 0)
-        }, 0)
-    },
+                    return this.selectedLayanan.reduce((total, id) => {
+                        const l = this.layanan.find(x => x.id == id)
+                        return total + (l ? parseInt(l.harga) : 0)
+                    }, 0)
+                },
 
-get grandTotal() {
-    return this.subtotal - this.discount + this.layananTotal
-},
+                get grandTotal() {
+                    return this.subtotal - this.discount + this.layananTotal
+                },
 
                 get totalBayar() {
                     return this.subtotal - this.discount
@@ -486,11 +496,23 @@ get grandTotal() {
 
                     if (!promo) return 0
 
+                    let discount = 0
+
                     if (promo.type === 'percent') {
-                        return subtotal * promo.value / 100
+
+                        discount = subtotal * promo.value / 100
+
+                    } else {
+
+                        discount = parseInt(promo.value)
                     }
 
-                    return promo.value
+                    // APPLY MAX DISCOUNT
+                    if (promo.max_discount && discount > promo.max_discount) {
+                        discount = promo.max_discount
+                    }
+
+                    return discount
                 },
 
 
