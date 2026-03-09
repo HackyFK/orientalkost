@@ -60,7 +60,7 @@ class BookingHistoryController extends Controller
 
         $pdf = Pdf::loadView('user.booking.struk', [
             'booking' => $booking
-        ])->setPaper('A5', 'portrait');
+        ])->setPaper('A4', 'potrait');
 
         $filename = 'struk-booking-' . $booking->id . '.pdf';
 

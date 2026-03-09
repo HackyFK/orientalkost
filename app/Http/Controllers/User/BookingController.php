@@ -67,9 +67,12 @@ class BookingController extends Controller
         // =========================
         // HITUNG TANGGAL
         // =========================
-        if ($request->jenis_sewa === 'harian') {
+        $durasi = (int) $request->durasi;
 
-            $durasi = (int) $request->durasi;
+        $discount = null;       // <-- TAMBAHKAN INI
+        $discountAmount = 0;    // default diskon
+
+        if ($request->jenis_sewa === 'harian') {
 
             $tanggalMulai = Carbon::parse($request->tanggal_mulai);
             $tanggalSelesai = $tanggalMulai->copy()->addDays($durasi)->subDay();
@@ -78,8 +81,6 @@ class BookingController extends Controller
             $subtotal = $hargaPerUnit * $durasi;
         } else {
 
-            $durasi = (int) $request->durasi;
-
             $durasiBulan = $request->jenis_sewa === 'tahunan'
                 ? $durasi * 12
                 : $durasi;
@@ -87,7 +88,9 @@ class BookingController extends Controller
             $tanggalMulai = Carbon::createFromFormat('Y-m', $request->bulan_mulai)
                 ->startOfMonth();
 
-            $tanggalSelesai = $tanggalMulai->copy()->addMonths($durasiBulan)->subDay();
+            $tanggalSelesai = $tanggalMulai->copy()
+                ->addMonths($durasiBulan)
+                ->subDay();
 
             $hargaPerUnit = $request->jenis_sewa === 'bulanan'
                 ? $kamar->harga_bulanan
@@ -95,7 +98,9 @@ class BookingController extends Controller
 
             $subtotal = $hargaPerUnit * $durasiBulan;
 
+            // =========================
             // DISKON
+            // =========================
             $discount = \App\Models\KosDiscount::where('kos_id', $kamar->kos_id)
                 ->where('is_active', true)
                 ->get()
@@ -116,25 +121,18 @@ class BookingController extends Controller
                     return true;
                 });
 
-            $discountAmount = 0;
-
             if ($discount) {
-
-                if ($discount->type == 'percent') {
-
-                    $discountAmount = ($subtotal * $discount->value) / 100;
-                } else {
-
-                    $discountAmount = $discount->value;
-                }
+                $discountAmount = $discount->type === 'percent'
+                    ? ($subtotal * $discount->value) / 100
+                    : $discount->value;
             }
         }
 
         $layananTotal = 0;
 
         if ($request->filled('layanan')) {
-    $layananTotal = Layanan::whereIn('id', $request->layanan)->sum('harga');
-}
+            $layananTotal = Layanan::whereIn('id', $request->layanan)->sum('harga');
+        }
 
         // =========================
         // CEK BENTROK (WAJIB)
@@ -184,8 +182,8 @@ class BookingController extends Controller
         ]);
 
         if ($request->filled('layanan')) {
-    $booking->layanans()->sync($request->layanan);
-}
+            $booking->layanans()->sync($request->layanan);
+        }
         $payment = Payment::create([
             'booking_id'     => $booking->id,
             'amount'         => $totalBayar,   // bayar full
