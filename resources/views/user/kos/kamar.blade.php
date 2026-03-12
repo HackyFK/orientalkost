@@ -255,31 +255,109 @@
                                 </div>
 
                                 <!-- Button -->
-                                <div class="flex gap-3">
+                                <div x-data="{ open: false, agree: false }" class="flex gap-3">
+
+                                    {{-- DETAIL --}}
                                     <a href="{{ route('user.kamar.show', $kamar->id) }}"
-                                        class="flex-1 inline-flex items-center justify-center border-2 border-accent
-                                       text-accent hover:bg-accent hover:text-white py-3 rounded-xl font-semibold transition">
-                                        <i class="fas fa-info-circle mr-2"></i>
+                                        class="flex-1 flex items-center justify-center gap-2
+               border-2 border-accent text-accent
+               hover:bg-accent hover:text-white
+               py-3 rounded-xl font-semibold transition">
+
+                                        <i class="fas fa-info-circle"></i>
                                         Detail
                                     </a>
 
+
+                                    {{-- BOOKING BUTTON --}}
                                     @auth
-                                        <a href="{{ route('user.booking.create', $kamar->id) }}"
-                                            class="flex-1 bg-accent hover:bg-orange-600 text-white py-3 rounded-xl
-        font-semibold transition shadow-lg text-center">
-                                            <i class="fas fa-calendar-check mr-2"></i>
+                                        <button @click="open = true"
+                                            class="flex-1 flex items-center justify-center gap-2
+               bg-accent hover:bg-orange-600 text-white
+               py-3 rounded-xl font-semibold
+               shadow-lg transition">
+
+                                            <i class="fas fa-calendar-check"></i>
                                             Booking
-                                        </a>
+                                        </button>
                                     @endauth
 
+
+                                    {{-- LOGIN BUTTON --}}
                                     @guest
                                         <a href="{{ route('login') }}"
-                                            class="flex-1 bg-gray-400 text-white py-3 rounded-xl
-        font-semibold transition shadow-lg text-center">
-                                            <i class="fas fa-lock mr-2"></i>
+                                            class="flex-1 flex items-center justify-center gap-2
+               bg-gray-400 text-white
+               py-3 rounded-xl font-semibold
+               shadow-lg transition">
+
+                                            <i class="fas fa-lock"></i>
                                             Login untuk booking
                                         </a>
                                     @endguest
+
+
+                                    {{-- MODAL SURAT PERJANJIAN --}}
+                                    <div x-show="open" x-transition @click.self="open=false"
+                                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+
+                                        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl">
+
+                                            {{-- HEADER --}}
+                                            <div class="p-4 border-b font-semibold text-lg">
+                                                Surat Perjanjian Sewa Kamar
+                                            </div>
+
+                                            {{-- ISI PERJANJIAN --}}
+                                            <div class="p-5 h-80 overflow-y-auto text-sm text-gray-600 space-y-4">
+
+                                                <h4 class="font-semibold">Pasal 1 — Objek Sewa</h4>
+                                                <p>Penyewa menyewa kamar yang dipilih pada sistem booking Oriental Kost.</p>
+
+                                                <h4 class="font-semibold">Pasal 2 — Masa Sewa</h4>
+                                                <p>Masa sewa berlaku sesuai dengan durasi yang dipilih oleh penyewa.</p>
+
+                                                <h4 class="font-semibold">Pasal 3 — Pembayaran</h4>
+                                                <p>Penyewa wajib melakukan pembayaran sesuai harga yang tercantum pada
+                                                    sistem.</p>
+
+                                                <h4 class="font-semibold">Pasal 4 — Kewajiban Penyewa</h4>
+                                                <p>Penyewa wajib menjaga kebersihan kamar dan fasilitas yang tersedia.</p>
+
+                                                <h4 class="font-semibold">Pasal 5 — Larangan</h4>
+                                                <p>Penyewa dilarang membawa barang terlarang dan membuat keributan.</p>
+
+                                                {{-- CHECKBOX --}}
+                                                <div class="px-5 py-3 border-t flex items-center gap-2">
+                                                    <input type="checkbox" x-model="agree">
+                                                    <span class="text-sm text-gray-600">
+                                                        Saya telah membaca dan memahami perjanjian
+                                                    </span>
+                                                </div>
+                                            </div>
+
+
+                                            {{-- ACTION BUTTON --}}
+                                            <div class="p-4 flex justify-end gap-2">
+
+                                                <button @click="open=false"
+                                                    class="px-4 py-2 bg-gray-200 rounded-lg text-sm">
+                                                    Batal
+                                                </button>
+
+                                                <a :class="agree ? 'bg-accent hover:bg-orange-600' :
+                                                    'bg-gray-300 pointer-events-none'"
+                                                    class="px-4 py-2 text-white rounded-lg text-sm transition"
+                                                    href="{{ route('user.booking.create', $kamar->id) }}">
+                                                    Mengerti & Lanjutkan
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
