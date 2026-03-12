@@ -443,13 +443,155 @@
                                         </button>
                                     @endguest
 
-                                    @auth
-                                        <a href="{{ route('user.booking.create', $kamar->id) }}"
-                                            class="w-full bg-accent hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm shadow-orange-200">
-                                            <i class="fas fa-calendar-check"></i>
-                                            Booking Sekarang
-                                        </a>
-                                    @endauth
+                                    <div x-data="{ open: false, agree: false }">
+
+                                        {{-- BUTTON BOOKING --}}
+                                        @auth
+                                            <button @click="open = true"
+                                                class="w-full bg-accent hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm shadow-orange-200">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Booking Sekarang
+                                            </button>
+                                        @endauth
+
+
+                                        {{-- MODAL SURAT PERJANJIAN --}}
+                                        <div x-show="open" x-transition
+                                            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 mt-20">
+
+                                            <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl">
+
+                                                {{-- HEADER --}}
+                                                <div class="p-4 border-b font-bold text-lg">
+                                                    Surat Perjanjian Sewa Kamar Kos
+                                                </div>
+
+                                                {{-- ISI --}}
+                                                <div class="p-4 h-80 overflow-y-auto text-sm text-gray-600 space-y-3">
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 1 — Objek
+                                                        Sewa</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Penyewa menyewa satu kamar yang tersedia pada <strong>Oriental
+                                                            Kost</strong> sesuai dengan kamar yang dipilih pada sistem
+                                                        booking.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 2 — Masa Sewa
+                                                    </h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Masa sewa kamar berlaku sesuai dengan durasi yang dipilih oleh
+                                                        penyewa pada saat melakukan pemesanan melalui sistem.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 3 —
+                                                        Pembayaran Sewa</h3>
+                                                    <p class="text-sm text-gray-600">
+                                                        Penyewa wajib melakukan pembayaran sesuai dengan harga yang
+                                                        tercantum pada sistem.
+                                                    </p>
+                                                    <p class="text-sm text-gray-600">
+                                                        Pembayaran harus dilakukan sesuai dengan periode sewa yang dipilih.
+                                                    </p>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Keterlambatan pembayaran dapat menyebabkan pembatalan pemesanan atau
+                                                        sanksi sesuai kebijakan pengelola.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 4 — Hak
+                                                        Penyewa</h3>
+                                                    <p class="text-sm text-gray-600 mb-1">Penyewa berhak:</p>
+                                                    <p class="text-sm text-gray-600">• Menggunakan kamar dan fasilitas yang
+                                                        tersedia sesuai dengan peruntukannya.</p>
+                                                    <p class="text-sm text-gray-600">• Mendapatkan lingkungan tempat
+                                                        tinggal yang aman dan nyaman.</p>
+                                                    <p class="text-sm text-gray-600 mb-4">• Mendapatkan fasilitas sesuai
+                                                        dengan yang tercantum pada halaman kamar.</p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 5 — Kewajiban
+                                                        Penyewa</h3>
+                                                    <p class="text-sm text-gray-600 mb-1">Penyewa wajib:</p>
+                                                    <p class="text-sm text-gray-600">• Menjaga kebersihan kamar dan
+                                                        lingkungan kos.</p>
+                                                    <p class="text-sm text-gray-600">• Menjaga fasilitas yang tersedia di
+                                                        dalam kamar.</p>
+                                                    <p class="text-sm text-gray-600 mb-4">• Menggunakan fasilitas dengan
+                                                        baik dan tidak merusaknya.</p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 6 — Larangan
+                                                    </h3>
+                                                    <p class="text-sm text-gray-600 mb-1">Penyewa dilarang:</p>
+                                                    <p class="text-sm text-gray-600">• Membawa atau menggunakan barang
+                                                        terlarang seperti narkoba atau senjata.</p>
+                                                    <p class="text-sm text-gray-600">• Membuat keributan yang mengganggu
+                                                        penghuni lain.</p>
+                                                    <p class="text-sm text-gray-600">• Melakukan kegiatan yang melanggar
+                                                        hukum.</p>
+                                                    <p class="text-sm text-gray-600 mb-4">• Menggunakan kamar untuk
+                                                        kegiatan yang tidak sesuai dengan peruntukannya.</p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 7 — Kerusakan
+                                                        Fasilitas</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Apabila terjadi kerusakan fasilitas akibat kelalaian penyewa, maka
+                                                        penyewa wajib mengganti biaya perbaikan atau penggantian fasilitas
+                                                        tersebut.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 8 — Tamu dan
+                                                        Ketertiban</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Penyewa wajib menjaga ketertiban lingkungan kos dan mematuhi seluruh
+                                                        peraturan yang berlaku di lingkungan <strong>Kost</strong>.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 9 —
+                                                        Pembatalan dan Penghentian Sewa</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Pengelola berhak menghentikan masa sewa apabila penyewa melanggar
+                                                        ketentuan yang telah disepakati dalam perjanjian ini.
+                                                    </p>
+
+                                                    <h3 class="font-semibold text-lg text-primary mb-2">Pasal 10 —
+                                                        Persetujuan</h3>
+                                                    <p class="text-sm text-gray-600 mb-4">
+                                                        Dengan melanjutkan proses booking, penyewa menyatakan bahwa telah
+                                                        membaca, memahami, dan menyetujui seluruh isi perjanjian sewa kamar
+                                                        kos ini.
+                                                    </p>
+
+                                                    <div class="px-4 py-3 border-t flex items-center gap-2">
+                                                        <input type="checkbox" x-model="agree">
+                                                        <span class="text-sm">Saya telah membaca dan memahami seluruh isi
+                                                            perjanjian sewa kamar kos.</span>
+                                                    </div>
+                                                </div>
+
+                                                {{-- CHECKBOX --}}
+
+
+                                                {{-- BUTTON --}}
+                                                <div class="p-4 flex justify-end gap-2">
+
+                                                    <button @click="open=false"
+                                                        class="px-4 py-2 bg-gray-200 rounded-lg text-sm">
+                                                        Batal
+                                                    </button>
+
+                                                    <a :class="agree ? 'bg-orange-500 hover:bg-orange-600' :
+                                                        'bg-gray-300 pointer-events-none'"
+                                                        class="px-4 py-2 text-white text-sm rounded-lg transition"
+                                                        href="{{ route('user.booking.create', $kamar->id) }}">
+                                                        Mengerti & Lanjutkan
+                                                    </a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
 
                                     {{-- WhatsApp --}}
                                     <button type="button"
